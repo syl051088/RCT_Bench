@@ -4161,10 +4161,6 @@ df_new = df_new %>%
 # Box Plots
 ## Efficiency Gain
 ```{r}
-###############################################################################
-##  0.  Long data BEFORE trimming --------------------------------------------
-###############################################################################
-
 # First need to filter df_new to get primary and all outcomes datasets
 df_new_all_outcomes = df_new  # All outcomes
 
