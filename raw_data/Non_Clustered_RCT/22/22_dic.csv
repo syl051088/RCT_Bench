@@ -1,0 +1,306 @@
+Variable,Description,Response_Values,Sheet_Source
+Q1_5,Weeks pregnant,1=<24 weeks 2=24-31 weeks 3=>31 weeks,screening_survey
+Q1_8,Mother's age,NA,screening_survey
+Q1_9,Where did you hear about this study?,1=At my OB/GYN doctor's office 2= at a WIC office 3= at a pediatrician's office 4= from Berkeley Parents Network 5= on craigslist.org 6= from a listserv/e-mail list I'm on 7= saw a flyer  somewhere 8= someone told me about it 9= other,screening_survey
+Q1_9_TEXT,Where did you hear about this study?--other specify,NA,screening_survey
+V7,Status,NA,postpartum_survey
+V8,StartDate,NA,postpartum_survey
+V9,EndDate,NA,postpartum_survey
+V10,Finished,0= incomplete 1=finished,postpartum_survey
+SID,NA,NA,postpartum_survey
+Token,NA,NA,postpartum_survey
+Amount,NA,NA,postpartum_survey
+Contact,NA,NA,postpartum_survey
+code,NA,NA,postpartum_survey
+type,NA,NA,postpartum_survey
+RecipientLanguage,NA,NA,postpartum_survey
+Treatment_Group,NA,0=control 1=intervention,postpartum_survey
+Due_date,From screening survey taken,NA,postpartum_survey
+DateTaken,Date screening survey taken,NA,postpartum_survey
+Enrolled,From screening survey taken,NA,postpartum_survey
+Hard_copy,Requested hard copy?,NA,postpartum_survey
+Q4_3_1_TEXT,Baby’s age at survey (weeks),NA,postpartum_survey
+Q4_4,baby DOB,NA,postpartum_survey
+Q5_1,Type of work during pregnancy,NA,postpartum_survey
+Q5_2,Number of people working for employer,"1=Fewer than 5, 2=Between 5-49, 3=50 or more",postpartum_survey
+Q5_3,Length of time working at job,"1=Less than 1 year, 2=More than 1 year",postpartum_survey
+Q5_4,Hours usually worked per week when 6-7 months pregnant,"1=1-10 hours a week, 2=11-20 hours a week, 3=21-30 hours a week, 4=31-40 hours a week, 5=More than 40 hours a week",postpartum_survey
+Q6_2,Had any prenatal care,1=Yes 2=No,postpartum_survey
+Q6_3_1_TEXT,Weeks pregnant at first prenatal care visit,NA,postpartum_survey
+Q6_4,Cut back hours toward end of pregnancy?,1=Yes 2=No,postpartum_survey
+Q6_5,Stop working before delivery?,"1=Yes 2=No, I worked up til time of delivery",postpartum_survey
+Q6_6,Date when stopped working completely before delivery,Date,postpartum_survey
+Q6_7_1,Reasons took antenatal leave--Thought the baby might come early,"1=selected, missing=not selected",postpartum_survey
+Q6_7_2,Reasons took antenatal leave--To prepare for the birth of my child,"1=selected, missing=not selected",postpartum_survey
+Q6_7_4,Reasons took antenatal leave--Laid off as a result of pregnancy,"1=selected, missing=not selected",postpartum_survey
+Q6_7_9,Reasons took antenatal leave--Laid off for another reason,"1=selected, missing=not selected",postpartum_survey
+Q6_7_5,Reasons took antenatal leave--could collect pregnancy disability through SDI,"1=selected, missing=not selected",postpartum_survey
+Q6_7_6,Reasons took antenatal leave--Medical complications due to pregnancy,"1=selected, missing=not selected",postpartum_survey
+Q6_7_7,Reasons took antenatal leave--Difficulty in carrying out work due to pregnancy,"1=selected, missing=not selected",postpartum_survey
+Q6_7_3,Reasons took antenatal leave-- commute to work too long,"1=selected, missing=not selected",postpartum_survey
+Q6_7_15,Reasons took antenatal leave--wanted to rest before the baby came,"1=selected, missing=not selected",postpartum_survey
+Q6_7_16,Reasons took antenatal leave--thought it would be better for baby's health,"1=selected, missing=not selected",postpartum_survey
+Q6_7_8,Reasons took antenatal leave--Other,"1=selected, missing=not selected",postpartum_survey
+Q6_7_8_TEXT,Reasons took antenatal leave—Other--TEXT,NA,postpartum_survey
+Q6_8,Reasons took antenatal leave--MAIN reason,"1=Thought the baby might come early, 2=To prepare for the birth of my child, 3=Laid off as a result of pregnancy, 4=Laid off for another reason, 5=I could collect pregnancy disability through the State Disability Insurance Program, 6=Medical complications due to pregnancy , 7=Difficulty in carrying out work due to pregnancy , 8=The commute to and from work was too long, 9=I wanted to rest before the baby came, 10=I thought it would be better for my baby's health 11=Other",postpartum_survey
+Q6_9,Antenatal leave paid?,1=Yes 2=No,postpartum_survey
+Q6_10_1,Source of antenatal leave pay-- sick days,"1=selected, missing=not selected",postpartum_survey
+Q6_10_2,Source of antenatal leave pay-- vacation time,"1=selected, missing=not selected",postpartum_survey
+Q6_10_3,Source of antenatal leave pay--PTO,"1=selected, missing=not selected",postpartum_survey
+Q6_10_4,Source of antenatal leave pay-- private disability insurance,"1=selected, missing=not selected",postpartum_survey
+Q6_10_5,Source of antenatal leave pay--employer gave extra paid time off for maternity leave,"1=selected, missing=not selected",postpartum_survey
+Q6_10_6,Source of antenatal leave pay--SDI,"1=selected, missing=not selected",postpartum_survey
+Q6_11_1_TEXT,Total number of weeks of paid antenatal leave,NA,postpartum_survey
+Q6_12_1,"Reasons decided to work through pregnancy, up until delivery--felt good","1=selected, missing=not selected",postpartum_survey
+Q6_12_2,"Reasons decided to work through pregnancy, up until delivery--wanted more time with baby after birth","1=selected, missing=not selected",postpartum_survey
+Q6_12_3,"Reasons decided to work through pregnancy, up until delivery--employer did not offer maternity leave","1=selected, missing=not selected",postpartum_survey
+Q6_12_4,"Reasons decided to work through pregnancy, up until delivery--needed the money","1=selected, missing=not selected",postpartum_survey
+Q6_12_5,"Reasons decided to work through pregnancy, up until delivery--was worried might lose my job if took leave","1=selected, missing=not selected",postpartum_survey
+Q6_12_6,"Reasons decided to work through pregnancy, up until delivery--afraid taking leave would hurt opportunities for advancement","1=selected, missing=not selected",postpartum_survey
+Q6_12_7,"Reasons decided to work through pregnancy, up until delivery—didn’t know could take maternity leave before baby was born","1=selected, missing=not selected",postpartum_survey
+Q6_12_8,"Reasons decided to work through pregnancy, up until delivery--had baby early before planned leave could start","1=selected, missing=not selected",postpartum_survey
+Q6_12_10,"Reasons decided to work through pregnancy, up until delivery--no one to cover for me at work","1=selected, missing=not selected",postpartum_survey
+Q6_12_9,"Reasons decided to work through pregnancy, up until delivery--Other",NA,postpartum_survey
+Q_6_12_9_TEXT,"Reasons decided to work through pregnancy, up until delivery—Other--",NA,postpartum_survey
+Q6_13,"Reasons decided to work through pregnancy, up until delivery--MAIN reason",1=I felt good. 2=I wanted more time with my baby after birth. 3=My employer did not offer maternity leave. 4=I needed the money. 5=I was worried that I might lose my job if I took leave. 6=I was afraid that taking leave would hurt my opportunities for advancement. 7=I didn’t know that I could take maternity leave before my baby was born. 8=I had my baby early before my planned leave could start. 9=There was no one to cover for me at work. 10=Other,postpartum_survey
+Q6_14,Satisfaction with amount of antenatal leave,"1=Very dissatisfied, 2=Somewhat dissatisfied, 3=Somewhat satisfied, 4=Very satisfied",postpartum_survey
+Q7_2,Took postpartum leave?,1=Yes 2=No,postpartum_survey
+Q7_3,Returned to work?,"1=Yes, I have gone back to work with the same employer, 2=Yes, I have gone back to work with a different employer, 3=No, I haven't gone back to work yet, but I do plan to go back to work in the next year, 4=I don't plan on going back to work in the next year",postpartum_survey
+Q7_4,Date returned to work,NA,postpartum_survey
+Q7_5_1_TEXT,Baby’s age when returned to work (weeks),(SO FAR NO ONE ANSWERED THIS),postpartum_survey
+Q7_6,Plan on returning to same employer? (if not yet returned to work),1=Yes 2=No,postpartum_survey
+Q7_7,Date plan to return to work,NA,postpartum_survey
+Q7_8_1,Reasons influencing amount of postpartum leave--collect pregnancy disability pay through SDI,"1=selected, missing=not selected",postpartum_survey
+Q7_8_2,Reasons influencing amount of postpartum leave-- employer offered maternity leave benefits,"1=selected, missing=not selected",postpartum_survey
+Q7_8_4,Reasons influencing amount of postpartum leave--wanted more time to breastfeed baby,"1=selected, missing=not selected",postpartum_survey
+Q7_8_5,Reasons influencing amount of postpartum leave--wanted more bonding time with baby,"1=selected, missing=not selected",postpartum_survey
+Q7_8_7,Reasons influencing amount of postpartum leave--wanted to save on child care costs,"1=selected, missing=not selected",postpartum_survey
+Q7_8_9,Reasons influencing amount of postpartum leave--wanted to return to work,"1=selected, missing=not selected",postpartum_survey
+Q7_8_10,Reasons influencing amount of postpartum leave--employer wanted me to return to work,"1=selected, missing=not selected",postpartum_survey
+Q7_8_11,Reasons influencing amount of postpartum leave--couldn't afford to take more time off,"1=selected, missing=not selected",postpartum_survey
+Q7_8_3,Reasons influencing amount of postpartum leave--Other,"1=selected, missing=not selected",postpartum_survey
+Q7_8_3_TEXT,Reasons influencing amount of postpartum leave—Other--TEXT,NA,postpartum_survey
+Q7_9,Postpartum leave paid?,1=Yes 2=No,postpartum_survey
+Q7_10_1_TEXT,Total number of weeks of paid postpartum leave (returned to work),NA,postpartum_survey
+Q7_11_1,Source of postpartum leave pay-- sick days,"1=selected, missing=not selected",postpartum_survey
+Q7_11_2,Source of postpartum leave pay-- vacation time,"1=selected, missing=not selected",postpartum_survey
+Q7_11_3,Source of postpartum leave pay-- PTO,"1=selected, missing=not selected",postpartum_survey
+Q7_11_4,Source of postpartum leave pay-- private disability insurance,"1=selected, missing=not selected",postpartum_survey
+Q7_11_5,Source of postpartum leave pay--employer gave extra paid time off for maternity leave,"1=selected, missing=not selected",postpartum_survey
+Q7_11_6,Source of postpartum leave pay--SDI,"1=selected, missing=not selected",postpartum_survey
+Q7_12_1_TEXT,Total number of weeks of paid postpartum leave expected (FOR THOSE NOT YET RETURNED TO WORK),NA,postpartum_survey
+Q7_13,Satisfaction with amount of postpartum leave (returned to work),"1=Very dissatisfied, 2=Somewhat dissatisfied, 3=Somewhat satisfied, 4=Very satisfied",postpartum_survey
+Q7_14,Satisfaction with amount of postpartum leave at this point (not yet returned to work),"1=Very dissatisfied, 2=Somewhat dissatisfied, 3=Somewhat satisfied, 4=Very satisfied",postpartum_survey
+Q8_2_1_TEXT,Number of pregnancies (includes most recent),NA,postpartum_survey
+Q8_3_1_TEXT,Number of births (includes most recent),NA,postpartum_survey
+Q141,Singleton or multiple birth?,"1=One baby, 2=More than one",postpartum_survey
+Q142,Number of babies gave birth to (if multiple),NA,postpartum_survey
+Q8_4_1_TEXT,Birthweight (pounds) (singleton),NA,postpartum_survey
+Q8_4_2_TEXT,Birthweight (ounces) (singleton),NA,postpartum_survey
+Q144_1_TEXT_1_,Birthweight (pounds) (multiple 1),NA,postpartum_survey
+Q144_2_TEXT_1_,Birthweight (ounces) (multiple 1),NA,postpartum_survey
+Q144_1_TEXT_2_,Birthweight (pounds) (multiple 2),NA,postpartum_survey
+Q144_2_TEXT_2_,Birthweight (ounces) (multiple 2),NA,postpartum_survey
+Q144_1_TEXT_3_,Birthweight (pounds) (multiple 3),NA,postpartum_survey
+Q144_2_TEXT_3_,Birthweight (ounces) (multiple 3),NA,postpartum_survey
+Q144_1_TEXT_4_,Birthweight (pounds) (multiple 4),NA,postpartum_survey
+Q144_2_TEXT_4_,Birthweight (ounces) (multiple 4),NA,postpartum_survey
+Q144_1_TEXT_5_,Birthweight (pounds) (multiple 5),NA,postpartum_survey
+Q144_2_TEXT_5_,Birthweight (ounces) (multiple 5),NA,postpartum_survey
+Q144_1_TEXT_6_,Birthweight (pounds) (multiple 6),NA,postpartum_survey
+Q144_2_TEXT_6_,Birthweight (ounces) (multiple 6),NA,postpartum_survey
+Q144_1_TEXT_7_,Birthweight (pounds) (multiple 7),NA,postpartum_survey
+Q144_2_TEXT_7_,Birthweight (ounces) (multiple 7),NA,postpartum_survey
+Q8_5,Type of birth,"1=Vaginal, 2=Planned C-section, 3= C-section needed at the last minute",postpartum_survey
+Q8_6,Health care provider induced labor?,"1=Yes 2=No, 3=I don't know",postpartum_survey
+Q8_7,Induction planned or emergency?,"1=Planned ahead of time, 2=Needed at the last minute, 3=I don't know",postpartum_survey
+Q9_2,Health effects of antenatal leave (knowledge question),"1=Lower risk for problems during your baby’s birth, 2=Lower risk of a first-time C-section, 3=Lower risk of your baby being born early and too small, 4=All of the above, 5=I don't know",postpartum_survey
+Q9_3,Health effects of postpartum leave (knowledge question),"1=Lower risk for postpartum depression, 2=Helps your baby’s motor and social development, 3=More time to learn how to breastfeed and pump breast milk, 4=All of the above, 5=I don't know",postpartum_survey
+Q9_4,Number of weeks of antenatal leave usually paid by SDI (knowledge question),"1=1 week, 2=2 weeks, 3=4 weeks, 4=6 weeks, 5=Don't know",postpartum_survey
+Q9_5,Types of job-protected maternity leave in California (knowledge question),"1=Pregnancy Disability Leave, 2=Paid Family Leave,  3=California Family Rights Act Leave, 4=Both Pregnancy Disability Leave and California Family Rights Act Leave, 5=I don’t know",postpartum_survey
+Q9_6,True or False: Taking paid antenatal leave through SDI decreases amount of paid postpartum leave,"4=True, 5=False, 6=I don't know",postpartum_survey
+Q9_7,True or False: You must work full time to qualify for paid maternity leave through SDI,"1=True, 2=False, 3=I don't know",postpartum_survey
+Q9_8,True or False: You only qualify for paid maternity leave through SDI if pay into it through job,"1=True, 2=False, 3=I don't know",postpartum_survey
+Q10_2_1,"Source of information about maternity leave--From friends, family, or co-workers","1=selected, missing=not selected",postpartum_survey
+Q10_2_2,Source of information about maternity leave-- From doctor,"1=selected, missing=not selected",postpartum_survey
+Q10_2_3,Source of information about maternity leave-- From employer/human resources,"1=selected, missing=not selected",postpartum_survey
+Q10_2_4,Source of information about maternity leave-- From the internet,"1=selected, missing=not selected",postpartum_survey
+Q10_2_5,"Source of information about maternity leave-- From TV, radio or newspapers","1=selected, missing=not selected",postpartum_survey
+Q10_2_6,Source of information about maternity leave-- From written materials,"1=selected, missing=not selected",postpartum_survey
+Q10_2_6_TEXT,Source of information about maternity leave-- From written materials--TEXT,NA,postpartum_survey
+Q10_2_8,Source of information about maternity leave--Other,"1=selected, missing=not selected",postpartum_survey
+Q10_2_8_TEXT,Source of information about maternity leave--Other --TEXT,NA,postpartum_survey
+Q10_2_7,Source of information about maternity leave--didn't get any information about maternity leave,"1=selected, missing=not selected",postpartum_survey
+Q10_3_1,"When planning maternity leave, able to find all information needed about the health benefits of taking antenatal or postpartum leave?",YESNOF,postpartum_survey
+Q10_3_2,"When planning maternity leave, able to find all information needed about laws that protect your job during maternity leave?",YESNOF,postpartum_survey
+Q10_3_3,"When planning maternity leave, able to find all information needed about ways to get paid during maternity leave?",YESNOF,postpartum_survey
+Q10_3_5,"When planning maternity leave, able to find all information needed about what happens with the health insurance and other benefits through employer during maternity leave?",YESNOF,postpartum_survey
+Q10_3_4,"When planning maternity leave, able to find all information needed about--Other",YESNOF,postpartum_survey
+Q10_3_4_TEXT,"When planning maternity leave, able to find all information needed about--Other --TEXT",NA,postpartum_survey
+Q10_4,Best time to give pregnant women information about maternity leave,"1=First trimester, 2=Second trimester, 3=third trimester, 4=I'm not sure",postpartum_survey
+Q11_2,Remember getting tool?,1=Yes 2=No,postpartum_survey
+Q11_3,Read or referred to tool?,1=Yes 2=No,postpartum_survey
+Q11_4,Number of times looked at tool,"1=1-2 times, 2=3-4 times, 3=5 or more times, 4=I don't know",postpartum_survey
+Q11_5,Tool easy to understand?,"1= Very hard to understand, 2= Somewhat hard to understand, 3=Somewhat easy to understand, 4= Very easy to understand, 5=I don't know",postpartum_survey
+Q11_6,Usefulness of tool,"1=Very useful, 2=Somewhat useful, 3=Not very useful, 4=Not at all useful, 5=I don't know",postpartum_survey
+Q11_7,Most useful thing about the tool (if thought it useful),NA,postpartum_survey
+Q11_8,Referred to the tool to find answers to questions?,1=Yes 2=No,postpartum_survey
+Q11_9,Did tool answer question?,"1=Yes 2=Partially answered question, 3=No",postpartum_survey
+Q11_10,Learn anything new from tool?,1=Yes 2=No,postpartum_survey
+Q11_11,One thing learned from tool,NA,postpartum_survey
+Q11_12,Did tool help you plan maternity leave?,1=Yes 2=No,postpartum_survey
+Q11_13,One way tool helped you plan maternity leave,NA,postpartum_survey
+Q11_14,Did you change your maternity leave plans based on information from tool?,1=Yes 2=No,postpartum_survey
+Q11_15,Took tool to any meeting with employer/HR or doctor?,1=Yes 2=No,postpartum_survey
+Q11_16,Called any phone numbers or visit any websites listed on tool?,1=Yes 2=No,postpartum_survey
+Q11_17,One thing recommend we change to make tool more useful,NA,postpartum_survey
+Q11_18,"BEFORE received tool, how much knew about maternity leave?","1=A lot, 2=Some, 3=A little, 4=Nothing, 5=I don't know",postpartum_survey
+Q12_2_1,Self-reported race/ethnicity--White or Caucasian,"1=selected, missing=not selected",postpartum_survey
+Q12_2_2,Self-reported race/ethnicity--Black or African American,"1=selected, missing=not selected",postpartum_survey
+Q12_2_3,Self-reported race/ethnicity--Latino or Hispanic,"1=selected, missing=not selected",postpartum_survey
+Q12_2_4,Self-reported race/ethnicity--Asian,"1=selected, missing=not selected",postpartum_survey
+Q12_2_5,Self-reported race/ethnicity--American Indian or Alaskan Native,"1=selected, missing=not selected",postpartum_survey
+Q12_2_6,Self-reported race/ethnicity--Other Pacific Islander,"1=selected, missing=not selected",postpartum_survey
+Q12_2_7,Self-reported race/ethnicity--Native Hawaiian,"1=selected, missing=not selected",postpartum_survey
+Q12_2_8,Self-reported race/ethnicity--Other,"1=selected, missing=not selected",postpartum_survey
+Q12_2_8_TEXT,Self-reported race/ethnicity--Other--TEXT,NA,postpartum_survey
+Q12_3,Born in U.S?,1=Yes 2=No,postpartum_survey
+Q12_4,Years lived in US,NA,postpartum_survey
+Q12_5,Highest level of education completed,"1=Never attended school or only attended kindergarten, 2=Grades 1 through 8 (Elementary), 3=Grades 9 through 11 (Some high school), 4=Grade 12 or GED (High school graduate), 5=College 1 year to 3 years (Some college or technical school), 6=College 4 years or more (College graduate), 9=Graduate or professional school, 7=Other",postpartum_survey
+Q12_5_TEXT,Highest level of education completed--TEXT,NA,postpartum_survey
+Q12_6,Marital status,"1=Married, 2=Living with a partner, 3=Widowed, 4=Divorced, 5=Separated, 6=Never married",postpartum_survey
+Q12_7,Household income,"1=Less than $10,000,  2=$10,000  -  $29,999, 3=$30,000  -  $49,999, 4=$50,000 - $74,999, 5=$75,000 - $99,999, 6=$100,000 - 149,999, 7=$150,000 or more",postpartum_survey
+V7,Status,NA,tool_use_survey
+V8,StartDate,NA,tool_use_survey
+V9,EndDate,NA,tool_use_survey
+V10,Finished,NA,tool_use_survey
+SID,SID,DELETE,tool_use_survey
+Token,Token,DELETE,tool_use_survey
+Amount,Amount,DELETE,tool_use_survey
+Contact,Contact,DELETE,tool_use_survey
+code,code,DELETE,tool_use_survey
+Q44,Thank you for taking part in our study. This short survey will help us evaluate an educational hando...,DELETE,tool_use_survey
+Q34,"We&#39;ll start with some questions about this handout called, Maternity Leave: What s Best for You...",DELETE,tool_use_survey
+Q11.2,Remember getting tool?,1=Yes 2=No,tool_use_survey
+Q11.3,Read or referred to tool?,1=Yes 2=No,tool_use_survey
+Q11.4,Number of many times looked at tool,"1=1-2 times, 2=3-4 times, 3=5 or more times, 4=I don't know",tool_use_survey
+Q33,"If you'd like to review the handout again to refresh your memory, click on ""Maternity leave educatio...",DELETE,tool_use_survey
+Q11.5,Tool easy to understand?,"1= Very hard to understand, 2= Somewhat hard to understand, 3=Somewhat easy to understand, 4= Very easy to understand, 5=I don't know",tool_use_survey
+Q11.6,Usefulness of tool,"1=Very useful, 2=Somewhat useful, 3=Not very useful, 4=Not at all useful, 5=I don't know",tool_use_survey
+Q11.7,Most useful thing about the tool (if thought it useful),NA,tool_use_survey
+Q11.8,Referred to the tool to find answers to questions?,1=Yes 2=No,tool_use_survey
+Q11.9,Did tool answer question?,"1=Yes 2=Partially answered question, 3=No",tool_use_survey
+Q11.10,Learn anything new from tool?,1=Yes 2=No,tool_use_survey
+Q11.11,One thing learned from tool,NA,tool_use_survey
+Q11.12,Did tool help you plan maternity leave?,1=Yes 2=No,tool_use_survey
+Q11.13,One way tool helped you plan maternity leave,NA,tool_use_survey
+Q11.14,Did you change your maternity leave plans based on information from tool?,1=Yes 2=No,tool_use_survey
+Q11.15,Took tool to any meeting with employer/HR or doctor?,1=Yes 2=No,tool_use_survey
+Q11.16,Called any phone numbers or visit any websites listed on tool?,1=Yes 2=No,tool_use_survey
+Q11.17,One thing recommend we change to make tool more useful,NA,tool_use_survey
+Q11.18,"BEFORE received tool, how much knew about maternity leave?","1=A lot, 2=Some, 3=A little, 4=Nothing, 5=I don't know",tool_use_survey
+Q35,"Please take a moment now to look over this handout called, ‚ÄúMaternity Leave: What‚Äôs Best for You and...",DELETE,tool_use_survey
+Q150,Tool easy to understand? (DIDN'T READ BEFOREHAND),"1= Very hard to understand, 2= Somewhat hard to understand, 3=Somewhat easy to understand, 4= Very easy to understand, 5=I don't know",tool_use_survey
+Q152,Usefulness of tool (DIDN'T READ BEFOREHAND),"1=Very useful, 2=Somewhat useful, 3=Not very useful, 4=Not at all useful, 5=I don't know",tool_use_survey
+Q154,Most useful thing about the tool (if thought it useful) (DIDN'T READ BEFOREHAND),NA,tool_use_survey
+Q158,handout answer any questions you've had? (DIDN'T READ BEFOREHAND),1=Yes 2=No,tool_use_survey
+Q160,Learn anything new from tool? (DIDN'T READ BEFOREHAND),1=Yes 2=No,tool_use_survey
+Q162,One thing learned from tool (DIDN'T READ BEFOREHAND),NA,tool_use_survey
+Q177,Would tool have helped you plan maternity leave? (DIDN'T READ BEFOREHAND),1=Yes 2=No,tool_use_survey
+Q170,Would have taken tool to any meeting with employer/HR or doctor? (DIDN'T READ BEFOREHAND),1=Yes 2=No,tool_use_survey
+Q172,Would have called any phone numbers or visit any websites listed on tool? (DIDN'T READ BEFOREHAND),1=Yes 2=No,tool_use_survey
+Q174,One thing recommend we change to make tool more useful (DIDN'T READ BEFOREHAND),NA,tool_use_survey
+Q176,"BEFORE received tool, how much knew about maternity leave? (DIDN'T READ BEFOREHAND)","1=A lot, 2=Some, 3=A little, 4=Nothing, 5=I don't know",tool_use_survey
+Q45,Thank you for your participation! We value your time and input. You will receive a code for a $10 Am...,DELETE,tool_use_survey
+paidpplv,NUMBER OF PAID WEEKS POSTPARTUM LEAVE (combined for those returned and not yet returned to work),NA,created_vars
+satis_pp,SATISFACTION WITH AMOUNT OF POSTPARTUM LEAVE (combined for those returned and not yet returned to work),NA,created_vars
+dtreturnwk,DATE RETURN TO WORK (combined for those returned and not yet returned to work),NA,created_vars
+dtenrolled,Date enrolled in study (reformatted 'datetaken' var),NA,created_vars
+wkslateearly,weeks late or early,NA,created_vars
+wksgest,weeks gestation at birth,NA,created_vars
+wkspregenroll,weeks pregnant when enrolled in study,NA,created_vars
+wkspregleavebeg,weeks pregnant when began antenatal leave,NA,created_vars
+wksantelv,weeks of antenatal leave,NA,created_vars
+wkspplv,weeks of postpartum leave,NA,created_vars
+grams,birthweight in grams,NA,created_vars
+pntalcare,trimester entered into prenatal care,0=no prenatal care 1=3rd trimester 2=2nd trimester 3=1st trimester,created_vars
+Agecat,categorical age variable,1=18-29 2=30-39 3=40+,created_vars
+trimester,Trimester enrolled in study,1=2nd trimester 2=3rd trimester,created_vars
+lbw,Low birthweight (<2500 g),"1=""Low birth weight"" 0=""Not low birth weight""",created_vars
+preterm,Preterm birth (<37 weeks gestation),"1=""Preterm birth"" 0=""Full term birth""",created_vars
+numpregs,Number of pregnancies (categorical),"1=1, 2=2-3, 3=4 or more",created_vars
+numbirths,Number of births (categorical),"1=1, 2=2-3, 3=4 or more",created_vars
+intendedantelv,Intended antenatal leave (due date-last day of work),NA,created_vars
+intendedantelv_rev,Intended antenatal leave (due date-last day of work); for those with planned c-section calculated as actual antenatal leave instead,NA,created_vars
+inccat,Collapsed income variable,NA,created_vars
+educcat,Collapsed education variable,NA,created_vars
+hourscollapsed,Collapsed work hours variable,NA,created_vars
+antelv1wk,Took at least 1 week antenatal leave,0=took less than a week 1=took at least a week,created_vars
+reta8wks,"took at least 8 weeks of postnatal leave 
+ (for those who returned to work already  OR who who took survey after 2 months);
+Note: 2 people said they took no postpartum leave; one said she was laid off during pregnancy; decided
+to omit these two people instead of counting as <8 weeks leave since not sure if accurate",0=took less than 8 weeks 1=took at least 8 weeks,created_vars
+readtool,reported reading tool (controls coded as 0),"0=""did not read tool"" 1=""read tool"";",created_vars
+treatment3cat,3 groups combining treatment group and if read tool,"0=""control"" 1=""intervention/didn't read tool"" 2=""intervention/read tool""",created_vars
+Age2cat,categorical age variable (2 categories),1=18-29 2=30+,created_vars
+wkparttime,worked part time vs. full time,0=worked 31+ hours 1=worked 1-30 hours,created_vars
+notreadtool,didn't read tool (indicator variable for log reg),"0=control OR intervention but read tool, 1=intervention and did NOT read tool",created_vars
+VARIABLES BELOW WERE RECODED TO CHANGE MISSINGS TO '0' TO ALLOW FOR RUNNING CHI SQUARE (ORIGINALLY MISSING IF NOT CHOSEN (BINARY VAR)),NA,NA,created_vars
+Q10_2_1N,"Source of information about maternity leave--From friends, family, or co-workers","1=selected, 0=not selected",created_vars
+Q10_2_2N,Source of information about maternity leave-- From doctor,"1=selected, 0=not selected",created_vars
+Q10_2_3N,Source of information about maternity leave-- From employer/human resources,"1=selected, 0=not selected",created_vars
+Q10_2_4N,Source of information about maternity leave-- From the internet,"1=selected, 0=not selected",created_vars
+Q10_2_5N,"Source of information about maternity leave-- From TV, radio or newspapers","1=selected, 0=not selected",created_vars
+Q10_2_6N,Source of information about maternity leave-- From written materials,"1=selected, 0=not selected",created_vars
+Q10_2_7N,Source of information about maternity leave--didn't get any information about maternity leave,"1=selected, 0=not selected",created_vars
+Q10_2_8N,Source of information about maternity leave--Other,"1=selected, 0=not selected",created_vars
+Q12_2_1N,Self-reported race/ethnicity--White or Caucasian,"1=selected, 0=not selected",created_vars
+Q12_2_2N,Self-reported race/ethnicity--Black or African American,"1=selected, 0=not selected",created_vars
+Q12_2_3N,Self-reported race/ethnicity--Latino or Hispanic,"1=selected, 0=not selected",created_vars
+Q12_2_4n,Self-reported race/ethnicity--Asian,"1=selected, 0=not selected",created_vars
+Q12_2_5N,Self-reported race/ethnicity--American Indian or Alaskan Native,"1=selected, 0=not selected",created_vars
+Q12_2_6N,Self-reported race/ethnicity--Other Pacific Islander,"1=selected, 0=not selected",created_vars
+Q12_2_7N,Self-reported race/ethnicity--Native Hawaiian,"1=selected, 0=not selected",created_vars
+Q12_2_8N,Self-reported race/ethnicity--Other,"1=selected, 0=not selected",created_vars
+Q6_10_1N,Source of antenatal leave pay-- sick days,"1=selected, 0=not selected",created_vars
+Q6_10_2N,Source of antenatal leave pay-- vacation time,"1=selected, 0=not selected",created_vars
+Q6_10_3N,Source of antenatal leave pay--PTO,"1=selected, 0=not selected",created_vars
+Q6_10_4N,Source of antenatal leave pay-- private disability insurance,"1=selected, 0=not selected",created_vars
+Q6_10_5N,Source of antenatal leave pay--employer gave extra paid time off for maternity leave,"1=selected, 0=not selected",created_vars
+Q6_10_6N,Source of antenatal leave pay--SDI,"1=selected, 0=not selected",created_vars
+Q6_12_1N,"Reasons decided to work through pregnancy, up until delivery--felt good","1=selected, 0=not selected",created_vars
+Q6_12_2N,"Reasons decided to work through pregnancy, up until delivery--wanted more time with baby after birth","1=selected, 0=not selected",created_vars
+Q6_12_3N,"Reasons decided to work through pregnancy, up until delivery--employer did not offer maternity leave","1=selected, 0=not selected",created_vars
+Q6_12_4N,"Reasons decided to work through pregnancy, up until delivery--needed the money","1=selected, 0=not selected",created_vars
+Q6_12_5N,"Reasons decided to work through pregnancy, up until delivery--was worried might lose my job if took leave","1=selected, 0=not selected",created_vars
+Q6_12_6N,"Reasons decided to work through pregnancy, up until delivery--afraid taking leave would hurt opportunities for advancement","1=selected, 0=not selected",created_vars
+Q6_12_7N,"Reasons decided to work through pregnancy, up until delivery—didn’t know could take maternity leave before baby was born","1=selected, 0=not selected",created_vars
+Q6_12_8N,"Reasons decided to work through pregnancy, up until delivery--had baby early before planned leave could start","1=selected, 0=not selected",created_vars
+Q6_12_9N,"Reasons decided to work through pregnancy, up until delivery--Other","1=selected, 0=not selected",created_vars
+Q6_12_10N,"Reasons decided to work through pregnancy, up until delivery--no one to cover for me at work","1=selected, 0=not selected",created_vars
+Q6_7_1N,Reasons took antenatal leave--Thought the baby might come early,"1=selected, 0=not selected",created_vars
+Q6_7_2N,Reasons took antenatal leave--To prepare for the birth of my child,"1=selected, 0=not selected",created_vars
+Q6_7_3N,Reasons took antenatal leave-- commute to work too long,"1=selected, 0=not selected",created_vars
+Q6_7_4N,Reasons took antenatal leave--Laid off as a result of pregnancy,"1=selected, 0=not selected",created_vars
+Q6_7_5N,Reasons took antenatal leave--could collect pregnancy disability through SDI,"1=selected, 0=not selected",created_vars
+Q6_7_6N,Reasons took antenatal leave--Medical complications due to pregnancy,"1=selected, 0=not selected",created_vars
+Q6_7_7N,Reasons took antenatal leave--Difficulty in carrying out work due to pregnancy,"1=selected, 0=not selected",created_vars
+Q6_7_8N,Reasons took antenatal leave--Other,"1=selected, 0=not selected",created_vars
+Q6_7_9N,Reasons took antenatal leave--Laid off for another reason,"1=selected, 0=not selected",created_vars
+Q6_7_15N,Reasons took antenatal leave--wanted to rest before the baby came,"1=selected, 0=not selected",created_vars
+Q6_7_16N,Reasons took antenatal leave--thought it would be better for baby's health,"1=selected, 0=not selected",created_vars
+Q7_11_1N,Source of postpartum leave pay-- sick days,"1=selected, 0=not selected",created_vars
+Q7_11_2N,Source of postpartum leave pay-- vacation time,"1=selected, 0=not selected",created_vars
+Q7_11_3N,Source of postpartum leave pay-- PTO,"1=selected, 0=not selected",created_vars
+Q7_11_4N,Source of postpartum leave pay-- private disability insurance,"1=selected, 0=not selected",created_vars
+Q7_11_5N,Source of postpartum leave pay--employer gave extra paid time off for maternity leave,"1=selected, 0=not selected",created_vars
+Q7_11_6N,Source of postpartum leave pay--SDI,"1=selected, 0=not selected",created_vars
+Q7_8_1N,Reasons influencing amount of postpartum leave--collect pregnancy disability pay through SDI,"1=selected, 0=not selected",created_vars
+Q7_8_2N,Reasons influencing amount of postpartum leave-- employer offered maternity leave benefits,"1=selected, 0=not selected",created_vars
+Q7_8_3N,Reasons influencing amount of postpartum leave--Other,"1=selected, 0=not selected",created_vars
+Q7_8_4N,Reasons influencing amount of postpartum leave--wanted more time to breastfeed baby,"1=selected, 0=not selected",created_vars
+Q7_8_5N,Reasons influencing amount of postpartum leave--wanted more bonding time with baby,"1=selected, 0=not selected",created_vars
+Q7_8_7N,Reasons influencing amount of postpartum leave--wanted to save on child care costs,"1=selected, 0=not selected",created_vars
+Q7_8_9N,Reasons influencing amount of postpartum leave--wanted to return to work,"1=selected, 0=not selected",created_vars
+Q7_8_10N,Reasons influencing amount of postpartum leave--employer wanted me to return to work,"1=selected, 0=not selected",created_vars
+Q7_8_11N,Reasons influencing amount of postpartum leave--couldn't afford to take more time off,"1=selected, 0=not selected",created_vars

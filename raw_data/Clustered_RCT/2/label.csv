@@ -1,0 +1,217 @@
+Variable,Label
+Pat_code,NA
+Age,Age patient (years)
+GDM_ACDT,History of GDM (1=Y/0=N)
+MACRO_ACDT,History of macrosome baby (1=Y/0=N)
+Gest,Gestity (No. of pregnancies)
+Weight,Weight (first measure) in kg
+GA_1_wgt,Gestational age at 1. weight measurement (weeks)
+Test_screen1,Screeningtest 1 (1=FBS/2=OGTT/3=Other)
+GA_test_screen1,Gestational age at screening test 1 (weeks)
+Test_screen2,Screeningtest 2 (1=FBS/2=OGTT/3=Other)
+GA_test_screen2,Gestational age at screening test 2 (weeks)
+Place_screen,Place of screening test (1=health center/ 2= public lab/3=private lab)
+Diag_FBS,Positive fasting blood sugar ((1=Y/0=N)
+Diag_HGPO1,Positive 1 hour OGTT (1=Y/0=N)
+Diag_HGPO2,Positive 2 hour OGTT (1=Y/0=N)
+FBS_1_Screen,Result of fasting blood sugar screening 1 (g/l)
+Res_HGPO1,Result 1 hour OGTT (g/l)
+Res_HGPO2,Result 2 hour OGTT (g/l)
+GA_diag,Gestational age at diagnosis (weeks)
+CPN_diag,Number of ANC visit at diagnosis
+Tx1_type,Type of treatment 1 (1=diet/2=insulin)
+GA_Tx1,Gestational age at initiation treatment 1 (diet) in weeks
+Tx2_type,Type of treatment 2 (1=diet/2=insulin)
+GA_Tx2,Gestational age at initating treatment 2 (insulin) in weeks
+Refer_SP,Referral to diabetes specialist? (1=Y/0=N/ 2=unknown)
+Ref_Comply,Women went to see specialist (complied)? (1=Y/0=N/ 2=unknown)
+Ref_place1,Place of referral 1 (1=Endo pub/2=Endo pri/ 3=Internist pub/4=Gyn pub/5=Gyn pri)
+Ref_place2,Place of referral 2 (1=Endo pub/2=Endo pri/ 3=Internist pub/4=Gyn pub/5=Gyn pri)
+No_total_FU,Total no. of follow-ups
+No_FU_HC,Number of follow-ups at health center
+No_FU_CR,Number of follow-ups at diabetes referral centre
+Date_FU1,NA
+GA_FU1,Gestational age follow-up visit 1 (weeks)
+Weight_FU1,Weight at follow-up visit 1 (kg)
+FBS_FU1,Fasting blood sugar at follow-up visit 1 (g/l)
+GPP_FU1,Post-prandial blood sugar (after 2 hours) follow-up visit 1 (g/l)
+Place_FU1,Place follow-up visit 1 (1=health center/2=reference centre/ 3=other)
+Tx_FU1,Treatment follow-up visit 1 (1=diet/2=insulin)
+Date_FU2,NA
+GA_FU2,Gestational age at follow-up visit 2 (weeks)
+Weight_FU2,Weight at follow-up visit 2 (kg)
+FBS_FU2,Fasting blood sugar at follow-up visit 2 (g/l)
+GPP_FU2,Post-prandial blood sugar (after 2 hrs) follow-up visit 2 (g/l)
+Place_FU2,Place follow-up visit 2 (1=health center/2=reference centre/ 3=other)
+Tx_FU2,Treatment follow-up visit 2 (1=diet/2=insulin)
+Date_FU3,NA
+GA_FU3,Gestational age at follow-up visit 3 (weeks)
+Weight_FU3,Weight at follow-up visit 3 (kg)
+FBS_FU3,Fasting blood sugar at follow-up visit 3 (g/l)
+GPP_FU3,Post-prandial blood sugar (after 2 hrs) follow-up visit 3 (g/l)
+Place_FU3,Place follow-up visit 3 (1=health center/2=reference centre/ 3=other)
+Tx_FU3,Treatment follow-up visit 3 (1=diet/2=insulin)
+GA_FU4,Gestational age at follow-up visit 4 (weeks)
+Weight_FU4,Weight at follow-up visit 4 (kg)
+FBS_FU4,Fasting blood sugar at follow-up visit 4 (g/l)
+GPP_FU4,Post-prandial blood sugar (after 2 hrs) follow-up visit 4 (g/l)
+Place_FU4,Place follow-up visit 4 (1=health center/2=reference centre/ 3=other)
+Tx_FU4,Treatment follow-up visit 4 (1=diet/2=insulin)
+Date_FU5,NA
+GA_FU5,Gestational age at follow-up visit 5 (weeks)
+Weight_FU5,Weight at follow-up visit 5 (kg)
+FBS_FU5,Fasting blood sugar at follow-up visit 5 ( (g/l)
+GPP_FU5,Post-prandial blood sugar (after 2 hrs) follow-up visit 5 (g/l)
+Place_FU5,Place follow-up visit 5 (1=health center/2=reference centre/ 3=other)
+Tx_FU5,Treatment follow-up visit 5 (1=diet/2=insulin)
+Date_FU6,NA
+GA_FU6,Gestational age at follow-up visit 6 (weeks)
+Weight_FU6,Weight at follow-up visit 6 (kg)
+FBS_FU6,Fasting blood sugar at follow-up visit 6 (g/l)
+GPP_FU6,Post-prandial blood sugar (after 2 hrs) follow-up visit 6 (g/l)
+Place_FU6,Place follow-up visit 6 (1=health center/2=reference centre/ 3=other)
+Tx_FU6,Treatment follow-up visit 6 (1=diet/2=insulin)
+Date_FU7,NA
+GA_FU7,Gestational age at follow-up visit 7 (weeks)
+Weight_FU7,Weight at follow-up visit 7 (kg)
+FBS_FU7,Fasting blood sugar at follow-up visit 7 (g/l)
+GPP_FU7,Post-prandial blood sugar (after 2 hrs) follow-up visit 7 (g/l)
+Tx_FU7,Treatment follow-up visit 7 (1=diet/2=insulin)
+Date_FU8,NA
+GA_FU8,Gestational age at follow-up visit 8 (weeks)
+Weight_FU8,Weight at follow-up visit 8 (kg)
+FBS_FU8,Fasting blood sugar at follow-up visit 8 (g/l)
+GPP_FU8,Post-prandial blood sugar (after 2 hrs) follow-up visit 8 (g/l)
+Place_FU8,Place follow-up visit 8 (1=health center/2=reference centre/ 3=other)
+Tx_FU8,Treatment follow-up visit 8 (1=diet/2=insulin)
+Date_FU9,NA
+GA_FU9,Gestational age at follow-up visit 9 (weeks)
+Weight_FU9,Weight at follow-up visit 9 (kg)
+FBS_FU9,Fasting blood sugar at follow-up visit 9 (g/l)
+GPP_FU9,Post-prandial blood sugar (after 2 hrs) follow-up visit 9 (g/l)
+Place_FU9,Place follow-up visit 9 (1=health center/2=reference centre/ 3=other)
+Tx_FU9,Treatment follow-up visit 9 (1=diet/2=insulin)
+Date_FU10,NA
+GA_FU10,Gestational age at follow-up visit 10 (weeks)
+Weight_FU10,Weight at follow-up visit 10 (kg)
+FBS_FU10,Fasting blood sugar at follow-up visit 10 (g/l)
+GPP_FU10,Post-prandial blood sugar (after 2 hours) follow-up visit 10 (g/l)
+Place_FU10,Place follow-up visit 10 (1=health center/2=reference centre/ 3=other)
+Tx_FU10,Treatment follow-up visit 10 (1=diet/2=insulin)
+Date_FU11,NA
+GA_FU11,Gestational age at follow-up visit 11 (weeks)
+Weight_FU11,Weight at follow-up visit 11 (kg)
+FBS_FU11,Fasting blood sugar at follow-up visit 11 (g/l)
+GPP_FU11,Post-prandial glucose (after 2 hrs) follow-up visit 11 (g/l)
+Place_FU11,Place follow-up visit 11 (1=health center/2=reference centre/ 3=other)
+Tx_FU11,Treatment follow-up visit 11 (1=diet/2=insulin)
+Date_FU12,NA
+GA_FU12,Gestational age at follow-up visit 12 (weeks)
+Weight_FU12,Weight at follow-up visit 12 (kg)
+FBS_FU12,Fasting blood sugar at follow-up visit 12 (g/l)
+GPP_FU12,Post-prandial glucose (after 2 hrs) follow-up 12 (g/l)
+Place_FU12,Place follow-up visit 12 (1=health center/2=reference centre/ 3=other)
+Tx_FU12,Treatment follow-up visit 12 (1=diet/2=insulin)
+Date_FU13,NA
+GA_FU13,Gestational age follow-up visit 13 (weeks)
+Weight_FU13,Weight at follow-up visit 13 (kg)
+FBS_FU13,Fasting blood sugar at follow-up visit 13 (g/l)
+GPP_FU13,Post-prandial glucose (after 2 hrs) follow-up 13 (g/l)
+Place_FU13,Place of follow-up visit 13 (1=health center/2=reference centre/ 3=other)
+Tx_FU13,Treatment follow-up visit 13 (1=diet/2=insulin)
+Date_FU14,NA
+GA_FU14,Gestational age at follow-up visit 14 (weeks)
+Weight_FU14,Weight at follow-up visit 14 (kg)
+FBS_FU14,Fasting blood sugar at follow-up visit 14 (g/l)
+GPP_FU14,Post-prandial blood sugar (after 2 hrs) follow-up 14 (g/l)
+Place_FU14,Place of follow-up visit 14 (1=health center/2=reference centre/ 3=other)
+Tx_FU14,Treatment follow-up visit 14 (1=diet/2=insulin)
+Date_FU15,NA
+GA_FU15,Gestational age at follow-up visit 15 (weeks)
+Weight_FU15,Weight at follow-up visit 15 (kg)
+FBS_FU15,Fasting blood sugar at follow-up visit 15 (g/l)
+GPP_FU15,Post-prandial blood sugar (after 2 hrs) follow-up 15 (g/l)
+Place_FU15,Place of follow-up visit 15 (1=health center/2=reference centre/ 3=other)
+Tx_FU15,Treatment follow-up visit 15 (1=diet/2=insulin)
+Date_FU16,NA
+GA_FU16,Gestational age at follow-up visit 16 (weeks)
+Weight_FU16,Weight at follow-up visit 16 (kg)
+FBS_FU16,Fasting blood sugar at follow-up visit 16 (g/l)
+GPP_FU16,Post-prandial blood sugar (after 2 hrs) follow-up 16 (g/l)
+Place_FU16,Place of follow-up visit 16 (1=health center/2=reference centre/ 3=other)
+Tx_FU16,Treatment follow-up visit 16 (1=diet/2=insulin)
+GA_FU17,Gestational age at follow-up visit 17 (weeks)
+Weight_FU17,Weight at follow-up visit 17 (kg)
+FBS_FU17,Fasting blood sugar at follow-up visit 17 (g/l)
+GPP_FU17,Post-prandial blood sugar (after 2 hrs) follow-up 17 (g/l)
+Place_FU17,Place of follow-up visit 17 (1=health center/2=reference centre/ 3=other)
+Tx_FU17,Treatment follow-up visit 17 (1=diet/2=insulin)
+Date_FU18,NA
+GA_FU18,Gestational age at follow-up visit 18 (weeks)
+Weight_FU18,Weight at follow-up visit 18 (kg)
+FBS_FU18,Fasting blood sugar at follow-up visit 18 (g/l)
+GPP_FU18,Post-prandial blood-sugar (after 2 hrs) follow-up 18 (g/l)
+Place_FU18,Place of follow-up visit 18 (1=health center/2=reference centre/ 3=other)
+Tx_FU18,Treatment follow-up visit 18 (1=diet/2=insulin)
+Date_FU19,NA
+GA_FU19,Gestational age at follow-up visit 19 (weeks)
+Weight_FU19,Weight at follow-up visit 19 (kg)
+FBS_FU19,Fasting blood sugar at follow-up visit 19 (g/l)
+GPP_FU19,Post-prandial blood sugar (after 2 hrs) follow-up 19 (g/l)
+Place_FU19,Place of follow-up visit 19 (1=health center/2=reference centre/ 3=other)
+Tx_FU19,Treatment follow-up visit 19 (1=diet/2=insulin)
+Date_FU20,NA
+GA_FU20,Gestational age at follow-up visit 20 (weeks)
+Weight_FU20,Weight at follow-up visit 20 (kg)
+FBS_FU20,Fasting blood sugar at follow-up visit 20 (g/l)
+GPP_FU20,Post-prandial blood sugar (after 2 hrs) follow-up 20 (g/l)
+Place_FU20,Place of follow-up visit 20 (1=health center/2=reference centre/ 3=other)
+Tx_FU20,Treatment follow-up visit 20 (1=diet/2=insulin)
+Date_FU21,NA
+GA_FU21,Gestational age at follow-up visit 21 (weeks)
+Weight_FU21,Weight at follow-up visit 21 (kg)
+FBS_FU21,Fasting blood sugar at follow-up visit 21 (g/l)
+GPP_FU21,Post-prandial blood sugar (after 2 hrs) follow-up 21 (g/l)
+Place_FU21,Place of follow-up visit 21 (1=health center/2=reference centre/ 3=other)
+Tx_FU21,Treatment follow-up visit 21 (1=diet/2=insulin)
+Date_FU22,NA
+GA_FU22,Gestational age at follow-up visit 22 (weeks)
+Place_FU22,Place of follow-up visit 22 (1=health center/2=reference centre/ 3=other)
+Tx_FU22,Treatment follow-up visit 22 (1=diet/2=insulin)
+Date_deliver,NA
+Term,Delivery at term (1=Yes/ 0=No)
+GA_del,Gestational age at delivery (weeks)
+Place_del,Place of delivery (1=HC/2=HR or CHP/3=CHU/4=Clin priv/5=home/ 6=on way)
+Mode_del,Mode of delivery (1=vaginal/2=C-section)
+Cond_baby,Condition of the baby (1=Livebirth/2=Stillbirth)
+Birthwgt,Birthweight (g)
+BW_source,Source of birthweight info (1=verified/ 2=not verified/ 3=estimated)
+APG_doc,Apgar documented (1=Yes/0=No)
+APGAR1,APGAR after 1 minute
+APGAR2,APGAR after 5 minutes
+Comp_NN,Complications newborns documented (1=Yes/ 0=No/2=unknown)
+Comp_Cat_NN,Complications baby (1=Resp. distress/ 2=hypoglyc./ 3=premature/4=SB/5=NS)
+Comp_del,Complications delivery documented (1=Yes/0=No/2=unknown)
+Comp_Cat_del,Obestr compl. (1=Prol. labor/ 2=PE_E/3=Hemorrh/4=SD/5=Abruptio/6=Plac.ret/7=NS))
+Retest_PP,Retest postpartum done (1=Yes/0=No)
+Date_retest_PP,NA
+Test_PP1,Type of postpartum test 1 (1=FBS/2=OGTT 2hrs/3=GPP)
+Test_PP2,Type of postpartum test 2  (1=FBS/2=OGTT 2hrs/3=GPP)
+DM_PP,Hyperglycemia indicative of DM postpartum (1=Yes/0=No)
+Res_FBS_PP1,Result fasting blood sugar postpartum 1 (g/l)
+Res_HGPO_PP,Result HGPO postpartum (after 2 hrs) (g/l)
+Date_form,NA
+Date_test_screen1,NA
+Date_test_screen2,NA
+Date_diag,NA
+Date_Tx1,NA
+Date_Tx2,NA
+Date_FU17,NA
+Type_HC,Type of health center (1=intervention/ 2= control)
+Distr_HC,District of health center (1= Marrakech / 2= Al Haouz)
+Locat_HC,Location of health center (1=urban / 2=rural)
+Code_HC,Code health center
+Date_FU4,NA
+GW_fin,Weight mother last measure (kg)
+Resid,Residence of patient (1=urban/2=rural)
+Time_HC,Time to reach health center (minutes)

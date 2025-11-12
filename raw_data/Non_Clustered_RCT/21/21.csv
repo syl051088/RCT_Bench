@@ -1,0 +1,1463 @@
+group,cough,duration_of_cough_weeks,night_sweats,weight_loss,fever,reported_hiv_status,taking_antiretoviral_therapy,euro_qol_5q_5d_3l_zimbabwe_tariff,cxr_done,cad4t_bv5_score,cad4t_bv5_above_threshold,sputum_xpert_done,sputum_xpert_result,primary_outcome_tb_treatment_initiation,primary_outcome_days_to_tb_initiation,secondary_outcome_undiagnsed_tb,secondary_outcome_same_day_tb_treatment,secondary_outcome_undiagnosed_hiv,secondary_outcome_mortality,secondary_outcome_eq5d
+SOC,Yes,8.69048,Yes,Yes,Yes,Never tested,no,0.731,NA,NA,NA,NA,NA,1,23,no,no,no,no,0.777
+SOC,Yes,0.428571,No,No,No,HIV-negative,no,0.798,NA,NA,NA,NA,NA,0,56,NA,no,no,no,1
+SOC,Yes,2,Yes,No,No,HIV-negative,no,0.596,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.698
+SOC,Yes,0.428571,Yes,No,Yes,HIV-positive,yes,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.854
+SOC,Yes,0.571429,Yes,No,No,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.787
+SOC,Yes,0.285714,No,Yes,No,Never tested,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,1,No,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+SOC,Yes,8.69048,Yes,Yes,Yes,HIV-negative,no,0.798,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.833
+SOC,Yes,1,No,Yes,Yes,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.844
+SOC,Yes,2,Yes,Yes,Yes,HIV-positive,yes,0.685,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.688
+SOC,Yes,1,Yes,Yes,Yes,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.741
+SOC,Yes,2,No,No,No,HIV-negative,no,0.688,NA,NA,NA,NA,NA,0,56,no,no,NA,no,0.844
+SOC,Yes,8.69048,Yes,No,No,HIV-negative,no,0.844,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+SOC,Yes,0.428571,Yes,No,Yes,HIV-negative,no,0.854,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.596
+SOC,Yes,4.34524,Yes,No,Yes,HIV-positive,yes,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+SOC,Yes,1,Yes,No,No,Never tested,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,0.428571,Yes,No,Yes,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,NA,no,NA,no,NA
+SOC,Yes,0.285714,No,No,No,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,1,No,Yes,Yes,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+SOC,Yes,2,Yes,Yes,Yes,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,2,Yes,Yes,Yes,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,yes,no,0.731
+SOC,Yes,0.285714,No,Yes,Yes,HIV-negative,no,0.854,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.833
+SOC,Yes,2,No,Yes,No,HIV-negative,no,0.79,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,1,Yes,Yes,Yes,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,0.285714,No,Yes,Yes,HIV-positive,yes,0.798,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.798
+SOC,Yes,4.34524,Yes,Yes,Yes,HIV-positive,yes,0.854,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.854
+SOC,Yes,1,No,No,No,HIV-positive,yes,0.695,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.833
+SOC,Yes,2,Yes,No,Yes,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+SOC,Yes,2,No,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.854
+SOC,Yes,1,No,Yes,No,HIV-negative,no,0.695,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.787
+SOC,Yes,4.34524,No,Yes,Yes,HIV-negative,no,0.425,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+SOC,Yes,4.34524,No,No,No,HIV-negative,no,0.844,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,1,No,No,No,Never tested,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.833
+SOC,Yes,2,Yes,No,Yes,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.833
+SOC,Yes,4.34524,Yes,Yes,No,HIV-negative,no,0.596,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+SOC,Yes,1,No,No,No,HIV-negative,no,0.798,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.596
+SOC,Yes,17.381,Yes,No,Yes,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+SOC,Yes,2,No,No,Yes,Never tested,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+SOC,Yes,0.428571,No,No,No,HIV-negative,no,0.596,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,2,Yes,No,Yes,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+SOC,Yes,2,No,No,No,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+SOC,Yes,26.0714,No,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.844
+SOC,Yes,0.714286,No,No,No,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+SOC,Yes,0.285714,Yes,Yes,Yes,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,1,No,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.744
+SOC,Yes,0.428571,Yes,No,No,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+SOC,Yes,3,No,No,No,HIV-negative,no,0.604,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.596
+SOC,Yes,2,Yes,Yes,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.854
+SOC,Yes,1,No,No,No,HIV-negative,no,0.596,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.596
+SOC,Yes,13.0357,No,No,Yes,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+SOC,Yes,2,No,No,No,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,4.34524,Yes,Yes,Yes,HIV-negative,no,0.596,NA,NA,NA,NA,NA,0,56,NA,no,NA,no,NA
+SOC,Yes,3,Yes,Yes,Yes,Never tested,no,0.213,NA,NA,NA,NA,NA,0,25,NA,no,NA,yes,0
+SOC,Yes,1,Yes,No,Yes,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.798
+SOC,Yes,8.69048,No,Yes,No,HIV-positive,yes,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,13.0357,Yes,No,Yes,HIV-positive,yes,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.66
+SOC,Yes,1,No,No,No,HIV-positive,yes,0.798,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+SOC,Yes,2,No,No,No,HIV-negative,no,0.642,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.777
+SOC,Yes,1,No,No,No,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.456
+SOC,Yes,2,Yes,No,Yes,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,1,Yes,Yes,Yes,HIV-positive,yes,0.596,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,1,Yes,Yes,Yes,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.798
+SOC,Yes,0.285714,No,No,No,HIV-negative,no,0.811,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,0.428571,No,No,Yes,Never tested,no,0.844,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+SOC,Yes,2,No,Yes,Yes,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.833
+SOC,Yes,1,No,Yes,Yes,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.833
+SOC,Yes,1,Yes,Yes,Yes,HIV-negative,no,0.777,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.79
+SOC,Yes,52,Yes,Yes,No,HIV-negative,no,0.685,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.79
+SOC,Yes,13.0357,No,Yes,Yes,HIV-positive,yes,1,NA,NA,NA,NA,NA,1,5,no,no,no,no,1
+SOC,Yes,1,No,No,No,HIV-negative,no,0.854,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.854
+SOC,Yes,0.428571,Yes,No,No,HIV-positive,yes,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.79
+SOC,Yes,2,Yes,Yes,Yes,HIV-negative,no,0.496,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.642
+SOC,Yes,4,Yes,Yes,Yes,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.734
+SOC,Yes,8.69048,Yes,Yes,Yes,HIV-negative,no,0.596,NA,NA,NA,NA,NA,0,56,NA,no,NA,no,NA
+SOC,Yes,1,No,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,NA,no,NA,no,NA
+SOC,Yes,1.14286,No,Yes,No,Never tested,no,0.695,NA,NA,NA,NA,NA,0,56,no,no,yes,no,0.777
+SOC,Yes,0.571429,Yes,No,Yes,HIV-negative,no,0.752,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+SOC,Yes,0.428571,No,No,No,HIV-positive,yes,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.854
+SOC,Yes,3,Yes,Yes,Yes,HIV-negative,no,0.777,NA,NA,NA,NA,NA,0,56,no,no,yes,no,0.777
+SOC,Yes,2,Yes,No,Yes,HIV-positive,yes,0.744,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,3,Yes,Yes,Yes,HIV-positive,yes,0.361,NA,NA,NA,NA,NA,1,11,no,no,no,no,0.777
+SOC,Yes,1,No,No,No,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,NA,no,NA
+SOC,Yes,4.34524,No,No,Yes,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,0.714286,No,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.854
+SOC,Yes,0.428571,No,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.361
+SOC,Yes,0.428571,No,No,No,HIV-positive,yes,0.854,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+SOC,Yes,1,Yes,No,No,Never tested,no,0.731,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+SOC,Yes,17.381,Yes,Yes,Yes,HIV-negative,no,0.596,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.642
+SOC,Yes,3,No,Yes,No,HIV-negative,no,0.596,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.596
+SOC,Yes,0.428571,Yes,No,No,HIV-negative,no,0.741,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.706
+SOC,Yes,1,No,Yes,Yes,Never tested,no,0.596,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.787
+SOC,Yes,0.571429,No,No,No,HIV-negative,no,0.854,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.752
+SOC,Yes,0.428571,Yes,No,No,HIV-negative,no,0.639,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.642
+SOC,Yes,0.571429,No,No,Yes,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,NA,no,NA,no,NA
+SOC,Yes,1,No,Yes,No,HIV-negative,no,0.854,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,0.428571,Yes,No,No,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,NA,no,1
+SOC,Yes,0.428571,No,Yes,No,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+SOC,Yes,0.285714,No,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+SOC,Yes,0.285714,No,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,0.428571,No,No,No,HIV-positive,yes,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.596
+SOC,Yes,4.34524,Yes,Yes,Yes,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,23,NA,no,NA,yes,0
+SOC,Yes,2,No,No,No,Never tested,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.833
+SOC,Yes,4.34524,Yes,No,No,HIV-negative,no,0.604,NA,NA,NA,NA,NA,0,56,NA,no,no,no,0.854
+SOC,Yes,0.428571,No,No,Yes,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,0.428571,Yes,No,No,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,0.428571,No,No,No,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+SOC,Yes,2,Yes,Yes,Yes,HIV-negative,no,0.596,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+SOC,Yes,2,No,No,No,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.604
+SOC,Yes,2,Yes,Yes,Yes,HIV-negative,no,0.604,NA,NA,NA,NA,NA,0,56,NA,no,no,no,0.854
+SOC,Yes,0.428571,No,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.639
+SOC,Yes,0.714286,Yes,Yes,Yes,HIV-negative,no,0.706,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+SOC,Yes,0.285714,No,No,Yes,Never tested,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.003
+SOC,Yes,0.428571,No,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,1,Yes,Yes,Yes,HIV-positive,yes,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.256
+SOC,Yes,0.571429,Yes,No,No,HIV-negative,no,0.639,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.787
+SOC,Yes,0.428571,No,Yes,Yes,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.808
+SOC,Yes,1,No,Yes,Yes,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,NA,no,NA,no,NA
+SOC,Yes,1,No,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.741
+SOC,Yes,0.285714,No,No,Yes,HIV-negative,no,0.695,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,1,Yes,No,Yes,HIV-negative,no,0.652,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.66
+SOC,Yes,1,Yes,No,Yes,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.604
+SOC,Yes,1,No,No,No,HIV-negative,no,0.79,NA,NA,NA,NA,NA,0,56,no,no,NA,no,1
+SOC,Yes,0.571429,Yes,No,No,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.833
+SOC,Yes,0.428571,No,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.787
+SOC,Yes,0.571429,No,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+SOC,Yes,0.428571,No,No,No,HIV-negative,no,0.79,NA,NA,NA,NA,NA,0,56,NA,no,NA,no,NA
+SOC,Yes,8.69048,Yes,Yes,Yes,HIV-positive,yes,0.596,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.744
+SOC,Yes,2,Yes,Yes,No,HIV-positive,yes,0.695,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.844
+SOC,Yes,0.285714,No,No,No,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.787
+SOC,Yes,4.34524,Yes,Yes,Yes,HIV-positive,yes,0.787,NA,NA,NA,NA,NA,0,56,yes,no,no,no,0.642
+SOC,Yes,1,No,Yes,No,HIV-positive,yes,0.79,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+SOC,Yes,0.285714,Yes,Yes,Yes,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,1,No,Yes,No,HIV-negative,no,0.741,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.798
+SOC,Yes,0.428571,No,No,No,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,NA,no,NA,no,NA
+SOC,Yes,1,No,No,No,HIV-positive,yes,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.698
+SOC,Yes,1,No,Yes,Yes,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.833
+SOC,Yes,1,Yes,No,No,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.604
+SOC,Yes,0.285714,Yes,No,No,HIV-negative,no,0.777,NA,NA,NA,NA,NA,0,56,NA,no,NA,no,NA
+SOC,Yes,0.428571,No,No,No,HIV-positive,yes,1,NA,NA,NA,NA,NA,0,56,NA,no,no,no,0.844
+SOC,Yes,1,No,Yes,No,HIV-negative,no,0.642,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.787
+SOC,Yes,3,No,Yes,Yes,HIV-negative,no,0.66,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+SOC,Yes,1,No,No,No,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.854
+SOC,Yes,4.34524,No,Yes,No,HIV-negative,no,0.854,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+SOC,Yes,2,No,No,Yes,HIV-negative,no,0.688,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+SOC,Yes,0.428571,Yes,Yes,Yes,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.787
+SOC,Yes,4.34524,Yes,No,Yes,HIV-positive,yes,0.596,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.695
+SOC,Yes,0.428571,No,No,No,HIV-negative,no,0.469,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.854
+SOC,Yes,1,No,No,Yes,Never tested,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,17.381,Yes,Yes,Yes,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.787
+SOC,Yes,2,No,No,Yes,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.854
+SOC,Yes,3,Yes,Yes,Yes,HIV-negative,no,0.688,NA,NA,NA,NA,NA,0,56,no,no,NA,no,0.844
+SOC,Yes,1,Yes,No,Yes,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,4.34524,No,No,No,HIV-negative,no,0.798,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,0.428571,No,No,No,HIV-negative,no,0.844,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,0.428571,Yes,No,Yes,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,1,Yes,Yes,No,HIV-negative,no,0.604,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+SOC,Yes,13.0357,Yes,Yes,Yes,HIV-positive,yes,0.685,NA,NA,NA,NA,NA,0,56,NA,no,NA,no,NA
+SOC,Yes,0.714286,No,Yes,No,HIV-negative,no,0.663,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.844
+SOC,Yes,8.69048,Yes,Yes,Yes,HIV-negative,no,0.698,NA,NA,NA,NA,NA,0,56,no,no,NA,no,NA
+SOC,Yes,0.285714,No,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,1,Yes,Yes,Yes,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.604
+SOC,Yes,0.571429,No,Yes,No,HIV-positive,yes,0.596,NA,NA,NA,NA,NA,0,56,yes,no,no,no,0.731
+SOC,Yes,1,Yes,Yes,Yes,Never tested,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.596
+SOC,Yes,2,No,No,Yes,HIV-negative,no,0.596,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.844
+SOC,Yes,1,No,No,Yes,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,NA
+SOC,Yes,1,No,Yes,No,HIV-negative,no,0.844,NA,NA,NA,NA,NA,0,56,no,no,NA,no,0.787
+SOC,Yes,2,Yes,No,Yes,HIV-negative,no,0.798,NA,NA,NA,NA,NA,0,56,no,no,no,no,NA
+SOC,Yes,0.714286,Yes,Yes,No,HIV-negative,no,0.854,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,1,No,Yes,Yes,HIV-negative,no,0.777,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.854
+SOC,Yes,0.571429,No,No,No,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.833
+SOC,Yes,3,Yes,Yes,Yes,HIV-negative,no,0.706,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.604
+SOC,Yes,0.571429,Yes,Yes,Yes,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,17.381,Yes,Yes,Yes,HIV-positive,yes,0.652,NA,NA,NA,NA,NA,1,53,no,no,no,no,0.731
+SOC,Yes,0.428571,No,No,Yes,HIV-negative,no,1,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+SOC,Yes,3,Yes,No,Yes,HIV-negative,no,0.777,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+SOC,Yes,2,Yes,Yes,Yes,HIV-positive,yes,0.596,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.688
+SOC,Yes,1,Yes,No,Yes,HIV-positive,yes,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+SOC,Yes,0.714286,Yes,No,No,HIV-negative,no,0.844,NA,NA,NA,NA,NA,0,56,no,no,NA,no,1
+SOC,Yes,0.428571,No,No,No,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.833
+SOC,Yes,2,No,Yes,No,HIV-positive,yes,0.66,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.844
+SOC,Yes,0.285714,No,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,1,No,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.604
+SOC,Yes,1,Yes,No,Yes,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.639
+SOC,Yes,2,Yes,Yes,Yes,Never tested,no,0.731,NA,NA,NA,NA,NA,0,56,NA,no,yes,no,1
+SOC,Yes,2,Yes,Yes,Yes,HIV-negative,no,0.808,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+SOC,Yes,1,No,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.642
+SOC,Yes,0.428571,No,Yes,Yes,HIV-negative,no,0.639,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.833
+SOC,Yes,4.34524,Yes,Yes,Yes,HIV-positive,no,0.596,NA,NA,NA,NA,NA,0,56,no,no,NA,no,0.413
+SOC,Yes,1,Yes,Yes,Yes,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,0.285714,No,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.833
+SOC,Yes,1,No,Yes,Yes,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+SOC,Yes,0.571429,No,No,Yes,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,0.285714,No,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,NA,no,0.731
+SOC,Yes,2,Yes,Yes,No,HIV-negative,no,0.596,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.12
+SOC,Yes,4.34524,No,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,0.714286,No,No,No,HIV-negative,no,0.642,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.604
+SOC,Yes,2,Yes,Yes,Yes,HIV-positive,yes,0.561,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.596
+SOC,Yes,13.0357,Yes,Yes,Yes,HIV-positive,yes,0.604,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.596
+SOC,Yes,1,No,No,Yes,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.854
+SOC,Yes,0.428571,Yes,No,No,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.833
+SOC,Yes,0.285714,No,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.833
+SOC,Yes,1,No,Yes,No,HIV-negative,no,0.596,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.844
+SOC,Yes,1,No,Yes,Yes,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,1,No,Yes,No,HIV-negative,no,0.639,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,1,No,No,No,HIV-negative,no,0.777,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.642
+SOC,Yes,0.571429,No,Yes,Yes,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,3,Yes,No,Yes,HIV-negative,no,0.844,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.833
+SOC,Yes,1,No,Yes,Yes,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.854
+SOC,Yes,21.7262,Yes,Yes,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,8.69048,Yes,Yes,Yes,HIV-positive,yes,0.731,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+SOC,Yes,3,Yes,No,Yes,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.798
+SOC,Yes,3,Yes,Yes,Yes,HIV-negative,no,0.596,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+SOC,Yes,13.0357,No,No,No,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,2,Yes,No,No,HIV-negative,no,0.596,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,0.285714,No,No,No,HIV-negative,no,0.469,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,0.428571,No,Yes,No,HIV-negative,no,0.854,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+SOC,Yes,0.428571,No,No,No,HIV-positive,yes,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,0.714286,No,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,0.571429,Yes,Yes,Yes,HIV-negative,no,0.596,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.688
+SOC,Yes,1,No,No,No,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.604
+SOC,Yes,104,No,No,Yes,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,13.0357,No,Yes,Yes,HIV-negative,no,0.596,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.457
+SOC,Yes,1,Yes,Yes,Yes,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.469
+SOC,Yes,3,Yes,Yes,Yes,HIV-positive,yes,0.719,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.833
+SOC,Yes,0.428571,Yes,Yes,Yes,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.787
+SOC,Yes,0.428571,Yes,No,Yes,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+SOC,Yes,1,No,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.744
+SOC,Yes,1,Yes,Yes,Yes,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,NA,no,NA,no,NA
+SOC,Yes,0.714286,Yes,Yes,Yes,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.787
+SOC,Yes,4.34524,No,No,No,HIV-negative,no,0.777,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+SOC,Yes,2,Yes,Yes,Yes,HIV-negative,no,0.639,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.777
+SOC,Yes,0.428571,No,No,Yes,HIV-negative,no,0.854,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,0.428571,No,No,No,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+SOC,Yes,1.14286,No,Yes,No,HIV-negative,no,0.469,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,2,No,No,No,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+SOC,Yes,2,Yes,Yes,Yes,Never tested,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.596
+SOC,Yes,0.428571,No,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.854
+SOC,Yes,0.428571,No,No,No,HIV-negative,no,0.844,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.798
+SOC,Yes,17.381,No,Yes,Yes,Never tested,no,0.787,NA,NA,NA,NA,NA,0,56,NA,no,NA,no,NA
+SOC,Yes,13.0357,Yes,Yes,Yes,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,NA
+SOC,Yes,0.428571,No,No,No,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,13.0357,Yes,No,Yes,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,2,No,Yes,Yes,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+SOC,Yes,0.714286,No,No,Yes,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,4.34524,No,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.596
+SOC,Yes,4.34524,No,Yes,Yes,HIV-positive,yes,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.688
+SOC,Yes,2,Yes,Yes,Yes,HIV-positive,yes,0.596,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.833
+SOC,Yes,2,No,No,No,HIV-negative,no,0.741,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,3,Yes,No,Yes,HIV-negative,no,0.741,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+SOC,Yes,0.428571,Yes,No,Yes,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,2,No,No,No,HIV-positive,yes,0.731,NA,NA,NA,NA,NA,0,56,NA,no,NA,no,NA
+SOC,Yes,0.428571,Yes,Yes,No,HIV-negative,no,0.552,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+SOC,Yes,1,No,No,Yes,HIV-positive,yes,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.596
+SOC,Yes,104,No,No,Yes,HIV-negative,no,0.695,NA,NA,NA,NA,NA,0,56,no,no,no,no,NA
+SOC,Yes,2,No,No,No,HIV-negative,no,0.596,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.798
+SOC,Yes,3,Yes,Yes,Yes,HIV-positive,yes,0.66,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+SOC,Yes,4.34524,No,Yes,No,HIV-positive,yes,1,NA,NA,NA,NA,NA,1,8,no,no,no,no,0.777
+SOC,Yes,2,Yes,No,No,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,52,Yes,Yes,Yes,HIV-negative,no,0.5,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.596
+SOC,Yes,1,No,No,No,HIV-negative,no,0.854,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+SOC,Yes,1,Yes,Yes,No,HIV-positive,yes,0.66,NA,NA,NA,NA,NA,0,56,NA,no,no,no,0.833
+SOC,Yes,1,Yes,No,No,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.833
+SOC,Yes,52,No,Yes,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,13.0357,Yes,Yes,Yes,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+SOC,Yes,0.285714,No,No,Yes,HIV-negative,no,0.695,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+SOC,Yes,2,Yes,No,No,HIV-positive,yes,0.731,NA,NA,NA,NA,NA,0,56,no,no,NA,no,0.744
+SOC,Yes,0.428571,Yes,Yes,Yes,HIV-positive,yes,0.787,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+SOC,Yes,3,Yes,Yes,Yes,HIV-positive,yes,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.604
+SOC,Yes,1,Yes,No,Yes,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+SOC,Yes,1,Yes,Yes,No,HIV-negative,no,0.604,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.688
+SOC,Yes,1,No,No,No,HIV-negative,no,0.844,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.787
+SOC,Yes,1,Yes,No,Yes,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,NA,no,NA,no,NA
+SOC,Yes,1,Yes,Yes,Yes,HIV-negative,no,0.777,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.688
+SOC,Yes,2,Yes,Yes,Yes,HIV-negative,no,0.596,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.744
+SOC,Yes,3,Yes,Yes,No,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.844
+SOC,Yes,1,Yes,Yes,Yes,Never tested,no,0.596,NA,NA,NA,NA,NA,0,56,NA,no,NA,no,NA
+SOC,Yes,2,Yes,Yes,No,HIV-negative,no,0.695,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.604
+SOC,Yes,2,Yes,Yes,Yes,HIV-positive,yes,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.596
+SOC,Yes,3,Yes,No,Yes,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.854
+SOC,Yes,0.428571,No,No,Yes,HIV-negative,no,0.596,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,1,No,No,No,Never tested,no,0.854,NA,NA,NA,NA,NA,0,23,no,no,NA,yes,0
+SOC,Yes,2,Yes,No,Yes,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,8.69048,Yes,Yes,Yes,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.777
+SOC,Yes,1,Yes,Yes,No,HIV-negative,no,0.642,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.854
+SOC,Yes,0.428571,No,No,Yes,HIV-negative,no,0.777,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.854
+SOC,Yes,4.34524,No,No,No,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.777
+SOC,Yes,0.285714,Yes,No,Yes,HIV-negative,no,0.854,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.777
+SOC,Yes,1,Yes,No,No,HIV-positive,yes,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.66
+SOC,Yes,2,No,No,Yes,HIV-negative,no,0.496,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.833
+SOC,Yes,0.428571,No,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,0.571429,No,No,No,HIV-positive,yes,0.596,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,0.428571,No,No,Yes,HIV-negative,no,0.798,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.798
+SOC,Yes,2,No,No,No,HIV-negative,no,0.596,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.798
+SOC,Yes,2,No,No,Yes,HIV-negative,no,0.798,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.596
+SOC,Yes,1,No,Yes,No,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,NA,no,NA,no,NA
+SOC,Yes,2,No,Yes,No,HIV-positive,yes,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.642
+SOC,Yes,0.571429,No,No,No,HIV-positive,yes,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.777
+SOC,Yes,0.714286,No,No,No,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,1,Yes,No,Yes,HIV-positive,yes,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,3,Yes,Yes,Yes,HIV-positive,yes,0.695,NA,NA,NA,NA,NA,0,56,NA,no,NA,no,NA
+SOC,Yes,0.428571,No,No,No,HIV-positive,yes,0.833,NA,NA,NA,NA,NA,0,56,NA,no,NA,no,NA
+SOC,Yes,8.69048,Yes,Yes,Yes,HIV-positive,yes,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.787
+SOC,Yes,0.428571,No,Yes,No,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.777
+SOC,Yes,0.285714,Yes,Yes,Yes,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.596
+SOC,Yes,2,Yes,Yes,Yes,HIV-positive,yes,0.596,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.833
+SOC,Yes,2,Yes,Yes,Yes,HIV-negative,no,0.596,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.798
+SOC,Yes,0.571429,No,No,Yes,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.798
+SOC,Yes,0.714286,No,Yes,No,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+SOC,Yes,1,No,No,Yes,HIV-positive,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,2,Yes,Yes,Yes,Never tested,no,0.777,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.695
+SOC,Yes,2,Yes,Yes,Yes,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.833
+SOC,Yes,2,Yes,No,Yes,HIV-negative,no,0.604,NA,NA,NA,NA,NA,0,56,no,no,yes,no,0.731
+SOC,Yes,0.428571,No,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,0.428571,No,No,No,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.787
+SOC,Yes,2,No,No,Yes,HIV-positive,yes,0.777,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.777
+SOC,Yes,1,No,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+SOC,Yes,2,Yes,Yes,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,4.28571,Yes,No,Yes,HIV-negative,no,0.512,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.798
+SOC,Yes,2,Yes,Yes,Yes,HIV-positive,yes,0.639,NA,NA,NA,NA,NA,0,56,no,no,NA,no,0.596
+SOC,Yes,2,No,No,Yes,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.798
+SOC,Yes,0.428571,Yes,No,No,HIV-positive,yes,0.777,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+SOC,Yes,1,Yes,No,No,HIV-negative,no,0.777,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,1,No,No,No,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.642
+SOC,Yes,1,No,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,0.285714,No,No,No,HIV-positive,yes,0.596,NA,NA,NA,NA,NA,0,56,no,no,no,no,NA
+SOC,Yes,0.428571,No,Yes,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.833
+SOC,Yes,1,No,Yes,Yes,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.639
+SOC,Yes,0.428571,No,Yes,Yes,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.688
+SOC,Yes,1,Yes,Yes,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,1,No,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.596
+SOC,Yes,1,No,No,No,HIV-positive,yes,0.798,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+SOC,Yes,0.571429,Yes,No,Yes,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,NA
+SOC,Yes,0.571429,No,No,No,HIV-negative,no,0.854,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.79
+SOC,Yes,4.34524,Yes,Yes,Yes,HIV-negative,no,0.744,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.642
+SOC,Yes,1,No,No,No,HIV-positive,yes,0.369,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+SOC,Yes,2,No,Yes,Yes,Never tested,no,0.234,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.685
+SOC,Yes,1,No,Yes,Yes,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.79
+SOC,Yes,1,No,No,No,HIV-negative,no,0.854,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+SOC,Yes,17.381,Yes,Yes,No,HIV-negative,no,0.695,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+SOC,Yes,1,No,Yes,No,HIV-positive,yes,0.777,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.685
+SOC,Yes,0.428571,Yes,No,Yes,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,yes,no,0.66
+SOC,Yes,0.714286,Yes,Yes,Yes,HIV-negative,no,0.685,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.688
+SOC,Yes,0.428571,Yes,No,Yes,HIV-negative,no,0.604,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,1,Yes,Yes,Yes,Never tested,no,0.596,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+SOC,Yes,0.285714,No,No,No,HIV-negative,no,0.777,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,1,No,No,No,HIV-negative,no,0.695,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,2,Yes,Yes,Yes,HIV-positive,yes,0.596,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+SOC,Yes,1,No,No,No,HIV-negative,no,0.798,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.652
+SOC,Yes,4.34524,Yes,Yes,No,Never tested,no,0.596,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+SOC,Yes,1,Yes,No,Yes,HIV-negative,no,0.777,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.787
+SOC,Yes,2,No,No,No,HIV-negative,no,0.844,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.787
+SOC,Yes,0.285714,No,No,No,HIV-negative,no,0.639,NA,NA,NA,NA,NA,0,56,NA,no,NA,no,NA
+SOC,Yes,0.428571,No,No,No,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.854
+SOC,Yes,3,No,Yes,No,HIV-positive,yes,0.695,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+SOC,Yes,0.285714,No,No,Yes,HIV-positive,yes,0.844,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.66
+SOC,Yes,1,Yes,No,Yes,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,4.34524,Yes,Yes,Yes,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,NA,no,no,no,0.596
+SOC,Yes,2,No,No,Yes,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.833
+SOC,Yes,21.7262,No,No,Yes,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,NA,no,no,no,1
+SOC,Yes,0.571429,No,Yes,No,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.854
+SOC,Yes,0.714286,Yes,No,Yes,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+SOC,Yes,1,Yes,Yes,Yes,HIV-negative,no,0.469,NA,NA,NA,NA,NA,0,56,no,no,yes,no,0.854
+SOC,Yes,1,No,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.844
+SOC,Yes,0.285714,No,No,Yes,HIV-negative,no,1,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+SOC,Yes,30.4167,No,No,No,HIV-negative,no,0.844,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+SOC,Yes,1,Yes,No,Yes,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+SOC,Yes,0.714286,Yes,Yes,Yes,HIV-positive,yes,0.652,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,8.69048,Yes,Yes,Yes,HIV-positive,yes,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.777
+SOC,Yes,0.428571,No,No,Yes,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.854
+SOC,Yes,0.571429,No,No,No,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,NA,no,0.854
+SOC,Yes,0.428571,No,Yes,No,Never tested,no,0.596,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+SOC,Yes,0.428571,No,No,No,HIV-positive,yes,0.731,NA,NA,NA,NA,NA,0,56,NA,no,NA,no,NA
+SOC,Yes,1,No,No,Yes,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+SOC,Yes,1,No,No,No,Never tested,no,0.642,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.642
+SOC,Yes,0.428571,No,No,No,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,NA,no,NA,no,NA
+SOC,Yes,3,Yes,Yes,Yes,HIV-positive,yes,0.596,NA,NA,NA,NA,NA,0,56,no,no,no,no,NA
+SOC,Yes,52,Yes,Yes,Yes,HIV-negative,no,0.777,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,0.428571,No,No,Yes,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.854
+SOC,Yes,1,No,Yes,Yes,HIV-negative,no,0.604,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.642
+SOC,Yes,4.34524,No,No,Yes,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+SOC,Yes,1,Yes,Yes,Yes,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.787
+SOC,Yes,0.428571,No,No,Yes,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.854
+SOC,Yes,0.428571,No,No,Yes,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,4.34524,No,No,Yes,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.688
+SOC,Yes,2,No,Yes,No,HIV-negative,no,0.596,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+SOC,Yes,1,No,No,No,Never tested,no,0.695,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,4.34524,No,No,Yes,HIV-negative,no,1,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+SOC,Yes,2,No,Yes,Yes,HIV-negative,no,0.811,NA,NA,NA,NA,NA,0,56,NA,no,no,no,NA
+SOC,Yes,0.428571,Yes,Yes,No,Never tested,no,1,NA,NA,NA,NA,NA,0,56,NA,no,no,no,1
+SOC,Yes,2,No,No,No,HIV-negative,no,0.844,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.808
+SOC,Yes,0.428571,No,No,Yes,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,56,NA,no,no,no,0.604
+SOC,Yes,4.34524,No,Yes,Yes,Never tested,no,0.596,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.604
+SOC,Yes,0.428571,No,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+SOC,Yes,0.428571,No,Yes,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+SOC,Yes,52,No,No,No,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.787
+SOC,Yes,52,Yes,No,Yes,HIV-positive,yes,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.652
+SOC,Yes,0.428571,No,No,No,HIV-negative,no,0.854,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+SOC,Yes,1,Yes,No,No,HIV-negative,no,0.688,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+SOC,Yes,0.428571,No,No,No,HIV-positive,yes,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,2,No,No,No,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,0.571429,No,No,No,HIV-negative,no,0.777,NA,NA,NA,NA,NA,0,56,no,no,yes,no,0.787
+SOC,Yes,1,Yes,No,Yes,HIV-negative,no,0.777,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.604
+SOC,Yes,0.428571,No,No,No,HIV-negative,no,0.854,NA,NA,NA,NA,NA,0,56,no,no,NA,no,0.787
+SOC,Yes,1,No,Yes,Yes,HIV-positive,yes,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.844
+SOC,Yes,156,Yes,No,Yes,HIV-positive,yes,0.777,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.787
+SOC,Yes,4.34524,No,Yes,No,HIV-positive,yes,0.731,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+SOC,Yes,1,Yes,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.596
+SOC,Yes,0.714286,Yes,No,Yes,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,3,No,No,No,Never tested,no,0.66,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.596
+SOC,Yes,1,Yes,No,Yes,HIV-negative,no,0.652,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,4.34524,No,Yes,No,HIV-positive,yes,0.744,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.604
+SOC,Yes,8.69048,Yes,Yes,Yes,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+SOC,Yes,1,Yes,Yes,Yes,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.777
+SOC,Yes,2,No,No,No,HIV-negative,no,0.844,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+SOC,Yes,2,Yes,Yes,Yes,HIV-positive,yes,0.542,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.798
+SOC,Yes,1,Yes,Yes,Yes,HIV-negative,no,0.777,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.801
+SOC,Yes,2,No,No,Yes,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.854
+SOC,Yes,1,Yes,No,Yes,Never tested,no,0.777,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.074
+SOC,Yes,2,Yes,No,Yes,HIV-positive,yes,0.777,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.33
+SOC,Yes,4.34524,No,Yes,Yes,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+SOC,Yes,1,No,Yes,Yes,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,1,No,Yes,No,HIV-negative,no,0.604,NA,NA,NA,NA,NA,0,56,NA,no,NA,no,NA
+SOC,Yes,1,No,No,Yes,HIV-negative,no,0.777,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+SOC,Yes,2,No,No,Yes,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+SOC,Yes,104,Yes,No,Yes,HIV-negative,no,0.642,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.604
+SOC,Yes,0.571429,Yes,Yes,Yes,HIV-negative,no,0.685,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.854
+SOC,Yes,1,Yes,Yes,No,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+SOC,Yes,2,No,No,No,HIV-positive,yes,0.854,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,0.428571,No,No,Yes,Never tested,no,0.833,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+SOC,Yes,0.285714,No,Yes,Yes,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,NA,no,no,no,1
+SOC,Yes,0.714286,No,No,Yes,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.844
+SOC,Yes,1,Yes,No,No,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.787
+SOC,Yes,1,Yes,Yes,Yes,HIV-negative,no,0.315,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.833
+SOC,Yes,4.34524,Yes,No,No,HIV-positive,yes,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.833
+SOC,Yes,0.571429,No,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.787
+SOC,Yes,4,No,Yes,Yes,HIV-negative,no,0.79,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.854
+SOC,Yes,0.428571,No,No,No,HIV-negative,no,0.596,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+SOC,Yes,4.34524,No,Yes,No,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.798
+SOC,Yes,2,Yes,No,Yes,HIV-negative,no,0.801,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.66
+SOC,Yes,0.285714,No,No,No,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,1,No,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,yes,no,0.801
+SOC,Yes,2,Yes,No,Yes,HIV-negative,no,0.777,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.596
+SOC,Yes,1,Yes,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,yes,no,0.688
+SOC,Yes,0.571429,No,No,Yes,HIV-negative,no,0.734,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,0.285714,No,Yes,Yes,HIV-negative,no,1,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+SOC,Yes,1,No,No,No,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.798
+SOC,Yes,1,No,No,No,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+SOC,Yes,2,No,Yes,Yes,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+SOC,Yes,1,Yes,No,Yes,Never tested,no,0.695,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+SOC,Yes,1,Yes,Yes,Yes,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+SOC,Yes,1,No,Yes,No,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.798
+SOC,Yes,1,No,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,NA,no,0.844
+SOC,Yes,13.0357,Yes,Yes,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,-0.006
+SOC,Yes,0.285714,Yes,Yes,Yes,HIV-negative,no,0.854,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.833
+SOC,Yes,1,Yes,No,Yes,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+SOC,Yes,0.428571,No,No,No,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,2,No,Yes,Yes,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,0.285714,No,No,No,Never tested,no,1,NA,NA,NA,NA,NA,0,56,NA,no,NA,no,NA
+SOC,Yes,0.428571,No,Yes,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,1,No,Yes,Yes,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.074
+SOC,Yes,4.34524,No,No,No,HIV-positive,no,0.596,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+SOC,Yes,8.69048,Yes,Yes,Yes,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.787
+SOC,Yes,0.428571,No,No,No,HIV-negative,no,0.854,NA,NA,NA,NA,NA,0,56,no,no,no,no,NA
+SOC,Yes,2,Yes,No,Yes,HIV-negative,no,0.777,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.596
+SOC,Yes,0.714286,No,No,No,HIV-negative,no,0.777,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+SOC,Yes,0.428571,No,No,No,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+SOC,Yes,0.428571,No,No,No,HIV-positive,yes,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.844
+SOC,Yes,13.0357,Yes,No,Yes,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,NA
+SOC,Yes,0.428571,No,No,No,HIV-negative,no,0.777,NA,NA,NA,NA,NA,0,56,NA,no,NA,no,NA
+SOC,Yes,1,No,No,No,HIV-positive,no,0.709,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.833
+SOC,Yes,0.714286,No,No,No,HIV-negative,no,0.568,NA,NA,NA,NA,NA,0,56,no,no,NA,no,0.731
+SOC,Yes,3,No,No,No,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.688
+SOC,Yes,4.34524,No,No,Yes,HIV-positive,yes,0.808,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,1,No,No,No,HIV-negative,no,0.777,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+HIV,Yes,1,Yes,No,Yes,HIV-negative,no,0.685,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.844
+HIV,Yes,0.571429,No,Yes,Yes,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,NA,no,0.787
+HIV,Yes,4.34524,Yes,Yes,Yes,HIV-negative,no,0.755,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+HIV,Yes,3,Yes,No,Yes,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.074
+HIV,Yes,0.571429,No,No,No,Never tested,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,1,No,No,Yes,HIV-negative,no,0.695,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,21.7262,Yes,Yes,Yes,HIV-negative,no,0.66,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,2,Yes,Yes,Yes,HIV-negative,no,0.734,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,1,No,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,1,No,No,No,HIV-negative,no,0.685,NA,NA,NA,NA,NA,0,56,no,no,NA,no,0.695
+HIV,Yes,13.0357,Yes,Yes,Yes,HIV-negative,no,0.596,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,0.285714,No,No,No,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.798
+HIV,Yes,1,No,Yes,No,Never tested,no,0.79,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,1,No,Yes,No,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.854
+HIV,Yes,2,No,Yes,No,HIV-positive,yes,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+HIV,Yes,26.0714,Yes,Yes,Yes,HIV-positive,yes,0.777,NA,NA,NA,NA,NA,1,19,no,no,no,no,1
+HIV,Yes,0.428571,No,Yes,No,HIV-negative,no,0.706,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,0.428571,Yes,Yes,Yes,HIV-negative,no,0.777,NA,NA,NA,NA,NA,0,56,NA,no,NA,no,NA
+HIV,Yes,1,No,No,No,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.854
+HIV,Yes,0.428571,Yes,No,Yes,HIV-negative,no,0.844,NA,NA,NA,NA,NA,0,56,NA,no,no,no,0.731
+HIV,Yes,2,No,No,No,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.854
+HIV,Yes,0.571429,No,No,Yes,HIV-positive,yes,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,1,Yes,No,Yes,HIV-negative,no,0.503,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.844
+HIV,Yes,2,No,No,No,HIV-negative,no,0.652,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,4.34524,No,Yes,Yes,HIV-negative,no,0.639,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.787
+HIV,Yes,13.0357,Yes,No,Yes,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,NA
+HIV,Yes,2,Yes,Yes,No,HIV-negative,no,0.469,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.787
+HIV,Yes,1,No,No,No,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,NA,no,1
+HIV,Yes,1,Yes,Yes,Yes,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.787
+HIV,Yes,0.285714,No,No,No,HIV-negative,no,0.698,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,0.428571,No,Yes,Yes,HIV-positive,yes,0.425,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.798
+HIV,Yes,2,Yes,No,Yes,HIV-positive,yes,0.688,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.833
+HIV,Yes,2,Yes,No,Yes,HIV-positive,yes,0.596,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.222
+HIV,Yes,13.0357,No,Yes,Yes,HIV-positive,yes,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,4.34524,Yes,Yes,Yes,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,1,Yes,No,Yes,HIV-negative,no,0.552,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+HIV,Yes,0.285714,Yes,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,52,Yes,No,Yes,HIV-negative,no,0.844,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.596
+HIV,Yes,0.571429,Yes,No,No,HIV-positive,yes,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.854
+HIV,Yes,13.0357,No,Yes,Yes,HIV-positive,yes,0.596,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.361
+HIV,Yes,0.428571,Yes,Yes,Yes,HIV-positive,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,1,No,No,No,HIV-negative,no,0.777,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.844
+HIV,Yes,2,No,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,1,Yes,Yes,Yes,Never tested,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,0.428571,No,Yes,No,HIV-positive,yes,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,4.34524,Yes,No,Yes,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.844
+HIV,Yes,2,No,Yes,No,HIV-negative,no,0.639,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+HIV,Yes,0.428571,No,No,Yes,Never tested,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.787
+HIV,Yes,0.571429,No,No,No,HIV-negative,no,0.709,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+HIV,Yes,0.571429,No,No,No,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.642
+HIV,Yes,0.285714,No,No,Yes,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.854
+HIV,Yes,4.34524,No,No,No,HIV-negative,no,0.854,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,43.4524,Yes,Yes,Yes,HIV-positive,yes,0.326,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+HIV,Yes,1,Yes,Yes,Yes,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+HIV,Yes,1,No,Yes,Yes,HIV-positive,yes,0.66,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,0.428571,Yes,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,0.428571,No,No,No,HIV-negative,no,0.66,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.698
+HIV,Yes,1,No,No,Yes,HIV-negative,no,0.777,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.798
+HIV,Yes,2,No,Yes,No,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.777
+HIV,Yes,0.285714,No,No,No,HIV-negative,no,0.854,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.66
+HIV,Yes,0.285714,No,Yes,Yes,HIV-negative,no,0.777,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,1,No,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.596
+HIV,Yes,1,Yes,Yes,Yes,Never tested,no,0.777,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+HIV,Yes,0.428571,No,Yes,Yes,HIV-negative,no,1,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+HIV,Yes,2,Yes,Yes,Yes,HIV-negative,no,0.361,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.844
+HIV,Yes,1,No,No,No,HIV-negative,no,0.777,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,2,No,No,No,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,4.34524,No,Yes,Yes,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+HIV,Yes,0.285714,No,No,Yes,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+HIV,Yes,2,No,No,Yes,Never tested,no,0.787,NA,NA,NA,NA,NA,0,40,NA,no,NA,yes,0
+HIV,Yes,1,Yes,Yes,Yes,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,yes,no,no,no,NA
+HIV,Yes,0.428571,No,No,No,HIV-negative,no,0.685,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.798
+HIV,Yes,0.285714,No,No,No,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.787
+HIV,Yes,0.285714,No,No,No,HIV-negative,no,0.752,NA,NA,NA,NA,NA,0,56,no,no,no,no,NA
+HIV,Yes,1,Yes,Yes,Yes,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.854
+HIV,Yes,1,Yes,No,Yes,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,2,Yes,No,Yes,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+HIV,Yes,4.34524,No,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,NA,no,no,no,1
+HIV,Yes,0.571429,No,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.777
+HIV,Yes,21.7262,Yes,Yes,Yes,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.596
+HIV,Yes,1,No,Yes,No,HIV-negative,no,0.361,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.525
+HIV,Yes,4.34524,Yes,Yes,Yes,HIV-positive,yes,0.787,NA,NA,NA,NA,NA,1,4,no,no,no,no,0.642
+HIV,Yes,0.428571,Yes,Yes,No,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,4.34524,No,No,No,HIV-positive,yes,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.854
+HIV,Yes,0.285714,No,No,No,HIV-negative,no,0.79,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,0.428571,No,No,No,HIV-negative,no,0.596,NA,NA,NA,NA,NA,0,56,no,no,NA,no,0.833
+HIV,Yes,1,Yes,No,Yes,HIV-positive,yes,0.596,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.596
+HIV,Yes,104,No,No,Yes,HIV-negative,no,0.844,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,1,No,No,No,HIV-negative,no,0.854,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.833
+HIV,Yes,2,Yes,No,No,HIV-negative,no,0.596,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.854
+HIV,Yes,0.714286,No,No,No,HIV-negative,no,0.854,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.854
+HIV,Yes,4.34524,No,No,Yes,HIV-positive,yes,0.596,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.798
+HIV,Yes,1,No,No,No,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.854
+HIV,Yes,2,Yes,Yes,No,HIV-negative,no,0.777,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,2,No,No,No,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.787
+HIV,Yes,2,No,No,Yes,HIV-positive,yes,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.604
+HIV,Yes,1,Yes,Yes,Yes,HIV-negative,no,1,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+HIV,Yes,13.0357,No,Yes,No,HIV-negative,no,0.407,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,1,No,Yes,Yes,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.833
+HIV,Yes,0.428571,No,No,No,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,NA,no,NA,no,NA
+HIV,Yes,0.285714,No,Yes,No,HIV-positive,yes,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.844
+HIV,Yes,104,Yes,No,Yes,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.844
+HIV,Yes,0.428571,No,No,No,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.777
+HIV,Yes,2,Yes,Yes,Yes,HIV-positive,yes,0.525,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.561
+HIV,Yes,0.571429,No,No,No,HIV-positive,yes,0.596,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.448
+HIV,Yes,1,No,No,Yes,HIV-negative,no,0.642,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.369
+HIV,Yes,4.34524,No,No,Yes,Never tested,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.844
+HIV,Yes,0.428571,Yes,No,Yes,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,NA,no,0.808
+HIV,Yes,8.69048,Yes,No,No,HIV-positive,yes,1,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+HIV,Yes,0.428571,No,No,No,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.787
+HIV,Yes,1,Yes,Yes,Yes,HIV-positive,yes,0.706,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.777
+HIV,Yes,1,No,No,No,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,NA,no,0.798
+HIV,Yes,17.381,No,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,1,No,No,No,HIV-negative,no,0.66,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,2,Yes,No,Yes,Never tested,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,0.285714,No,No,No,HIV-positive,yes,1,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+HIV,Yes,1,Yes,No,Yes,HIV-negative,no,0.777,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,2,Yes,Yes,Yes,HIV-negative,no,0.596,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.854
+HIV,Yes,4.34524,Yes,No,No,HIV-positive,yes,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.685
+HIV,Yes,2,No,Yes,No,HIV-positive,yes,0.596,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.596
+HIV,Yes,1,No,No,Yes,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+HIV,Yes,0.428571,Yes,Yes,Yes,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,NA,no,0.639
+HIV,Yes,1,Yes,No,Yes,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,0.571429,Yes,Yes,Yes,HIV-negative,no,0.744,NA,NA,NA,NA,NA,0,56,NA,no,NA,no,NA
+HIV,Yes,4.34524,Yes,No,Yes,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+HIV,Yes,0.571429,No,No,No,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,0.428571,No,No,Yes,HIV-negative,no,0.844,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.596
+HIV,Yes,4.34524,Yes,Yes,Yes,HIV-negative,no,0.639,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.854
+HIV,Yes,2,No,No,No,HIV-positive,yes,0.66,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.309
+HIV,Yes,4.34524,Yes,Yes,Yes,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.642
+HIV,Yes,2,No,No,Yes,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,NA,no,NA
+HIV,Yes,4.34524,Yes,No,Yes,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.854
+HIV,Yes,13.0357,No,No,No,HIV-negative,no,0.801,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.787
+HIV,Yes,0.285714,Yes,Yes,Yes,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+HIV,Yes,0.428571,Yes,No,Yes,HIV-negative,no,0.552,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,2,Yes,Yes,Yes,HIV-positive,yes,0.604,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.787
+HIV,Yes,2,Yes,Yes,Yes,Never tested,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,1,No,Yes,No,HIV-positive,yes,0.787,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+HIV,Yes,1,No,No,No,HIV-negative,no,0.777,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+HIV,Yes,2,Yes,Yes,No,HIV-positive,yes,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.469
+HIV,Yes,0.428571,No,No,No,HIV-negative,no,0.854,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.854
+HIV,Yes,0.428571,No,Yes,Yes,HIV-negative,no,0.596,NA,NA,NA,NA,NA,0,56,NA,no,NA,no,NA
+HIV,Yes,8.69048,Yes,Yes,Yes,HIV-negative,no,0.596,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.854
+HIV,Yes,4.34524,Yes,No,No,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,NA
+HIV,Yes,2,No,No,No,HIV-negative,no,0.741,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,2,Yes,No,Yes,HIV-negative,no,0.604,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+HIV,Yes,0.428571,No,No,No,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+HIV,Yes,0.285714,Yes,No,Yes,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.787
+HIV,Yes,2,Yes,No,Yes,Never tested,no,0.833,NA,NA,NA,NA,NA,0,56,NA,no,NA,no,NA
+HIV,Yes,1,No,No,Yes,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,0,no,no,no,NA,NA
+HIV,Yes,4.34524,Yes,No,No,HIV-negative,no,0.706,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+HIV,Yes,4.34524,No,No,Yes,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+HIV,Yes,3,Yes,Yes,Yes,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.798
+HIV,Yes,1,No,Yes,Yes,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,0.285714,No,No,No,HIV-negative,no,0.777,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,1,No,Yes,Yes,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,0.428571,Yes,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,8.69048,No,Yes,Yes,HIV-negative,no,0.854,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+HIV,Yes,2,Yes,No,Yes,HIV-negative,no,0.688,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,8.69048,Yes,Yes,Yes,HIV-negative,no,0.652,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.787
+HIV,Yes,3,Yes,Yes,Yes,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.854
+HIV,Yes,0.285714,No,No,No,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+HIV,Yes,0.428571,Yes,No,Yes,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,1,No,Yes,Yes,HIV-negative,no,0.777,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.854
+HIV,Yes,1,No,No,No,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.854
+HIV,Yes,1,Yes,Yes,Yes,HIV-negative,no,0.642,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.833
+HIV,Yes,1,No,No,Yes,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+HIV,Yes,0.428571,No,No,Yes,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,NA,no,no,no,NA
+HIV,Yes,0.428571,No,Yes,Yes,HIV-negative,no,0.844,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+HIV,Yes,0.428571,No,No,No,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,3,No,No,No,HIV-negative,no,0.833,NA,NA,NA,NA,NA,1,0,no,yes,no,no,0.777
+HIV,Yes,4.34524,No,Yes,Yes,HIV-negative,no,0.854,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+HIV,Yes,4.34524,No,Yes,Yes,Never tested,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+HIV,Yes,1,Yes,Yes,Yes,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.762
+HIV,Yes,1,No,Yes,No,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.369
+HIV,Yes,0.142857,No,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,3,No,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,0.428571,No,No,Yes,HIV-negative,no,0.695,NA,NA,NA,NA,NA,0,56,no,no,no,no,NA
+HIV,Yes,1,No,No,Yes,HIV-positive,yes,0.604,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.833
+HIV,Yes,3,No,No,No,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.777
+HIV,Yes,3,No,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.596
+HIV,Yes,0.428571,Yes,Yes,No,HIV-positive,yes,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,13.0357,Yes,Yes,Yes,HIV-negative,no,0.361,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.66
+HIV,Yes,1,No,No,No,HIV-positive,yes,1,NA,NA,NA,NA,NA,0,56,yes,no,no,no,0.596
+HIV,Yes,2,No,No,No,HIV-negative,no,0.777,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,1,No,No,No,HIV-negative,no,0.695,NA,NA,NA,NA,NA,0,56,NA,no,no,no,0.787
+HIV,Yes,1,No,No,No,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,0.428571,Yes,No,No,HIV-positive,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,4.34524,No,No,No,HIV-negative,no,0.652,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.844
+HIV,Yes,8.69048,No,No,No,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,NA,no,NA,no,NA
+HIV,Yes,2,No,No,Yes,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.844
+HIV,Yes,4.34524,No,No,No,HIV-negative,no,0.596,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.787
+HIV,Yes,0.571429,Yes,Yes,Yes,HIV-negative,no,0.798,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.844
+HIV,Yes,4.34524,Yes,Yes,Yes,Never tested,no,0.731,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+HIV,Yes,0.571429,No,No,No,HIV-negative,no,0.798,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,0.428571,Yes,Yes,No,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+HIV,Yes,2,Yes,No,No,HIV-negative,no,0.844,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.854
+HIV,Yes,2,No,Yes,Yes,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.844
+HIV,Yes,0.428571,No,No,No,HIV-positive,yes,0.762,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.66
+HIV,Yes,4.34524,No,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,NA,no,no,no,NA
+HIV,Yes,0.571429,Yes,Yes,Yes,Never tested,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.833
+HIV,Yes,0.285714,No,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+HIV,Yes,0.285714,No,No,Yes,HIV-negative,no,0.798,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.79
+HIV,Yes,1,No,No,Yes,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.844
+HIV,Yes,1,No,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,26.0714,Yes,No,Yes,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+HIV,Yes,1,No,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.777
+HIV,Yes,3,Yes,No,Yes,HIV-negative,no,0.642,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,0.714286,No,Yes,No,HIV-negative,no,0.695,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.833
+HIV,Yes,1,No,No,No,HIV-positive,yes,0.787,NA,NA,NA,NA,NA,0,56,no,no,yes,no,1
+HIV,Yes,1,No,Yes,No,HIV-negative,no,0.79,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.798
+HIV,Yes,0.857143,No,No,No,HIV-negative,no,0.29,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.808
+HIV,Yes,0.428571,Yes,No,Yes,HIV-negative,no,1,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+HIV,Yes,1,No,No,Yes,HIV-negative,no,0.854,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.854
+HIV,Yes,1,Yes,Yes,Yes,HIV-negative,no,0.652,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.604
+HIV,Yes,2,No,No,Yes,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,NA,no,no,no,1
+HIV,Yes,4.34524,No,No,No,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,NA
+HIV,Yes,2,No,No,Yes,HIV-negative,no,0.709,NA,NA,NA,NA,NA,0,56,NA,no,NA,no,NA
+HIV,Yes,1,Yes,No,Yes,HIV-negative,no,0.777,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.777
+HIV,Yes,0.571429,No,No,No,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.639
+HIV,Yes,4.34524,Yes,No,No,HIV-negative,no,0.833,NA,NA,NA,NA,NA,1,23,no,no,no,no,1
+HIV,Yes,52,Yes,Yes,Yes,HIV-positive,yes,0.66,NA,NA,NA,NA,NA,1,8,no,no,no,no,0.499
+HIV,Yes,8.69048,Yes,Yes,Yes,HIV-negative,no,0.453,NA,NA,NA,NA,NA,0,56,NA,no,no,no,NA
+HIV,Yes,1,Yes,Yes,Yes,HIV-negative,no,0.617,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,2,Yes,Yes,Yes,HIV-positive,yes,0.234,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.787
+HIV,Yes,0.428571,No,No,No,HIV-negative,no,0.685,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.833
+HIV,Yes,0.428571,Yes,Yes,Yes,Never tested,no,0.731,NA,NA,NA,NA,NA,0,56,NA,no,NA,no,NA
+HIV,Yes,8.69048,Yes,Yes,Yes,Never tested,yes,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.79
+HIV,Yes,0.428571,No,No,No,HIV-positive,yes,0.808,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,0.428571,No,Yes,No,HIV-negative,no,0.734,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+HIV,Yes,1,No,No,Yes,HIV-negative,no,0.642,NA,NA,NA,NA,NA,0,56,NA,no,no,no,1
+HIV,Yes,156,Yes,No,Yes,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+HIV,Yes,2,No,No,No,HIV-positive,yes,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,1,Yes,No,Yes,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.844
+HIV,Yes,0.714286,No,No,Yes,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.798
+HIV,Yes,2,Yes,Yes,Yes,HIV-positive,yes,0.695,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.854
+HIV,Yes,2,No,Yes,Yes,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.798
+HIV,Yes,2,Yes,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,0.428571,No,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,NA,no,NA,no,NA
+HIV,Yes,0.571429,No,No,No,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+HIV,Yes,13.0357,Yes,No,Yes,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,1,No,Yes,Yes,Never tested,no,0.787,NA,NA,NA,NA,NA,0,56,NA,no,NA,no,NA
+HIV,Yes,1,No,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,8.69048,No,Yes,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,4.34524,No,No,No,HIV-positive,yes,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.833
+HIV,Yes,1,No,No,No,HIV-positive,yes,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.833
+HIV,Yes,0.428571,Yes,No,No,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.854
+HIV,Yes,0.571429,No,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.777
+HIV,Yes,2,No,No,No,HIV-negative,no,0.695,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,2,No,No,Yes,HIV-positive,yes,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.596
+HIV,Yes,4.34524,Yes,Yes,Yes,HIV-positive,yes,0.579,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+HIV,Yes,0.285714,Yes,Yes,No,HIV-negative,no,0.642,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,2,Yes,Yes,Yes,HIV-positive,yes,0.844,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.685
+HIV,Yes,0.571429,Yes,Yes,Yes,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.787
+HIV,Yes,0.428571,Yes,No,No,HIV-negative,no,0.706,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.787
+HIV,Yes,0.428571,No,No,No,HIV-negative,no,0.777,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.777
+HIV,Yes,4.34524,No,No,No,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+HIV,Yes,1,Yes,Yes,Yes,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,56,NA,no,NA,no,NA
+HIV,Yes,0.428571,No,Yes,No,HIV-negative,no,0.777,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,0.428571,Yes,Yes,No,HIV-negative,no,0.425,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,4.34524,Yes,Yes,Yes,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,0.285714,No,Yes,Yes,Never tested,no,0.361,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.787
+HIV,Yes,0.714286,Yes,Yes,Yes,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,3,Yes,No,Yes,HIV-positive,yes,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.854
+HIV,Yes,52,Yes,No,Yes,HIV-negative,no,0.568,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.833
+HIV,Yes,4.34524,Yes,Yes,Yes,HIV-positive,yes,0.844,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.326
+HIV,Yes,1,Yes,Yes,Yes,HIV-positive,yes,0.642,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,0.428571,No,No,No,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,NA,no,1
+HIV,Yes,0.428571,Yes,Yes,Yes,HIV-positive,yes,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.744
+HIV,Yes,1,No,No,No,HIV-negative,no,0.777,NA,NA,NA,NA,NA,0,56,no,no,no,no,-0.01
+HIV,Yes,0.571429,No,Yes,No,HIV-negative,no,0.798,NA,NA,NA,NA,NA,0,56,yes,no,no,no,1
+HIV,Yes,0.428571,No,No,No,HIV-negative,no,0.695,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,0.428571,No,No,Yes,HIV-negative,no,1,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+HIV,Yes,0.428571,No,No,No,HIV-positive,yes,1,NA,NA,NA,NA,NA,0,56,NA,no,no,no,0.787
+HIV,Yes,0.714286,No,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,1,No,No,No,HIV-negative,no,0.777,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.833
+HIV,Yes,0.428571,No,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.741
+HIV,Yes,2,Yes,Yes,Yes,HIV-negative,no,0.798,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+HIV,Yes,0.428571,No,No,No,HIV-negative,no,0.808,NA,NA,NA,NA,NA,0,56,NA,no,NA,no,NA
+HIV,Yes,4.34524,Yes,No,Yes,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.854
+HIV,Yes,2,Yes,No,Yes,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.741
+HIV,Yes,0.285714,Yes,No,Yes,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.777
+HIV,Yes,4.34524,Yes,Yes,Yes,HIV-negative,no,0.642,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+HIV,Yes,8.69048,Yes,No,Yes,HIV-positive,yes,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.469
+HIV,Yes,4.34524,Yes,No,Yes,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+HIV,Yes,0.428571,No,No,No,HIV-negative,no,0.844,NA,NA,NA,NA,NA,0,56,no,no,no,no,NA
+HIV,Yes,2,No,Yes,Yes,HIV-negative,no,0.469,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,8.69048,No,No,Yes,HIV-negative,no,0.642,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+HIV,Yes,0.428571,No,No,No,HIV-negative,no,0.695,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.787
+HIV,Yes,0.428571,Yes,No,No,HIV-negative,no,0.639,NA,NA,NA,NA,NA,0,56,yes,no,no,no,1
+HIV,Yes,1,Yes,No,No,Never tested,no,0.844,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.777
+HIV,Yes,0.428571,No,No,Yes,HIV-negative,no,0.777,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+HIV,Yes,0.571429,No,No,No,HIV-negative,no,0.66,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.596
+HIV,Yes,2,No,No,Yes,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.808
+HIV,Yes,13.0357,Yes,Yes,Yes,Never tested,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,0.571429,No,No,Yes,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,4.34524,Yes,Yes,Yes,HIV-negative,no,0.234,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,52,Yes,Yes,Yes,HIV-negative,no,0.695,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.469
+HIV,Yes,1,Yes,No,Yes,HIV-negative,no,0.844,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,0.571429,Yes,No,Yes,Never tested,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,0.428571,No,No,No,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,2,Yes,No,No,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,NA,no,NA,no,NA
+HIV,Yes,4.34524,Yes,Yes,Yes,HIV-negative,no,0.596,NA,NA,NA,NA,NA,0,56,no,no,NA,no,0.787
+HIV,Yes,1,No,Yes,No,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,0.428571,Yes,No,Yes,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+HIV,Yes,0.571429,No,No,No,HIV-negative,yes,0.844,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.833
+HIV,Yes,13.0357,No,No,No,HIV-negative,no,0.596,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,1,No,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.361
+HIV,Yes,2,No,No,No,HIV-positive,yes,0.854,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,2,Yes,Yes,Yes,HIV-negative,no,0.234,NA,NA,NA,NA,NA,0,56,no,no,NA,no,0.844
+HIV,Yes,3,Yes,Yes,Yes,HIV-positive,yes,0.33,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.777
+HIV,Yes,4.34524,No,No,No,HIV-negative,no,0.777,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+HIV,Yes,4.34524,No,No,No,HIV-negative,no,0.844,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.833
+HIV,Yes,4.34524,No,No,No,HIV-negative,no,0.844,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,3,Yes,Yes,Yes,HIV-negative,no,0.685,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.854
+HIV,Yes,1,No,Yes,Yes,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,1,Yes,No,Yes,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+HIV,Yes,2,Yes,Yes,Yes,Never tested,no,0.652,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.777
+HIV,Yes,0.428571,No,No,No,HIV-positive,yes,0.844,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,0.571429,No,No,No,Never tested,no,0.695,NA,NA,NA,NA,NA,0,56,NA,no,NA,no,NA
+HIV,Yes,0.428571,No,Yes,Yes,Never tested,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.833
+HIV,Yes,2,No,No,No,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,1,Yes,No,Yes,HIV-negative,no,0.407,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.734
+HIV,Yes,0.428571,Yes,Yes,Yes,HIV-negative,no,0.652,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.787
+HIV,Yes,13.0357,No,Yes,No,HIV-negative,no,0.777,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,4.34524,Yes,Yes,Yes,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.604
+HIV,Yes,1,Yes,Yes,Yes,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.844
+HIV,Yes,8.69048,No,Yes,No,HIV-positive,yes,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.596
+HIV,Yes,2,No,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,1,No,Yes,Yes,HIV-negative,no,0.496,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.854
+HIV,Yes,1,Yes,Yes,Yes,HIV-positive,yes,0.777,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.777
+HIV,Yes,8.69048,No,Yes,No,HIV-positive,yes,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+HIV,Yes,2,No,No,No,HIV-negative,yes,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.787
+HIV,Yes,0.714286,Yes,No,No,HIV-negative,no,0.652,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.652
+HIV,Yes,4.34524,No,No,No,HIV-positive,yes,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.854
+HIV,Yes,0.285714,No,Yes,No,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,4.34524,No,Yes,No,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.798
+HIV,Yes,1,Yes,Yes,Yes,HIV-negative,no,0.639,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,0.428571,No,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.777
+HIV,Yes,2,No,No,No,HIV-positive,yes,0.798,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+HIV,Yes,4.34524,Yes,No,Yes,HIV-positive,yes,0.639,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+HIV,Yes,0.571429,No,Yes,Yes,HIV-positive,yes,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,0.714286,No,No,Yes,HIV-positive,yes,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.688
+HIV,Yes,0.428571,No,No,Yes,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,NA,no,NA,no,NA
+HIV,Yes,0.571429,No,No,No,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.833
+HIV,Yes,0.285714,No,No,No,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,NA,no,NA,no,NA
+HIV,Yes,4.34524,Yes,Yes,Yes,Never tested,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.833
+HIV,Yes,1,No,No,Yes,HIV-negative,no,0.854,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.833
+HIV,Yes,0.428571,Yes,Yes,Yes,HIV-positive,yes,0.808,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+HIV,Yes,0.428571,No,Yes,No,HIV-negative,no,0.596,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+HIV,Yes,4.34524,No,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,3,No,No,No,HIV-positive,yes,0.698,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.798
+HIV,Yes,5,No,Yes,No,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.269
+HIV,Yes,0.285714,No,No,No,HIV-negative,no,0.777,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,3,No,No,Yes,Never tested,no,0.596,NA,NA,NA,NA,NA,0,56,NA,no,no,no,NA
+HIV,Yes,1,No,Yes,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.844
+HIV,Yes,0.285714,No,Yes,No,HIV-negative,no,0.798,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.798
+HIV,Yes,1,Yes,Yes,No,Never tested,no,0.596,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.596
+HIV,Yes,4.34524,Yes,No,Yes,HIV-negative,no,0.844,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+HIV,Yes,1,No,No,No,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,2,Yes,Yes,Yes,HIV-positive,yes,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.777
+HIV,Yes,21.7262,No,Yes,Yes,HIV-positive,yes,0.762,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.596
+HIV,Yes,3,No,Yes,No,HIV-negative,no,0.596,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.777
+HIV,Yes,0.428571,Yes,No,Yes,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+HIV,Yes,2,Yes,No,Yes,HIV-positive,yes,0.604,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.596
+HIV,Yes,1,Yes,Yes,Yes,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.833
+HIV,Yes,0.428571,No,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,0.428571,No,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.752
+HIV,Yes,0.571429,Yes,Yes,Yes,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,0.428571,No,No,No,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,1,Yes,No,Yes,HIV-positive,yes,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.787
+HIV,Yes,0.285714,No,No,No,HIV-positive,yes,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,1,No,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,4.34524,Yes,Yes,Yes,Never tested,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.777
+HIV,Yes,0.428571,No,Yes,Yes,HIV-negative,no,0.425,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+HIV,Yes,1,No,No,No,Never tested,no,1,NA,NA,NA,NA,NA,0,56,NA,no,NA,no,NA
+HIV,Yes,1,No,No,No,HIV-negative,no,0.777,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,0.571429,No,No,No,HIV-negative,no,0.652,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,0.428571,No,No,Yes,HIV-negative,no,0.596,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+HIV,Yes,0.428571,No,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.833
+HIV,Yes,1,Yes,No,Yes,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,0.285714,Yes,No,No,HIV-negative,no,0.854,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,2,Yes,Yes,Yes,HIV-negative,no,0.844,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.787
+HIV,Yes,3,Yes,Yes,Yes,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+HIV,Yes,3,Yes,Yes,Yes,HIV-negative,no,0.808,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.798
+HIV,Yes,1,No,No,Yes,HIV-negative,no,0.652,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+HIV,Yes,2,No,Yes,No,HIV-positive,yes,0.604,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,52,Yes,Yes,Yes,HIV-positive,yes,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.787
+HIV,Yes,1,No,No,No,HIV-positive,yes,0.596,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.596
+HIV,Yes,3,Yes,Yes,No,HIV-positive,yes,0.639,NA,NA,NA,NA,NA,0,31,NA,no,NA,yes,0
+HIV,Yes,3,Yes,No,Yes,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.787
+HIV,Yes,0.285714,No,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+HIV,Yes,3,No,Yes,No,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.787
+HIV,Yes,0.714286,No,No,No,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.463
+HIV,Yes,1,Yes,Yes,Yes,HIV-negative,no,0.639,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.639
+HIV,Yes,1,No,No,No,HIV-positive,yes,0.552,NA,NA,NA,NA,NA,0,56,no,no,no,no,NA
+HIV,Yes,0.428571,Yes,Yes,Yes,HIV-positive,yes,0.695,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,0.428571,No,No,Yes,HIV-negative,no,0.777,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.833
+HIV,Yes,8.69048,Yes,Yes,Yes,HIV-positive,yes,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+HIV,Yes,0.428571,Yes,No,Yes,HIV-negative,no,0.596,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.596
+HIV,Yes,104,Yes,No,Yes,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.552
+HIV,Yes,2,No,Yes,Yes,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.727
+HIV,Yes,1,No,No,No,HIV-negative,no,0.596,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.833
+HIV,Yes,0.857143,No,No,No,HIV-positive,yes,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.833
+HIV,Yes,3,No,Yes,No,HIV-negative,no,0.604,NA,NA,NA,NA,NA,0,56,no,no,NA,no,1
+HIV,Yes,0.428571,No,No,No,HIV-negative,no,0.642,NA,NA,NA,NA,NA,0,56,no,no,NA,no,0.844
+HIV,Yes,0.428571,No,No,No,HIV-positive,yes,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,2,Yes,Yes,Yes,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.604
+HIV,Yes,4.34524,Yes,No,Yes,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,0.571429,Yes,Yes,Yes,HIV-negative,no,0.596,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.854
+HIV,Yes,1,No,Yes,No,HIV-positive,yes,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.604
+HIV,Yes,0.428571,No,No,No,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,1,No,No,No,HIV-negative,no,0.777,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,1,No,No,No,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,3,No,Yes,No,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.844
+HIV,Yes,2,Yes,No,Yes,HIV-negative,no,0.844,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,0.285714,Yes,No,Yes,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,0.428571,No,Yes,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.66
+HIV,Yes,8.69048,Yes,No,Yes,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.787
+HIV,Yes,1,No,Yes,No,HIV-positive,yes,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.787
+HIV,Yes,0.428571,Yes,No,Yes,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.844
+HIV,Yes,2,Yes,No,No,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.469
+HIV,Yes,2,Yes,Yes,Yes,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.685
+HIV,Yes,3,No,Yes,No,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,0.428571,Yes,Yes,Yes,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,NA,no,1
+HIV,Yes,0.428571,No,No,No,Never tested,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,8.69048,No,No,No,HIV-negative,no,0.777,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,1,No,No,No,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.833
+HIV,Yes,0.285714,No,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+HIV,Yes,1,No,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.596
+HIV,Yes,0.285714,No,No,No,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.688
+HIV,Yes,1,Yes,Yes,Yes,HIV-positive,yes,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.787
+HIV,Yes,0.428571,No,No,No,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+HIV,Yes,0.571429,No,No,No,HIV-negative,no,0.642,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+HIV,Yes,2,Yes,No,Yes,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.596
+HIV,Yes,0.428571,No,No,No,HIV-negative,no,0.798,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.734
+HIV,Yes,0.428571,No,No,Yes,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.79
+HIV,Yes,2,No,No,No,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+HIV,Yes,0.285714,No,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,NA,no,NA,no,NA
+HIV,Yes,1,No,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.787
+HIV,Yes,0.285714,No,No,Yes,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,2,No,No,Yes,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,1,Yes,No,No,HIV-negative,no,0.777,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.833
+HIV,Yes,4.34524,No,No,No,HIV-negative,no,0.604,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+HIV,Yes,0.428571,No,No,Yes,HIV-positive,yes,0.596,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.074
+HIV,Yes,1,No,No,No,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,0.428571,No,No,No,HIV-negative,no,0.844,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.833
+HIV,Yes,0.285714,No,No,No,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+HIV,Yes,0.428571,No,No,No,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,156,No,Yes,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.854
+HIV,Yes,1,No,No,Yes,Never tested,no,0.777,NA,NA,NA,NA,NA,0,56,no,no,yes,no,1
+HIV,Yes,1,No,No,Yes,HIV-negative,no,0.777,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.844
+HIV,Yes,3,No,No,Yes,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.706
+HIV,Yes,0.285714,Yes,No,Yes,HIV-positive,yes,0.731,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+HIV,Yes,1,No,No,Yes,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.217
+HIV,Yes,1,No,No,No,HIV-negative,no,0.596,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.596
+HIV,Yes,0.285714,No,No,No,HIV-negative,no,0.663,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,3,No,No,No,Never tested,no,0.854,NA,NA,NA,NA,NA,0,56,NA,no,no,no,1
+HIV,Yes,1,No,Yes,No,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.844
+HIV,Yes,4.34524,Yes,Yes,Yes,HIV-negative,no,0.844,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.639
+HIV,Yes,17.381,Yes,No,Yes,HIV-negative,no,0.787,NA,NA,NA,NA,NA,1,1,no,no,no,no,1
+HIV,Yes,2,No,Yes,No,HIV-negative,no,0.642,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.642
+HIV,Yes,0.571429,Yes,Yes,Yes,HIV-positive,yes,0.604,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.604
+HIV,Yes,2,Yes,Yes,Yes,Never tested,no,0.833,NA,NA,NA,NA,NA,0,56,NA,no,no,no,NA
+HIV,Yes,4.34524,Yes,Yes,Yes,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,1,Yes,Yes,Yes,Never tested,no,0.604,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+HIV,Yes,1,No,Yes,No,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,56,NA,no,NA,no,NA
+HIV,Yes,0.285714,No,Yes,No,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,0.428571,Yes,Yes,Yes,HIV-positive,yes,0.798,NA,NA,NA,NA,NA,1,1,no,no,no,no,1
+HIV,Yes,4.34524,No,Yes,No,HIV-positive,yes,0.217,NA,NA,NA,NA,NA,0,16,NA,no,NA,yes,0
+HIV,Yes,4.34524,Yes,No,No,HIV-negative,no,0.844,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.844
+HIV,Yes,1,Yes,Yes,Yes,HIV-negative,no,0.695,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+HIV,Yes,2,No,No,No,HIV-negative,no,0.844,NA,NA,NA,NA,NA,0,56,NA,no,no,no,0.777
+HIV,Yes,2,No,Yes,Yes,HIV-negative,no,0.777,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.844
+HIV,Yes,1,No,No,Yes,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+HIV,Yes,0.428571,No,No,Yes,HIV-negative,no,0.777,NA,NA,NA,NA,NA,0,56,NA,no,no,no,1
+HIV,Yes,1,No,No,Yes,HIV-positive,yes,0.798,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+HIV,Yes,0.714286,No,No,No,HIV-positive,yes,0.66,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.639
+HIV,Yes,0.285714,No,No,Yes,Never tested,no,0.787,NA,NA,NA,NA,NA,0,56,NA,no,NA,no,NA
+HIV,Yes,8.69048,Yes,Yes,Yes,HIV-negative,no,0.854,NA,NA,NA,NA,NA,0,56,no,no,no,no,NA
+HIV,Yes,2,No,Yes,Yes,HIV-positive,yes,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.798
+HIV,Yes,1,No,No,No,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,1,Yes,No,Yes,HIV-positive,yes,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.596
+HIV,Yes,3,Yes,Yes,Yes,HIV-positive,yes,1,NA,NA,NA,NA,NA,1,54,no,no,no,no,1
+HIV,Yes,1,Yes,No,Yes,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.604
+HIV,Yes,0.428571,No,No,Yes,HIV-negative,no,0.798,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.798
+HIV,Yes,0.714286,No,No,No,HIV-negative,no,0.596,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.787
+HIV,Yes,0.571429,No,No,Yes,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV,Yes,13.0357,Yes,Yes,Yes,HIV-positive,yes,0.642,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.777
+HIV,Yes,0.428571,Yes,No,Yes,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.798
+HIV,Yes,4.34524,No,Yes,Yes,HIV-negative,no,0.798,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.833
+HIV-TB,Yes,0.428571,No,No,No,HIV-negative,no,1,Yes,46,CAD4TBv5 positive,Yes,NA,0,56,NA,no,no,no,1
+HIV-TB,Yes,0.285714,No,No,No,HIV-negative,no,0.844,Yes,44,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,13.0357,No,No,No,HIV-negative,no,0.854,Yes,53,CAD4TBv5 positive,Yes,NA,0,56,NA,no,NA,no,NA
+HIV-TB,Yes,0.428571,No,No,No,HIV-negative,no,1,Yes,39,CAD4TBv5 negative,NA,NA,0,0,NA,no,NA,NA,NA
+HIV-TB,Yes,4.34524,No,Yes,Yes,HIV-negative,no,0.642,Yes,58,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.731
+HIV-TB,Yes,0.571429,No,Yes,Yes,Never tested,no,0.568,Yes,33,CAD4TBv5 negative,NA,NA,0,0,NA,no,NA,NA,NA
+HIV-TB,Yes,0.285714,No,No,No,HIV-negative,no,0.844,Yes,30,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,0.561
+HIV-TB,Yes,0.428571,Yes,No,No,HIV-negative,no,0.596,Yes,45,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,NA
+HIV-TB,Yes,3,No,No,Yes,Never tested,no,0.844,Yes,22,CAD4TBv5 negative,NA,NA,0,0,NA,no,NA,NA,NA
+HIV-TB,Yes,312,Yes,No,Yes,HIV-negative,no,1,Yes,80,CAD4TBv5 positive,No,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,1,No,No,Yes,HIV-negative,no,0.833,Yes,57,CAD4TBv5 positive,Yes,NA,0,56,NA,no,no,no,0.698
+HIV-TB,Yes,0.428571,No,No,No,HIV-negative,no,0.731,Yes,44,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,0.596
+HIV-TB,Yes,0.428571,No,No,No,HIV-negative,no,0.833,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.854
+HIV-TB,Yes,1,No,No,No,HIV-positive,yes,0.596,Yes,60,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,0.428571,Yes,Yes,Yes,HIV-negative,no,0.833,Yes,61,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,13.0357,No,No,Yes,HIV-positive,yes,1,Yes,46,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.844
+HIV-TB,Yes,2,No,Yes,Yes,HIV-positive,yes,0.787,Yes,29,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,0.854
+HIV-TB,Yes,1,Yes,Yes,Yes,HIV-negative,no,0.833,Yes,36,CAD4TBv5 negative,NA,NA,0,56,no,no,NA,no,0.787
+HIV-TB,Yes,0.571429,No,No,No,HIV-negative,no,0.66,Yes,63,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.787
+HIV-TB,Yes,0.428571,No,Yes,No,HIV-negative,no,0.66,Yes,62,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.787
+HIV-TB,Yes,1,Yes,No,No,Never tested,no,1,Yes,32,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,0.428571,No,Yes,No,HIV-negative,no,0.731,Yes,52,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.854
+HIV-TB,Yes,1,Yes,Yes,No,HIV-negative,yes,0.596,Yes,45,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.844
+HIV-TB,Yes,26.0714,No,Yes,No,HIV-negative,no,0.833,Yes,47,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.66
+HIV-TB,Yes,2,No,No,Yes,HIV-negative,no,0.777,Yes,53,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,1,No,No,Yes,HIV-negative,no,0.854,Yes,43,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,4.34524,No,No,Yes,HIV-negative,no,1,Yes,56,CAD4TBv5 positive,No,NA,0,56,no,no,no,no,0.833
+HIV-TB,Yes,0.285714,No,No,No,Never tested,no,1,Yes,35,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,8.69048,No,No,No,HIV-positive,yes,0.596,NA,NA,NA,NA,NA,0,56,NA,no,NA,no,NA
+HIV-TB,Yes,0.571429,Yes,No,Yes,HIV-negative,no,0.833,Yes,53,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,0.571429,No,Yes,Yes,Never tested,no,0.744,Yes,57,CAD4TBv5 positive,Yes,NA,0,56,NA,no,NA,no,NA
+HIV-TB,Yes,1,Yes,No,Yes,HIV-negative,no,0.639,Yes,43,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,0.571429,No,No,Yes,HIV-negative,no,0.787,Yes,60,CAD4TBv5 positive,Yes,NA,0,56,NA,no,NA,no,NA
+HIV-TB,Yes,1,Yes,Yes,Yes,HIV-positive,yes,1,Yes,28,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,3,No,No,No,HIV-negative,no,0.596,Yes,52,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.833
+HIV-TB,Yes,0.428571,Yes,Yes,Yes,HIV-positive,yes,0.596,Yes,62,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.663
+HIV-TB,Yes,0.285714,No,Yes,Yes,HIV-negative,no,0.604,Yes,27,CAD4TBv5 negative,NA,NA,0,0,NA,no,NA,NA,NA
+HIV-TB,Yes,0.428571,No,Yes,Yes,Never tested,no,0.731,Yes,55,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.787
+HIV-TB,Yes,2,No,Yes,Yes,HIV-negative,no,0.731,Yes,53,CAD4TBv5 positive,Yes,NA,0,56,NA,no,NA,no,NA
+HIV-TB,Yes,8.69048,No,No,No,HIV-negative,no,0.604,Yes,57,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,NA
+HIV-TB,Yes,0.571429,No,No,No,HIV-negative,no,1,Yes,53,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.854
+HIV-TB,Yes,3,Yes,Yes,Yes,HIV-positive,yes,0.798,Yes,59,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.731
+HIV-TB,Yes,4.34524,No,Yes,No,HIV-negative,no,0.798,Yes,40,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,0.604
+HIV-TB,Yes,13.0357,No,No,Yes,HIV-negative,no,0.604,Yes,65,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.808
+HIV-TB,Yes,13.0357,No,Yes,No,HIV-negative,no,0.66,Yes,34,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,52,No,No,No,HIV-negative,no,0.731,Yes,26,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,8.69048,No,Yes,Yes,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+HIV-TB,Yes,1,No,No,No,HIV-negative,no,0.731,Yes,48,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,1,Yes,Yes,Yes,HIV-positive,yes,0.731,Yes,66,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,0.571429,Yes,Yes,Yes,HIV-negative,no,0.798,Yes,26,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,0.833
+HIV-TB,Yes,1,No,Yes,No,HIV-positive,yes,0.596,Yes,59,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.833
+HIV-TB,Yes,2,Yes,Yes,No,HIV-positive,yes,0.695,Yes,48,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.731
+HIV-TB,Yes,2,No,No,No,Never tested,no,0.833,Yes,65,CAD4TBv5 positive,Yes,NA,0,0,NA,no,NA,NA,NA
+HIV-TB,Yes,0.428571,No,Yes,No,HIV-negative,no,0.833,Yes,65,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,1,No,No,Yes,HIV-negative,no,0.787,Yes,23,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,0.777
+HIV-TB,Yes,0.857143,No,No,No,HIV-negative,no,1,Yes,53,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.854
+HIV-TB,Yes,3,No,No,No,HIV-negative,no,0.731,Yes,53,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.833
+HIV-TB,Yes,1,Yes,Yes,No,HIV-negative,no,0.731,Yes,95,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.79
+HIV-TB,Yes,1,No,No,No,HIV-negative,no,0.652,Yes,53,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.787
+HIV-TB,Yes,1,Yes,No,Yes,HIV-negative,no,0.833,Yes,39,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,0.844
+HIV-TB,Yes,2,No,No,Yes,HIV-negative,no,0.596,Yes,28,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,0.596
+HIV-TB,Yes,0.428571,Yes,No,Yes,HIV-positive,yes,0.854,Yes,59,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.755
+HIV-TB,Yes,1,No,No,Yes,HIV-negative,no,0.798,Yes,67,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,13.0357,No,Yes,Yes,HIV-negative,no,0.66,Yes,89,CAD4TBv5 positive,Yes,mtb_detected,1,1,no,no,no,no,1
+HIV-TB,Yes,0.428571,No,No,No,HIV-negative,no,1,Yes,59,CAD4TBv5 positive,NA,NA,0,0,NA,no,NA,NA,NA
+HIV-TB,Yes,13.0357,No,No,No,HIV-positive,yes,0.808,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.844
+HIV-TB,Yes,3,Yes,Yes,Yes,HIV-negative,no,0.596,Yes,60,CAD4TBv5 positive,Yes,NA,0,0,NA,no,NA,NA,NA
+HIV-TB,Yes,0.714286,No,No,No,HIV-negative,no,1,Yes,30,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,0.596
+HIV-TB,Yes,0.428571,No,Yes,Yes,Never tested,no,0.596,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.642
+HIV-TB,Yes,0.428571,Yes,No,No,HIV-negative,no,1,Yes,38,CAD4TBv5 negative,NA,NA,0,0,NA,no,NA,NA,NA
+HIV-TB,Yes,0.285714,No,Yes,No,HIV-negative,no,0.787,Yes,45,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.639
+HIV-TB,Yes,3,No,No,Yes,HIV-negative,no,0.695,Yes,32,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,0.777
+HIV-TB,Yes,0.571429,No,No,No,HIV-positive,yes,0.731,Yes,56,CAD4TBv5 positive,NA,NA,0,56,no,no,no,no,0.741
+HIV-TB,Yes,52,Yes,Yes,No,HIV-negative,no,0.234,Yes,58,CAD4TBv5 positive,NA,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,13.0357,No,Yes,Yes,Never tested,no,0.731,Yes,43,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,1,Yes,No,Yes,HIV-negative,no,0.13,Yes,60,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.731
+HIV-TB,Yes,0.428571,No,No,No,HIV-negative,no,0.787,Yes,44,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,0.428571,No,Yes,No,HIV-negative,no,1,Yes,67,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.777
+HIV-TB,Yes,1,No,No,Yes,HIV-positive,yes,0.777,Yes,34,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,0.695
+HIV-TB,Yes,1,No,Yes,No,HIV-negative,no,0.787,Yes,100,CAD4TBv5 positive,Yes,NA,0,56,NA,no,no,no,1
+HIV-TB,Yes,1,Yes,No,No,HIV-positive,yes,0.833,Yes,57,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.639
+HIV-TB,Yes,8.69048,No,Yes,No,HIV-positive,yes,1,Yes,87,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.596
+HIV-TB,Yes,4.34524,Yes,Yes,Yes,HIV-negative,no,0.596,Yes,43,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,0.731
+HIV-TB,Yes,8.69048,Yes,No,Yes,HIV-negative,no,1,Yes,38,CAD4TBv5 negative,NA,NA,0,0,NA,no,NA,NA,NA
+HIV-TB,Yes,1,Yes,No,No,HIV-negative,no,0.731,Yes,52,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.833
+HIV-TB,Yes,2,No,No,No,HIV-positive,yes,0.798,Yes,59,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,1,Yes,No,Yes,HIV-negative,no,0.66,Yes,51,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.854
+HIV-TB,Yes,1,No,No,Yes,HIV-negative,no,0.777,Yes,28,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,0.787
+HIV-TB,Yes,1,Yes,No,Yes,HIV-negative,no,0.652,Yes,33,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,0.285714,Yes,No,Yes,HIV-negative,no,0.639,NA,NA,NA,NA,NA,0,56,yes,no,no,no,1
+HIV-TB,Yes,4.34524,No,No,Yes,HIV-negative,no,0.844,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+HIV-TB,Yes,0.571429,No,No,No,HIV-negative,no,0.844,Yes,42,CAD4TBv5 negative,NA,NA,0,56,NA,no,no,no,0.854
+HIV-TB,Yes,0.428571,No,No,No,HIV-negative,no,1,Yes,44,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,0.428571,No,No,No,HIV-negative,no,0.79,Yes,74,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.833
+HIV-TB,Yes,2,No,No,Yes,HIV-negative,no,0.833,Yes,50,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.79
+HIV-TB,Yes,0.285714,Yes,No,No,Never tested,no,0.833,Yes,30,CAD4TBv5 negative,NA,NA,0,0,NA,no,NA,NA,NA
+HIV-TB,Yes,8.69048,Yes,No,Yes,HIV-positive,yes,1,Yes,72,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.698
+HIV-TB,Yes,1,No,No,No,HIV-negative,no,1,Yes,58,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.752
+HIV-TB,Yes,0.714286,No,Yes,Yes,HIV-negative,no,1,Yes,30,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,0.844
+HIV-TB,Yes,0.571429,No,No,No,HIV-positive,yes,0.787,Yes,60,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,1,Yes,No,Yes,HIV-negative,no,0.798,Yes,60,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,8.69048,Yes,Yes,No,HIV-positive,yes,0.639,Yes,63,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.66
+HIV-TB,Yes,3,Yes,Yes,Yes,Never tested,no,0.369,Yes,75,CAD4TBv5 positive,Yes,NA,0,11,NA,no,NA,yes,0
+HIV-TB,Yes,0.571429,No,No,No,HIV-negative,no,1,Yes,49,CAD4TBv5 positive,Yes,NA,0,0,NA,no,NA,NA,NA
+HIV-TB,Yes,1,Yes,Yes,Yes,Never tested,no,0.787,NA,NA,NA,NA,NA,0,3,NA,no,NA,yes,0
+HIV-TB,Yes,4,No,No,Yes,HIV-negative,no,1,Yes,22,CAD4TBv5 negative,NA,NA,0,56,no,no,NA,no,1
+HIV-TB,Yes,0.428571,Yes,No,No,HIV-negative,no,0.844,Yes,39,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,0.854
+HIV-TB,Yes,2,No,No,No,HIV-negative,no,0.706,Yes,41,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,1,Yes,Yes,Yes,HIV-negative,no,0.798,Yes,50,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.854
+HIV-TB,Yes,0.428571,No,No,No,HIV-negative,no,1,Yes,61,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,1,Yes,Yes,Yes,HIV-negative,no,0.787,Yes,50,CAD4TBv5 positive,Yes,NA,0,56,NA,no,NA,no,NA
+HIV-TB,Yes,1,No,No,No,HIV-negative,no,0.777,Yes,53,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.844
+HIV-TB,Yes,4.34524,No,No,No,HIV-positive,yes,0.844,Yes,53,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.074
+HIV-TB,Yes,1,Yes,No,No,HIV-negative,no,0.787,Yes,51,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,1,No,No,No,HIV-negative,no,0.731,Yes,56,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.448
+HIV-TB,Yes,1,Yes,Yes,No,HIV-negative,no,0.833,Yes,59,CAD4TBv5 positive,Yes,NA,0,0,no,no,NA,NA,NA
+HIV-TB,Yes,0.428571,Yes,Yes,Yes,HIV-positive,yes,0.844,Yes,69,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.854
+HIV-TB,Yes,2,No,No,No,HIV-negative,no,0.469,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.596
+HIV-TB,Yes,3,No,No,No,HIV-positive,yes,0.844,Yes,25,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,0.854
+HIV-TB,Yes,1,No,No,No,HIV-negative,no,0.787,Yes,32,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,0.695
+HIV-TB,Yes,0.428571,No,No,Yes,HIV-positive,yes,0.787,Yes,69,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.734
+HIV-TB,Yes,1,Yes,No,Yes,HIV-negative,no,0.854,Yes,61,CAD4TBv5 positive,Yes,NA,0,56,no,no,NA,no,0.833
+HIV-TB,Yes,1,Yes,Yes,No,HIV-negative,no,1,Yes,30,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,0.854
+HIV-TB,Yes,0.428571,No,No,No,HIV-negative,no,0.798,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.596
+HIV-TB,Yes,104,No,No,No,HIV-negative,no,0.596,Yes,68,CAD4TBv5 positive,Yes,NA,0,56,NA,no,NA,no,NA
+HIV-TB,Yes,0.285714,No,No,No,HIV-negative,no,0.695,NA,NA,NA,NA,NA,0,56,NA,no,no,no,NA
+HIV-TB,Yes,0.428571,No,No,No,HIV-negative,no,0.642,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.787
+HIV-TB,Yes,1,No,No,Yes,HIV-negative,no,0.731,Yes,44,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,4.34524,Yes,No,No,Never tested,no,0.79,Yes,84,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.777
+HIV-TB,Yes,1,No,No,No,HIV-negative,no,0.698,Yes,50,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,3,Yes,Yes,Yes,HIV-negative,no,0.787,Yes,50,CAD4TBv5 positive,Yes,NA,0,56,no,no,NA,no,1
+HIV-TB,Yes,1,Yes,No,Yes,Never tested,no,1,Yes,28,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,0.642
+HIV-TB,Yes,0.428571,No,No,Yes,HIV-negative,no,0.642,Yes,22,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,2,No,Yes,No,HIV-negative,no,0.833,Yes,36,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,13.0357,Yes,No,Yes,HIV-negative,no,0.787,Yes,53,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,0.571429,No,Yes,Yes,HIV-positive,yes,0.833,Yes,70,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,3,No,Yes,No,Never tested,no,1,Yes,93,CAD4TBv5 positive,Yes,mtb_detected,1,2,NA,no,NA,no,NA
+HIV-TB,Yes,0.285714,No,No,Yes,HIV-negative,no,0.555,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,4.34524,Yes,No,No,HIV-negative,no,0.731,Yes,41,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,1,No,Yes,No,Never tested,no,0.787,Yes,38,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,0.571429,Yes,No,Yes,HIV-negative,no,0.777,Yes,47,CAD4TBv5 positive,Yes,NA,0,56,no,no,NA,no,1
+HIV-TB,Yes,0.428571,Yes,No,Yes,HIV-negative,no,0.642,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.642
+HIV-TB,Yes,4.34524,Yes,Yes,Yes,HIV-negative,no,0.811,Yes,95,CAD4TBv5 positive,Yes,mtb_detected,1,0,no,yes,no,no,0.66
+HIV-TB,Yes,8.69048,No,No,No,HIV-negative,no,0.833,Yes,55,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.552
+HIV-TB,Yes,2,Yes,Yes,Yes,HIV-negative,no,0.731,Yes,47,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.731
+HIV-TB,Yes,4,No,No,No,HIV-negative,no,1,Yes,31,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,2,Yes,No,No,HIV-negative,no,0.787,Yes,36,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,0.798
+HIV-TB,Yes,0.428571,Yes,No,No,Never tested,no,0.642,Yes,27,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,0.741
+HIV-TB,Yes,0.428571,Yes,Yes,Yes,Never tested,no,0.688,Yes,54,CAD4TBv5 positive,Yes,NA,0,0,NA,no,NA,NA,NA
+HIV-TB,Yes,3,No,Yes,No,Never tested,no,0.833,Yes,53,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,17.381,Yes,No,Yes,HIV-negative,no,0.731,Yes,64,CAD4TBv5 positive,NA,NA,0,56,NA,no,NA,no,NA
+HIV-TB,Yes,156,No,No,No,HIV-negative,no,0.844,Yes,58,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.777
+HIV-TB,Yes,1,No,Yes,No,HIV-negative,no,0.731,Yes,55,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,0.428571,No,Yes,No,HIV-positive,yes,0.854,Yes,58,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,2,No,No,No,HIV-negative,no,0.833,Yes,36,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,0.731
+HIV-TB,Yes,2,Yes,Yes,No,HIV-negative,no,1,Yes,65,CAD4TBv5 positive,Yes,mtb_detected,1,0,no,yes,no,no,0.596
+HIV-TB,Yes,1,Yes,Yes,Yes,Never tested,no,0.604,Yes,64,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.798
+HIV-TB,Yes,0.428571,No,No,No,HIV-negative,no,1,Yes,29,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,3,No,Yes,No,HIV-negative,no,0.854,Yes,42,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,0.428571,Yes,No,Yes,HIV-negative,no,1,Yes,52,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,4.34524,No,Yes,Yes,HIV-negative,no,0.688,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.596
+HIV-TB,Yes,4.34524,No,No,No,HIV-negative,no,0.731,Yes,66,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.731
+HIV-TB,Yes,0.285714,No,No,No,HIV-positive,yes,1,Yes,63,CAD4TBv5 positive,Yes,NA,0,0,NA,no,NA,NA,NA
+HIV-TB,Yes,2,Yes,No,Yes,HIV-negative,no,0.731,Yes,53,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.596
+HIV-TB,Yes,4.34524,No,Yes,No,HIV-negative,no,0.731,Yes,61,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,NA
+HIV-TB,Yes,4.34524,Yes,Yes,Yes,HIV-negative,no,0.731,Yes,23,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,0.787
+HIV-TB,Yes,2,Yes,No,Yes,HIV-negative,no,0.854,Yes,53,CAD4TBv5 positive,NA,NA,0,56,no,no,no,no,0.854
+HIV-TB,Yes,0.428571,No,Yes,No,HIV-negative,no,0.596,Yes,64,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.854
+HIV-TB,Yes,1,Yes,Yes,Yes,HIV-negative,no,0.525,Yes,49,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,1,No,No,No,Never tested,no,0.695,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.854
+HIV-TB,Yes,1,No,No,No,HIV-negative,no,0.787,Yes,57,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,4.34524,No,Yes,No,HIV-negative,no,0.741,Yes,52,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,3,No,No,No,HIV-negative,no,1,Yes,54,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,4.34524,Yes,Yes,Yes,HIV-negative,no,0.731,Yes,97,CAD4TBv5 positive,Yes,mtb_detected,1,1,no,no,no,no,1
+HIV-TB,Yes,1,No,No,No,HIV-positive,yes,1,Yes,58,CAD4TBv5 positive,Yes,NA,0,56,NA,no,NA,no,NA
+HIV-TB,Yes,0.428571,No,No,No,HIV-negative,no,0.731,Yes,66,CAD4TBv5 positive,No,NA,0,56,no,no,no,no,0.639
+HIV-TB,Yes,0.428571,No,No,No,HIV-negative,no,0.854,Yes,26,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,0.731
+HIV-TB,Yes,2,Yes,Yes,Yes,HIV-negative,no,0.642,Yes,34,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,0.752
+HIV-TB,Yes,2,Yes,Yes,Yes,HIV-negative,no,0.787,Yes,64,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,0.428571,Yes,No,Yes,HIV-negative,no,0.79,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.787
+HIV-TB,Yes,1,No,Yes,No,HIV-negative,no,0.787,Yes,66,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,34.7619,Yes,No,Yes,HIV-positive,yes,0.596,Yes,54,CAD4TBv5 positive,NA,NA,1,48,no,no,no,no,0.734
+HIV-TB,Yes,1,Yes,Yes,Yes,HIV-negative,no,0.731,Yes,42,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,0.844
+HIV-TB,Yes,8.69048,Yes,Yes,Yes,HIV-negative,no,0.833,Yes,100,CAD4TBv5 positive,Yes,mtb_detected,1,0,no,yes,no,no,1
+HIV-TB,Yes,0.428571,No,No,No,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.639
+HIV-TB,Yes,2,No,No,No,HIV-negative,no,0.731,Yes,47,CAD4TBv5 positive,Yes,NA,0,0,NA,no,NA,NA,NA
+HIV-TB,Yes,1,No,No,Yes,HIV-negative,no,0.731,Yes,49,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.731
+HIV-TB,Yes,1,No,No,No,HIV-negative,no,0.639,Yes,67,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.66
+HIV-TB,Yes,8.69048,Yes,Yes,Yes,HIV-negative,no,0.596,Yes,62,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.469
+HIV-TB,Yes,0.428571,No,No,No,HIV-negative,no,0.833,Yes,37,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,1,No,No,Yes,HIV-negative,no,0.833,Yes,52,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,1,No,No,Yes,HIV-negative,no,0.731,Yes,84,CAD4TBv5 positive,No,NA,0,56,no,no,no,no,0.642
+HIV-TB,Yes,0.428571,Yes,Yes,No,HIV-positive,yes,0.833,Yes,91,CAD4TBv5 positive,Yes,mtb_detected,1,1,no,no,no,no,0.688
+HIV-TB,Yes,1,No,Yes,Yes,HIV-positive,yes,0.596,Yes,73,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,0.571429,No,No,No,HIV-positive,yes,1,Yes,57,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,2,Yes,Yes,Yes,HIV-negative,no,0.596,Yes,56,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.642
+HIV-TB,Yes,13.0357,Yes,Yes,Yes,HIV-positive,yes,0.787,Yes,52,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.734
+HIV-TB,Yes,0.428571,Yes,No,Yes,HIV-negative,no,0.777,Yes,64,CAD4TBv5 positive,Yes,NA,0,0,NA,no,NA,NA,NA
+HIV-TB,Yes,0.428571,No,No,No,HIV-negative,no,0.787,Yes,64,CAD4TBv5 positive,NA,NA,0,56,NA,no,no,no,1
+HIV-TB,Yes,13.0357,No,Yes,No,HIV-negative,no,0.639,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.469
+HIV-TB,Yes,0.714286,No,No,No,HIV-negative,no,1,Yes,42,CAD4TBv5 negative,NA,NA,0,0,NA,no,NA,NA,NA
+HIV-TB,Yes,7,No,No,No,HIV-negative,no,1,Yes,88,CAD4TBv5 positive,Yes,NA,1,3,no,no,no,no,0.844
+HIV-TB,Yes,0.571429,No,No,Yes,HIV-negative,no,0.777,Yes,41,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,0.777
+HIV-TB,Yes,1,Yes,Yes,Yes,HIV-negative,no,0.777,Yes,53,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,4.34524,No,Yes,No,HIV-negative,no,0.762,Yes,65,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.787
+HIV-TB,Yes,1,No,Yes,Yes,HIV-negative,no,0.854,Yes,55,CAD4TBv5 positive,Yes,NA,0,56,no,no,NA,no,0.833
+HIV-TB,Yes,4.34524,Yes,No,Yes,HIV-negative,no,0.66,Yes,89,CAD4TBv5 positive,Yes,mtb_detected,1,0,no,yes,no,no,1
+HIV-TB,Yes,1,No,No,No,Never tested,no,0.596,Yes,55,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.365
+HIV-TB,Yes,0.428571,Yes,Yes,Yes,Never tested,no,0.741,Yes,58,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.277
+HIV-TB,Yes,8.69048,Yes,Yes,Yes,HIV-negative,no,0.787,Yes,42,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,0.504
+HIV-TB,Yes,0.428571,No,No,No,HIV-positive,yes,1,Yes,58,CAD4TBv5 positive,Yes,NA,0,56,NA,no,NA,no,NA
+HIV-TB,Yes,8.69048,Yes,Yes,Yes,HIV-negative,no,0.787,Yes,47,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.787
+HIV-TB,Yes,1,Yes,No,Yes,HIV-positive,yes,0.731,Yes,28,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,0.798
+HIV-TB,Yes,0.571429,Yes,Yes,Yes,HIV-positive,yes,0.787,Yes,67,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,2,No,No,No,HIV-negative,no,0.695,Yes,41,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,0.854
+HIV-TB,Yes,0.428571,No,No,No,HIV-negative,no,0.695,Yes,24,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,0.698
+HIV-TB,Yes,0.571429,No,No,Yes,HIV-negative,no,1,Yes,53,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,0.428571,No,Yes,No,HIV-negative,no,1,Yes,71,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.844
+HIV-TB,Yes,0.428571,No,No,Yes,HIV-negative,no,1,Yes,35,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,1,No,No,No,HIV-negative,no,0.731,Yes,28,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,0.731
+HIV-TB,Yes,1,Yes,Yes,Yes,HIV-positive,yes,0.596,Yes,75,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.731
+HIV-TB,Yes,52,Yes,Yes,Yes,HIV-negative,no,0.731,Yes,53,CAD4TBv5 positive,No,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,13.0357,No,Yes,No,HIV-negative,no,0.596,Yes,60,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.642
+HIV-TB,Yes,0.428571,No,Yes,No,HIV-negative,no,0.698,Yes,30,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,0.833
+HIV-TB,Yes,0.571429,No,No,Yes,HIV-negative,no,0.787,Yes,25,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,0.642
+HIV-TB,Yes,0.857143,Yes,No,Yes,HIV-negative,no,1,Yes,23,CAD4TBv5 negative,NA,NA,0,56,no,no,NA,no,1
+HIV-TB,Yes,2,Yes,Yes,Yes,HIV-positive,yes,0.361,Yes,45,CAD4TBv5 positive,NA,NA,0,56,no,no,no,no,0.596
+HIV-TB,Yes,4.34524,Yes,Yes,Yes,HIV-positive,yes,0.639,Yes,47,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,0.428571,No,No,Yes,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.798
+HIV-TB,Yes,4.34524,Yes,No,Yes,HIV-negative,no,0.777,Yes,42,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,0.688
+HIV-TB,Yes,0.285714,No,No,No,HIV-positive,yes,0.731,Yes,39,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,0.639
+HIV-TB,Yes,1,Yes,No,No,HIV-negative,yes,0.844,Yes,100,CAD4TBv5 positive,Yes,NA,1,0,no,yes,no,no,0.777
+HIV-TB,Yes,4.34524,Yes,Yes,Yes,HIV-negative,no,0.731,Yes,45,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.765
+HIV-TB,Yes,4.34524,No,No,No,HIV-negative,no,0.833,Yes,53,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,0.428571,No,No,Yes,HIV-negative,no,1,Yes,43,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,0.596
+HIV-TB,Yes,0.428571,Yes,Yes,Yes,HIV-negative,no,0.833,Yes,27,CAD4TBv5 negative,NA,NA,0,0,NA,no,NA,NA,NA
+HIV-TB,Yes,0.285714,No,No,No,HIV-negative,no,1,Yes,44,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,4.34524,No,No,No,Never tested,yes,0.731,Yes,40,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,0.428571,No,No,No,HIV-negative,no,0.787,Yes,46,CAD4TBv5 positive,NA,NA,0,56,no,no,NA,no,1
+HIV-TB,Yes,1,Yes,No,No,HIV-negative,no,0.731,Yes,60,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,2,Yes,Yes,Yes,HIV-negative,no,0.407,Yes,53,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.741
+HIV-TB,Yes,0.571429,No,Yes,Yes,HIV-negative,no,0.596,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+HIV-TB,Yes,52,No,Yes,Yes,HIV-positive,yes,0.731,Yes,51,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.777
+HIV-TB,Yes,1,Yes,No,Yes,HIV-negative,no,0.604,Yes,39,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,0.596
+HIV-TB,Yes,0.428571,No,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.833
+HIV-TB,Yes,0.571429,No,No,No,HIV-negative,no,0.731,Yes,23,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,0.731
+HIV-TB,Yes,2,No,No,No,HIV-negative,no,0.854,NA,NA,NA,NA,NA,0,56,no,no,NA,no,1
+HIV-TB,Yes,1,No,No,Yes,HIV-negative,no,0.731,Yes,46,CAD4TBv5 positive,NA,NA,0,56,no,no,no,no,0.731
+HIV-TB,Yes,4.34524,No,Yes,No,HIV-positive,no,0.617,Yes,65,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.66
+HIV-TB,Yes,2,No,No,Yes,HIV-negative,no,1,Yes,53,CAD4TBv5 positive,Yes,NA,0,0,NA,no,NA,NA,NA
+HIV-TB,Yes,2,Yes,Yes,Yes,HIV-positive,no,0.596,Yes,63,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.808
+HIV-TB,Yes,1,Yes,No,Yes,HIV-negative,no,0.844,Yes,51,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.844
+HIV-TB,Yes,1,Yes,No,No,HIV-negative,no,0.787,Yes,59,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.604
+HIV-TB,Yes,0.285714,No,No,Yes,HIV-negative,no,0.844,Yes,23,CAD4TBv5 negative,NA,NA,0,56,NA,no,no,no,NA
+HIV-TB,Yes,4.34524,No,No,No,HIV-positive,yes,0.596,Yes,64,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.642
+HIV-TB,Yes,8.69048,Yes,Yes,Yes,HIV-negative,no,0.787,Yes,74,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.787
+HIV-TB,Yes,2,No,Yes,No,Never tested,no,0.833,Yes,49,CAD4TBv5 positive,Yes,NA,0,0,NA,no,NA,NA,NA
+HIV-TB,Yes,2,No,Yes,No,HIV-negative,no,0.596,Yes,54,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,0.428571,No,No,No,HIV-positive,yes,1,Yes,55,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.857
+HIV-TB,Yes,1,No,No,No,HIV-positive,yes,0.833,Yes,21,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,0.833
+HIV-TB,Yes,0.428571,Yes,Yes,No,HIV-negative,no,0.833,Yes,51,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.787
+HIV-TB,Yes,0.428571,No,No,Yes,HIV-negative,no,0.844,Yes,28,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,0.688
+HIV-TB,Yes,1,No,No,No,HIV-negative,no,0.798,Yes,53,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,34.7619,Yes,Yes,Yes,HIV-positive,yes,0.642,Yes,64,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.642
+HIV-TB,Yes,1,No,No,Yes,HIV-negative,no,1,Yes,21,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,NA
+HIV-TB,Yes,2,No,No,Yes,HIV-negative,no,0.811,Yes,36,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,0.854
+HIV-TB,Yes,0.428571,No,No,No,HIV-negative,no,0.787,Yes,50,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.798
+HIV-TB,Yes,2,No,Yes,No,HIV-negative,no,0.844,Yes,53,CAD4TBv5 positive,No,NA,0,56,no,no,no,no,0.787
+HIV-TB,Yes,0.428571,No,Yes,Yes,HIV-negative,no,0.777,Yes,36,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,0.428571,No,No,No,HIV-negative,no,1,Yes,43,CAD4TBv5 negative,NA,NA,0,56,NA,no,NA,no,NA
+HIV-TB,Yes,2,No,No,Yes,HIV-negative,no,1,Yes,37,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,0.844
+HIV-TB,Yes,4.34524,Yes,Yes,Yes,HIV-positive,yes,0.642,Yes,79,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.604
+HIV-TB,Yes,2,Yes,Yes,Yes,HIV-negative,no,0.596,Yes,43,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,0.752
+HIV-TB,Yes,0.285714,No,No,No,HIV-positive,yes,0.833,Yes,55,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.66
+HIV-TB,Yes,2,No,Yes,No,HIV-negative,no,0.854,Yes,64,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,0.428571,Yes,No,Yes,HIV-negative,no,0.731,Yes,56,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.854
+HIV-TB,Yes,1,Yes,Yes,Yes,HIV-positive,yes,0.741,Yes,64,CAD4TBv5 positive,Yes,NA,0,0,NA,no,NA,NA,NA
+HIV-TB,Yes,1,Yes,No,Yes,HIV-negative,no,0.639,Yes,54,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.777
+HIV-TB,Yes,0.428571,No,No,No,HIV-negative,no,0.79,Yes,28,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,0.787
+HIV-TB,Yes,1,Yes,No,Yes,HIV-negative,no,0.604,Yes,69,CAD4TBv5 positive,No,NA,0,56,no,no,no,no,0.469
+HIV-TB,Yes,3,No,Yes,No,HIV-negative,no,0.777,Yes,21,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,0.752
+HIV-TB,Yes,4.34524,No,Yes,No,HIV-negative,no,0.787,Yes,66,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.731
+HIV-TB,Yes,3,No,No,No,HIV-negative,no,0.833,Yes,24,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,1,No,No,No,HIV-negative,no,0.854,Yes,50,CAD4TBv5 positive,Yes,NA,0,56,NA,no,no,no,NA
+HIV-TB,Yes,1,No,No,No,HIV-negative,no,0.512,Yes,68,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.731
+HIV-TB,Yes,0.714286,No,Yes,No,HIV-negative,no,0.833,Yes,58,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,NA
+HIV-TB,Yes,2,Yes,No,No,HIV-negative,no,0.844,Yes,68,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.731
+HIV-TB,Yes,1,No,No,Yes,HIV-negative,no,0.833,Yes,53,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.854
+HIV-TB,Yes,0.428571,No,No,Yes,HIV-negative,no,1,Yes,44,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,2,No,No,Yes,HIV-positive,yes,0.854,Yes,56,CAD4TBv5 positive,Yes,mtb_detected,1,6,no,no,no,no,0.777
+HIV-TB,Yes,2,Yes,Yes,Yes,Never tested,no,0.604,Yes,58,CAD4TBv5 positive,Yes,NA,0,0,NA,no,NA,NA,NA
+HIV-TB,Yes,0.428571,Yes,No,Yes,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,1,Yes,No,Yes,HIV-negative,no,0.765,Yes,41,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,1,Yes,Yes,No,HIV-positive,yes,0.787,Yes,66,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.731
+HIV-TB,Yes,0.428571,No,No,Yes,HIV-negative,no,0.787,Yes,28,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,0.571429,No,No,No,HIV-positive,yes,0.854,Yes,92,CAD4TBv5 positive,Yes,NA,0,56,NA,no,no,no,0.854
+HIV-TB,Yes,4.34524,Yes,Yes,Yes,HIV-negative,no,0.596,Yes,100,CAD4TBv5 positive,Yes,mtb_detected,1,1,no,no,no,no,0.79
+HIV-TB,Yes,1,No,No,Yes,HIV-positive,yes,0.833,Yes,35,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,2,Yes,No,Yes,HIV-negative,no,0.777,Yes,50,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.833
+HIV-TB,Yes,0.428571,No,No,No,HIV-negative,no,0.777,Yes,24,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,1,No,Yes,No,HIV-negative,no,0.639,Yes,63,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.596
+HIV-TB,Yes,0.428571,Yes,No,Yes,HIV-negative,no,0.798,Yes,59,CAD4TBv5 positive,Yes,NA,0,0,NA,no,NA,NA,NA
+HIV-TB,Yes,1,No,No,No,HIV-negative,no,0.695,Yes,69,CAD4TBv5 positive,Yes,NA,0,56,no,no,yes,no,0.731
+HIV-TB,Yes,52,Yes,Yes,No,HIV-positive,yes,0.29,Yes,89,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.652
+HIV-TB,Yes,4.34524,Yes,Yes,Yes,HIV-negative,no,0.798,Yes,64,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.787
+HIV-TB,Yes,2,No,Yes,No,HIV-positive,yes,0.596,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,2,Yes,Yes,Yes,HIV-negative,no,0.604,Yes,31,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,4.34524,Yes,No,No,HIV-positive,yes,0.639,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,8.69048,No,No,Yes,HIV-positive,yes,1,Yes,62,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,4.34524,Yes,Yes,Yes,HIV-negative,no,0.596,NA,NA,NA,NA,NA,0,56,NA,no,NA,no,NA
+HIV-TB,Yes,1,No,No,Yes,HIV-negative,no,0.66,Yes,32,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,4.34524,Yes,No,Yes,HIV-negative,no,1,Yes,38,CAD4TBv5 negative,NA,NA,0,0,NA,no,no,NA,NA
+HIV-TB,Yes,0.428571,No,No,No,HIV-negative,no,0.844,Yes,27,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,0.833
+HIV-TB,Yes,2,Yes,No,No,HIV-negative,no,0.787,Yes,57,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.854
+HIV-TB,Yes,13.0357,Yes,No,Yes,HIV-negative,no,0.731,Yes,24,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,0.777
+HIV-TB,Yes,0.571429,No,No,No,Never tested,no,0.787,Yes,65,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,4.34524,No,Yes,No,HIV-positive,yes,0.639,Yes,68,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,0.571429,No,Yes,No,HIV-negative,no,0.787,Yes,47,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,NA
+HIV-TB,Yes,0.428571,No,No,No,HIV-positive,yes,0.787,Yes,62,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,0.428571,No,Yes,No,Never tested,no,0.695,Yes,51,CAD4TBv5 positive,Yes,NA,0,0,NA,no,NA,NA,NA
+HIV-TB,Yes,0.428571,No,No,No,HIV-negative,no,1,Yes,54,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,104,Yes,No,No,HIV-negative,no,0.844,Yes,72,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.833
+HIV-TB,Yes,3,Yes,No,Yes,HIV-positive,yes,0.833,Yes,73,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.854
+HIV-TB,Yes,0.285714,No,No,No,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.854
+HIV-TB,Yes,8.69048,No,Yes,Yes,HIV-negative,yes,0.731,Yes,71,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.698
+HIV-TB,Yes,8.69048,Yes,Yes,No,HIV-negative,no,1,Yes,46,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.731
+HIV-TB,Yes,0.428571,Yes,No,Yes,HIV-negative,no,0.734,Yes,57,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.457
+HIV-TB,Yes,1,No,Yes,No,HIV-negative,no,0.833,Yes,36,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,0.731
+HIV-TB,Yes,8.69048,Yes,No,Yes,HIV-negative,no,0.787,Yes,61,CAD4TBv5 positive,Yes,NA,0,0,no,no,no,NA,NA
+HIV-TB,Yes,1,Yes,Yes,No,HIV-positive,yes,0.844,Yes,55,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.787
+HIV-TB,Yes,0.571429,No,No,Yes,HIV-negative,no,1,Yes,38,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,8.69048,Yes,No,Yes,HIV-negative,no,0.808,Yes,63,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.787
+HIV-TB,Yes,3,Yes,Yes,Yes,HIV-negative,no,0.798,Yes,47,CAD4TBv5 positive,No,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,1,No,No,No,HIV-negative,no,1,Yes,48,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.744
+HIV-TB,Yes,4.34524,Yes,Yes,Yes,HIV-positive,yes,0.833,Yes,35,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,0.361
+HIV-TB,Yes,0.428571,No,No,No,HIV-negative,no,0.731,Yes,65,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.731
+HIV-TB,Yes,0.428571,Yes,Yes,Yes,HIV-positive,yes,1,Yes,81,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.652
+HIV-TB,Yes,4.34524,Yes,No,Yes,HIV-negative,no,0.731,Yes,52,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.787
+HIV-TB,Yes,1,No,No,No,HIV-negative,no,0.639,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.854
+HIV-TB,Yes,1,No,Yes,Yes,HIV-negative,no,0.731,Yes,45,CAD4TBv5 positive,NA,NA,0,56,no,no,no,no,0.685
+HIV-TB,Yes,1,No,No,No,HIV-negative,no,1,Yes,50,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,1,No,Yes,Yes,HIV-negative,no,0.652,Yes,50,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.734
+HIV-TB,Yes,0.428571,Yes,Yes,Yes,HIV-negative,no,0.642,Yes,52,CAD4TBv5 positive,Yes,NA,0,0,NA,no,NA,NA,NA
+HIV-TB,Yes,2,Yes,No,Yes,HIV-negative,no,1,Yes,58,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.731
+HIV-TB,Yes,0.428571,Yes,No,Yes,HIV-negative,no,0.731,Yes,43,CAD4TBv5 negative,NA,NA,0,56,NA,no,no,no,0.844
+HIV-TB,Yes,2,No,Yes,Yes,HIV-positive,yes,0.552,Yes,48,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,3,No,Yes,No,HIV-positive,yes,0.833,Yes,40,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,0.731
+HIV-TB,Yes,0.714286,No,Yes,Yes,HIV-negative,no,0.777,Yes,54,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.844
+HIV-TB,Yes,0.285714,No,No,Yes,HIV-negative,no,1,Yes,45,CAD4TBv5 positive,Yes,NA,0,56,no,no,NA,no,0.596
+HIV-TB,Yes,0.285714,Yes,Yes,Yes,HIV-negative,no,0.787,Yes,73,CAD4TBv5 positive,Yes,NA,0,56,no,no,NA,no,0.787
+HIV-TB,Yes,2,Yes,No,Yes,HIV-positive,yes,0.642,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.844
+HIV-TB,Yes,1,Yes,No,Yes,HIV-negative,no,0.777,Yes,69,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.537
+HIV-TB,Yes,2,No,No,No,HIV-positive,yes,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.596
+HIV-TB,Yes,2,Yes,Yes,Yes,HIV-negative,no,0.731,Yes,57,CAD4TBv5 positive,Yes,NA,0,56,NA,no,NA,no,NA
+HIV-TB,Yes,0.142857,Yes,No,Yes,HIV-negative,no,0.404,Yes,36,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,0.798
+HIV-TB,Yes,0.571429,No,No,Yes,HIV-negative,no,0.642,Yes,39,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,4.34524,No,No,No,HIV-positive,yes,0.844,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,2,Yes,No,No,HIV-negative,no,0.798,NA,NA,NA,NA,NA,0,56,no,no,no,no,NA
+HIV-TB,Yes,0.285714,No,No,Yes,HIV-negative,no,0.744,Yes,53,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.639
+HIV-TB,Yes,0.714286,No,No,Yes,HIV-negative,no,0.731,Yes,63,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.596
+HIV-TB,Yes,0.428571,No,No,No,Never tested,no,0.854,Yes,39,CAD4TBv5 negative,NA,NA,0,56,NA,no,no,no,1
+HIV-TB,Yes,0.428571,Yes,Yes,Yes,HIV-negative,no,0.744,Yes,55,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,1,Yes,Yes,Yes,Never tested,no,0.596,Yes,54,CAD4TBv5 positive,Yes,NA,0,17,NA,no,NA,yes,0
+HIV-TB,Yes,0.428571,No,No,No,HIV-negative,no,0.787,Yes,27,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,3,No,No,Yes,HIV-positive,yes,1,Yes,57,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,1.14286,Yes,No,No,HIV-negative,no,0.731,Yes,64,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.833
+HIV-TB,Yes,2,No,No,No,HIV-negative,no,0.695,Yes,49,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,4.34524,No,Yes,No,HIV-negative,no,0.787,Yes,51,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,0.428571,Yes,No,Yes,HIV-negative,no,0.596,Yes,58,CAD4TBv5 positive,NA,NA,0,56,NA,no,no,no,0.361
+HIV-TB,Yes,3,Yes,Yes,Yes,HIV-positive,yes,0.844,Yes,46,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.604
+HIV-TB,Yes,0.285714,Yes,No,No,Never tested,no,0.596,Yes,54,CAD4TBv5 positive,Yes,NA,0,0,NA,no,NA,NA,NA
+HIV-TB,Yes,52,No,No,Yes,HIV-positive,yes,0.833,Yes,56,CAD4TBv5 positive,Yes,NA,0,0,NA,no,NA,NA,NA
+HIV-TB,Yes,0.571429,No,No,No,HIV-negative,no,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,4.34524,Yes,No,Yes,HIV-negative,no,0.652,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.798
+HIV-TB,Yes,8.69048,Yes,No,No,HIV-positive,yes,0.604,Yes,57,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.642
+HIV-TB,Yes,0.428571,No,Yes,Yes,HIV-negative,no,0.66,Yes,36,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,2,No,Yes,No,HIV-negative,no,0.731,Yes,59,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,NA
+HIV-TB,Yes,0.428571,Yes,Yes,Yes,HIV-negative,no,0.596,Yes,61,CAD4TBv5 positive,NA,NA,0,0,NA,no,NA,NA,NA
+HIV-TB,Yes,2,No,No,Yes,HIV-positive,yes,0.762,Yes,24,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,0.844
+HIV-TB,Yes,2,Yes,No,Yes,HIV-negative,no,0.596,NA,NA,NA,NA,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,1,Yes,Yes,Yes,HIV-negative,no,0.652,Yes,54,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.79
+HIV-TB,Yes,1,No,No,Yes,HIV-negative,no,0.787,Yes,26,CAD4TBv5 negative,NA,NA,0,56,NA,no,no,no,NA
+HIV-TB,Yes,0.428571,No,No,No,HIV-negative,no,0.854,Yes,68,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.688
+HIV-TB,Yes,2,No,No,No,HIV-negative,no,0.787,Yes,77,CAD4TBv5 positive,Yes,NA,0,0,NA,no,NA,NA,NA
+HIV-TB,Yes,0.428571,Yes,No,Yes,HIV-negative,no,0.731,Yes,62,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,0.428571,No,No,No,HIV-negative,no,0.685,Yes,40,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,0.639
+HIV-TB,Yes,2,No,No,Yes,HIV-negative,no,0.369,Yes,62,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.854
+HIV-TB,Yes,0.428571,No,Yes,No,Never tested,no,0.596,Yes,78,CAD4TBv5 positive,Yes,NA,0,53,NA,no,NA,yes,0
+HIV-TB,Yes,1,Yes,Yes,No,HIV-positive,yes,0.731,Yes,76,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.777
+HIV-TB,Yes,1,No,No,No,HIV-negative,no,0.596,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.787
+HIV-TB,Yes,4.34524,Yes,Yes,Yes,HIV-negative,no,0.499,Yes,70,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,2,No,No,No,HIV-negative,no,0.731,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.798
+HIV-TB,Yes,1,Yes,No,Yes,HIV-negative,no,0.854,Yes,57,CAD4TBv5 positive,NA,NA,0,0,NA,no,NA,NA,NA
+HIV-TB,Yes,3,Yes,Yes,Yes,HIV-positive,yes,0.496,Yes,47,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.731
+HIV-TB,Yes,104,No,Yes,No,HIV-negative,no,0.731,Yes,93,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.798
+HIV-TB,Yes,8.69048,Yes,Yes,Yes,HIV-negative,no,0.833,Yes,36,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,0.787
+HIV-TB,Yes,0.285714,Yes,Yes,No,HIV-negative,no,0.371,Yes,35,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,0.714286,No,No,No,HIV-negative,no,0.844,Yes,43,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,0.798
+HIV-TB,Yes,8.69048,No,No,Yes,HIV-positive,yes,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.536
+HIV-TB,Yes,0.571429,Yes,No,Yes,Never tested,no,0.787,Yes,59,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.525
+HIV-TB,Yes,0.428571,No,No,No,HIV-negative,no,1,Yes,25,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,0.369
+HIV-TB,Yes,0.428571,Yes,Yes,Yes,HIV-negative,no,1,Yes,50,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.854
+HIV-TB,Yes,3,No,Yes,No,HIV-positive,yes,0.787,Yes,52,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.741
+HIV-TB,Yes,4.34524,Yes,No,Yes,HIV-negative,no,0.833,Yes,58,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.787
+HIV-TB,Yes,4.34524,No,No,Yes,HIV-negative,no,0.844,Yes,62,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.854
+HIV-TB,Yes,2,Yes,No,No,Never tested,no,0.66,Yes,72,CAD4TBv5 positive,NA,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,8.69048,Yes,Yes,No,Never tested,no,0.844,Yes,41,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,0.428571,Yes,Yes,Yes,HIV-negative,no,1,Yes,36,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,0.787
+HIV-TB,Yes,0.428571,No,No,No,HIV-negative,no,1,Yes,20,CAD4TBv5 negative,NA,NA,0,56,NA,no,NA,no,NA
+HIV-TB,Yes,0.428571,Yes,No,No,HIV-negative,no,0.731,Yes,42,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,0.688
+HIV-TB,Yes,0.428571,No,Yes,Yes,HIV-negative,no,0.639,Yes,50,CAD4TBv5 positive,Yes,NA,0,0,NA,no,NA,NA,NA
+HIV-TB,Yes,0.428571,No,Yes,No,HIV-negative,no,0.854,Yes,35,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,0.854
+HIV-TB,Yes,1,No,No,Yes,HIV-negative,no,0.787,Yes,63,CAD4TBv5 positive,NA,NA,0,56,no,no,no,no,NA
+HIV-TB,Yes,4.34524,Yes,Yes,No,Never tested,no,0.808,Yes,51,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.604
+HIV-TB,Yes,1,No,No,No,HIV-positive,yes,0.844,Yes,76,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,17.381,Yes,Yes,Yes,HIV-negative,no,0.695,Yes,53,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.731
+HIV-TB,Yes,2,No,Yes,No,HIV-negative,no,0.663,Yes,43,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,0.428571,No,No,No,HIV-negative,no,1,Yes,19,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,52,Yes,Yes,Yes,HIV-negative,no,0.642,Yes,76,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.833
+HIV-TB,Yes,1,Yes,Yes,No,HIV-negative,no,0.642,Yes,60,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.833
+HIV-TB,Yes,1,No,Yes,Yes,HIV-positive,yes,0.469,Yes,66,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,1,No,No,No,HIV-positive,yes,1,Yes,50,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.66
+HIV-TB,Yes,0.714286,Yes,No,No,HIV-negative,no,0.787,Yes,63,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.798
+HIV-TB,Yes,0.428571,No,No,No,HIV-negative,no,0.833,Yes,42,CAD4TBv5 negative,NA,NA,0,56,NA,no,NA,no,NA
+HIV-TB,Yes,1,No,Yes,Yes,HIV-positive,yes,0.731,Yes,33,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,0.571429,Yes,No,Yes,HIV-positive,yes,1,Yes,65,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,6,Yes,Yes,Yes,HIV-positive,yes,0.731,Yes,49,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.731
+HIV-TB,Yes,13.0357,Yes,Yes,Yes,HIV-positive,yes,0.833,Yes,60,CAD4TBv5 positive,Yes,NA,0,0,NA,no,NA,NA,NA
+HIV-TB,Yes,4.34524,Yes,Yes,Yes,HIV-positive,yes,0.596,Yes,56,CAD4TBv5 positive,Yes,NA,0,56,NA,no,no,no,1
+HIV-TB,Yes,8.69048,Yes,No,Yes,HIV-positive,yes,0.731,Yes,65,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.731
+HIV-TB,Yes,0.571429,No,No,Yes,HIV-negative,no,0.787,Yes,40,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,0.428571,No,No,No,HIV-negative,no,0.854,Yes,21,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,0.854
+HIV-TB,Yes,13.0357,No,Yes,Yes,HIV-negative,no,0.695,Yes,56,CAD4TBv5 positive,Yes,NA,0,56,NA,no,NA,no,NA
+HIV-TB,Yes,2,Yes,No,Yes,HIV-positive,yes,1,NA,NA,NA,NA,NA,0,56,NA,no,no,no,0.777
+HIV-TB,Yes,1,No,Yes,No,HIV-negative,no,0.854,Yes,57,CAD4TBv5 positive,Yes,NA,0,56,NA,no,NA,no,NA
+HIV-TB,Yes,0.428571,No,No,No,HIV-negative,no,0.787,Yes,37,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,0.844
+HIV-TB,Yes,0.428571,No,No,No,HIV-positive,yes,0.596,Yes,45,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.731
+HIV-TB,Yes,0.428571,No,No,No,HIV-negative,no,0.731,Yes,42,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,0.731
+HIV-TB,Yes,4.34524,No,Yes,Yes,HIV-positive,yes,0.639,NA,53,CAD4TBv5 positive,Yes,mtb_detected,1,6,NA,no,NA,no,NA
+HIV-TB,Yes,2,No,No,No,HIV-negative,no,0.663,Yes,36,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,0.731
+HIV-TB,Yes,1,Yes,No,No,HIV-negative,no,0.844,Yes,72,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,2,No,No,No,HIV-negative,no,1,Yes,42,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,0.787
+HIV-TB,Yes,0.428571,No,No,No,Never tested,no,0.844,Yes,61,CAD4TBv5 positive,Yes,NA,0,56,NA,no,NA,no,NA
+HIV-TB,Yes,1,Yes,Yes,Yes,HIV-positive,yes,0.642,Yes,24,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,0.844
+HIV-TB,Yes,8.69048,Yes,Yes,Yes,HIV-negative,no,0.604,Yes,64,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.787
+HIV-TB,Yes,2,No,Yes,No,HIV-negative,no,0.663,Yes,73,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,0.285714,No,No,No,Never tested,no,0.731,Yes,66,CAD4TBv5 positive,Yes,NA,0,0,NA,no,NA,NA,NA
+HIV-TB,Yes,4.34524,No,Yes,No,HIV-negative,no,0.798,Yes,72,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.854
+HIV-TB,Yes,4.34524,Yes,Yes,Yes,HIV-positive,yes,0.596,Yes,59,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.642
+HIV-TB,Yes,4.34524,No,Yes,No,HIV-positive,yes,0.596,Yes,51,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.844
+HIV-TB,Yes,4.34524,Yes,Yes,Yes,HIV-negative,no,0.596,Yes,93,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.448
+HIV-TB,Yes,4.34524,No,No,Yes,HIV-negative,no,0.744,Yes,67,CAD4TBv5 positive,Yes,NA,0,0,NA,no,NA,NA,NA
+HIV-TB,Yes,1,No,Yes,No,HIV-negative,no,0.777,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.731
+HIV-TB,Yes,3,Yes,No,Yes,HIV-negative,no,0.731,Yes,39,CAD4TBv5 negative,NA,NA,0,0,NA,no,NA,NA,NA
+HIV-TB,Yes,4.34524,No,No,No,HIV-positive,yes,0.66,Yes,47,CAD4TBv5 positive,Yes,NA,0,0,NA,no,NA,NA,NA
+HIV-TB,Yes,2,Yes,No,Yes,HIV-negative,no,0.844,Yes,58,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.777
+HIV-TB,Yes,2,No,No,Yes,HIV-positive,yes,0.642,Yes,62,CAD4TBv5 positive,NA,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,0.428571,No,No,No,Never tested,no,0.596,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.844
+HIV-TB,Yes,0.428571,No,No,Yes,HIV-negative,no,0.787,Yes,48,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.596
+HIV-TB,Yes,1,No,No,Yes,HIV-positive,yes,0.525,Yes,52,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.798
+HIV-TB,Yes,2,Yes,No,Yes,HIV-negative,no,0.854,Yes,100,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.798
+HIV-TB,Yes,1,Yes,Yes,No,HIV-negative,no,0.798,Yes,51,CAD4TBv5 positive,Yes,NA,0,0,NA,no,NA,NA,NA
+HIV-TB,Yes,2,No,Yes,No,Never tested,no,1,Yes,37,CAD4TBv5 negative,NA,NA,0,56,NA,no,NA,no,NA
+HIV-TB,Yes,0.285714,No,No,No,HIV-negative,no,0.844,Yes,45,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.798
+HIV-TB,Yes,4.34524,Yes,Yes,Yes,HIV-negative,no,0.652,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.361
+HIV-TB,Yes,0.428571,No,No,No,HIV-negative,no,1,Yes,50,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.854
+HIV-TB,Yes,4.34524,Yes,No,Yes,HIV-positive,yes,0.361,Yes,71,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.731
+HIV-TB,Yes,0.428571,No,No,No,HIV-negative,no,1,Yes,45,CAD4TBv5 positive,NA,NA,0,0,NA,no,NA,NA,NA
+HIV-TB,Yes,1,No,No,No,HIV-negative,no,0.787,Yes,33,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,0.698
+HIV-TB,Yes,13.0357,No,Yes,No,HIV-positive,yes,0.787,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.787
+HIV-TB,Yes,0.857143,No,No,Yes,HIV-negative,no,0.787,Yes,59,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,2,No,No,Yes,HIV-negative,no,0.731,Yes,69,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.777
+HIV-TB,Yes,3,Yes,Yes,Yes,HIV-negative,no,0.596,NA,NA,NA,NA,NA,0,0,NA,no,NA,NA,NA
+HIV-TB,Yes,1,No,No,No,HIV-positive,yes,0.833,Yes,61,CAD4TBv5 positive,Yes,NA,0,56,yes,no,no,no,1
+HIV-TB,Yes,0.285714,No,No,Yes,HIV-negative,no,1,Yes,22,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,4.34524,Yes,Yes,Yes,HIV-negative,no,0.731,Yes,34,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,NA
+HIV-TB,Yes,8.69048,No,No,No,HIV-positive,yes,1,Yes,23,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,0.457
+HIV-TB,Yes,0.428571,No,No,No,HIV-negative,no,1,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.844
+HIV-TB,Yes,1,No,No,Yes,HIV-negative,no,1,Yes,67,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,4.34524,Yes,Yes,Yes,HIV-negative,no,0.596,Yes,86,CAD4TBv5 positive,Yes,NA,0,0,NA,no,NA,NA,NA
+HIV-TB,Yes,2,No,Yes,No,HIV-negative,no,0.731,Yes,56,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.688
+HIV-TB,Yes,1,Yes,Yes,Yes,HIV-negative,no,0.596,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.66
+HIV-TB,Yes,3,Yes,Yes,Yes,HIV-negative,no,0.844,Yes,57,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.604
+HIV-TB,Yes,1,No,No,Yes,HIV-negative,no,0.844,Yes,64,CAD4TBv5 positive,Yes,NA,0,56,NA,no,no,no,1
+HIV-TB,Yes,0.428571,No,No,Yes,Never tested,no,0.833,Yes,41,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,2,Yes,Yes,Yes,HIV-negative,no,0.596,Yes,31,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,0.844
+HIV-TB,Yes,3,Yes,No,Yes,HIV-negative,no,0.787,Yes,52,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.844
+HIV-TB,Yes,1,Yes,No,No,HIV-negative,no,1,Yes,19,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,0.833
+HIV-TB,Yes,4.34524,Yes,Yes,Yes,HIV-positive,yes,0.833,Yes,64,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,0.642
+HIV-TB,Yes,8.69048,No,No,No,HIV-negative,no,0.731,Yes,94,CAD4TBv5 positive,Yes,NA,0,56,NA,no,NA,no,NA
+HIV-TB,Yes,3,No,Yes,No,HIV-negative,no,0.596,Yes,55,CAD4TBv5 positive,Yes,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,0.285714,Yes,Yes,No,HIV-negative,no,0.741,Yes,28,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,1
+HIV-TB,Yes,1,Yes,No,Yes,HIV-negative,no,0.787,Yes,34,CAD4TBv5 negative,NA,NA,0,0,NA,no,NA,NA,NA
+HIV-TB,Yes,1,No,No,No,HIV-negative,no,0.596,Yes,68,CAD4TBv5 positive,Yes,NA,0,0,NA,no,NA,NA,NA
+HIV-TB,Yes,2,No,No,Yes,HIV-negative,no,0.671,Yes,81,CAD4TBv5 positive,Yes,mtb_detected,1,0,NA,yes,NA,NA,NA
+HIV-TB,Yes,4.34524,No,Yes,No,HIV-negative,no,0.752,NA,NA,NA,NA,NA,0,56,no,no,no,no,0.787
+HIV-TB,Yes,6,Yes,No,Yes,HIV-negative,no,0.844,Yes,25,CAD4TBv5 negative,NA,NA,0,56,no,no,no,no,0.787

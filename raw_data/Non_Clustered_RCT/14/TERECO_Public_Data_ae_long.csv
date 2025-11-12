@@ -1,0 +1,175 @@
+ae_num,num_ID,ae_rec_no,backpain,chest_pain,chest_tightness,cough,dizziness,reducedstrength,sputum,weakness,other_ae,ae_timeperiod,ae_relint,ae_sev,ae_hospitalized,group_randomized
+1,95,1,0,0,1,0,0,0,0,0,0,intervention period,possible,"moderate, needs medical attention",,1
+2,95,2,0,1,0,0,0,0,0,0,0,intervention period,likely,"moderate, needs medical attention",,1
+3,95,3,0,0,0,0,0,0,0,0,1,intervention period,unlikely,"very mild, no follow up needed",,1
+4,56,1,0,0,0,0,0,0,0,0,1,intervention period,likely,"mild, further observation",,1
+5,98,1,0,0,0,0,0,0,0,0,1,intervention period,unlikely,"very mild, no follow up needed",,1
+6,98,2,0,0,0,0,1,0,0,0,0,intervention period,likely,"very mild, no follow up needed",,1
+7,98,3,0,0,0,0,0,0,0,1,0,follow up period,unlikely,"mild, further observation",,1
+8,98,4,0,0,1,0,0,0,0,0,0,follow up period,unlikely,"mild, further observation",,1
+9,98,5,0,0,0,0,0,0,0,0,1,follow up period,unlikely,"moderate, needs medical attention",,1
+10,98,6,0,0,0,0,0,0,0,0,1,follow up period,unlikely,"mild, further observation",,1
+11,98,7,0,0,0,0,0,0,0,0,1,follow up period,likely,"mild, further observation",,1
+12,46,1,0,0,0,0,1,0,0,0,0,intervention period,likely,"very mild, no follow up needed",,1
+13,46,2,0,0,0,0,0,0,0,0,1,intervention period,possible,"mild, further observation",,1
+14,46,3,0,0,0,0,0,0,0,0,1,intervention period,likely,"mild, further observation",,1
+15,9,1,0,0,0,0,0,0,0,0,1,intervention period,unlikely,"very mild, no follow up needed",,2
+16,9,2,0,0,0,1,0,0,0,0,0,follow up period,unlikely,"mild, further observation",,2
+17,9,3,0,0,0,0,0,0,1,0,0,follow up period,unlikely,"mild, further observation",,2
+18,11,1,0,0,0,0,0,1,0,0,0,follow up period,unlikely,"mild, further observation",,1
+19,68,1,0,0,0,0,0,0,0,0,1,intervention period,possible,"moderate, needs medical attention",,1
+20,68,2,1,0,0,0,0,0,0,0,0,intervention period,possible,"mild, further observation",,1
+21,35,1,0,1,0,0,0,0,0,0,0,intervention period,likely,"moderate, needs medical attention",,1
+22,8,1,0,0,0,0,0,0,0,0,1,follow up period,unlikely,"moderate, needs medical attention",yes,1
+23,8,2,0,0,0,0,0,1,0,0,0,follow up period,unlikely,"mild, further observation",,1
+24,114,1,0,0,0,0,0,0,0,0,1,intervention period,possible,"moderate, needs medical attention",,2
+25,114,2,0,0,0,0,0,0,0,0,1,intervention period,possible,"mild, further observation",,2
+26,114,3,0,0,1,0,0,0,0,0,0,follow up period,unlikely,"mild, further observation",,2
+27,114,4,0,0,0,0,0,1,0,0,0,follow up period,unlikely,"mild, further observation",,2
+28,38,1,0,0,0,0,0,0,0,0,1,intervention period,unlikely,"moderate, needs medical attention",,1
+29,94,1,0,0,0,1,0,0,0,0,0,follow up period,unlikely,"mild, further observation",,2
+30,94,2,0,0,0,0,0,0,0,0,1,follow up period,possible,"mild, further observation",,2
+31,94,3,0,0,0,0,0,0,1,0,0,follow up period,unlikely,"mild, further observation",,2
+32,94,4,0,0,1,0,0,0,0,0,0,follow up period,unlikely,"mild, further observation",,2
+33,48,1,0,1,0,0,0,0,0,0,0,intervention period,likely,"moderate, needs medical attention",,1
+34,75,1,0,0,0,0,0,1,0,0,0,follow up period,unlikely,"mild, further observation",,1
+35,75,2,0,0,0,0,0,0,1,0,0,follow up period,unlikely,"mild, further observation",,1
+36,75,3,0,0,0,1,0,0,0,0,0,follow up period,unlikely,"mild, further observation",,1
+37,96,1,0,0,0,0,0,1,0,0,0,follow up period,unlikely,"mild, further observation",,2
+38,31,1,0,0,1,0,0,0,0,0,0,follow up period,unlikely,"mild, further observation",,2
+39,4,1,0,0,0,0,0,0,0,1,0,intervention period,likely,"mild, further observation",,1
+40,62,1,0,0,1,0,0,0,0,0,0,follow up period,unlikely,"mild, further observation",,2
+41,90,1,0,0,0,0,0,0,0,0,1,intervention period,unlikely,"mild, further observation",,2
+42,90,2,0,0,0,0,1,0,0,0,0,intervention period,possible,"mild, further observation",,2
+43,90,3,0,0,0,0,0,0,0,0,1,intervention period,possible,"moderate to severe, requires treatment",,2
+44,90,4,0,0,0,0,0,0,0,0,1,intervention period,possible,"mild, further observation",,2
+45,90,5,0,0,0,0,0,1,0,0,0,follow up period,unlikely,"mild, further observation",,2
+46,90,6,0,0,0,0,0,0,0,0,1,follow up period,unlikely,"mild, further observation",,2
+47,90,7,0,0,0,0,0,0,0,0,1,follow up period,unlikely,"moderate to severe, requires treatment",yes,2
+48,43,1,0,0,1,0,0,0,0,0,0,follow up period,unlikely,"mild, further observation",,2
+49,5,1,0,0,0,0,0,1,0,0,0,follow up period,unlikely,"mild, further observation",,2
+50,58,1,0,0,0,1,0,0,0,0,0,follow up period,unlikely,"mild, further observation",,2
+51,58,2,0,0,0,0,0,1,0,0,0,follow up period,possible,"mild, further observation",,2
+52,113,1,0,0,0,0,0,0,0,0,1,intervention period,likely,"very mild, no follow up needed",,1
+53,113,2,0,0,0,0,0,0,0,0,1,intervention period,possible,"mild, further observation",,1
+54,113,3,0,0,0,0,0,0,0,0,1,intervention period,likely,"moderate, needs medical attention",,1
+55,113,4,0,0,1,0,0,0,0,0,0,follow up period,unlikely,"mild, further observation",,1
+56,86,1,0,0,0,0,0,1,0,0,0,follow up period,unlikely,"mild, further observation",,1
+57,88,1,0,1,0,0,0,0,0,0,0,intervention period,likely,"moderate, needs medical attention",,1
+58,88,2,0,0,1,0,0,0,0,0,0,intervention period,possible,"mild, further observation",,1
+59,88,3,0,0,1,0,0,0,0,0,0,follow up period,unlikely,"mild, further observation",,1
+60,6,1,0,0,0,1,0,0,0,0,0,follow up period,unlikely,"mild, further observation",,2
+61,6,2,0,0,0,0,0,0,1,0,0,follow up period,unlikely,"mild, further observation",,2
+62,39,1,0,0,1,0,0,0,0,0,0,follow up period,unlikely,"mild, further observation",,1
+63,39,2,0,0,0,0,0,1,0,0,0,follow up period,unlikely,"mild, further observation",,1
+64,27,1,0,0,0,0,0,0,0,0,1,intervention period,unlikely,"mild, further observation",,1
+65,27,2,0,0,0,0,0,0,1,0,0,follow up period,unlikely,"mild, further observation",,1
+66,27,3,0,0,0,1,0,0,0,0,0,follow up period,unlikely,"mild, further observation",,1
+67,82,1,0,0,0,0,0,0,0,0,1,intervention period,likely,"moderate, needs medical attention",,2
+68,82,2,0,0,1,0,0,0,0,0,0,follow up period,unlikely,"mild, further observation",,2
+69,23,1,0,0,0,0,0,0,0,0,1,intervention period,unlikely,"mild, further observation",,1
+70,23,2,0,0,0,0,0,1,0,0,0,follow up period,unlikely,"mild, further observation",,1
+71,30,1,0,1,0,0,0,0,0,0,0,follow up period,unlikely,"moderate to severe, requires treatment",,2
+72,72,1,0,0,0,1,0,0,0,0,0,follow up period,unlikely,"mild, further observation",,2
+73,61,1,0,0,0,0,0,0,0,0,1,intervention period,possible,"mild, further observation",,1
+74,61,2,0,0,1,0,0,0,0,0,0,intervention period,possible,"mild, further observation",,1
+75,61,3,0,0,0,0,1,0,0,0,0,intervention period,possible,"very mild, no follow up needed",,1
+76,61,4,0,0,0,0,0,0,0,0,1,intervention period,likely,"mild, further observation",,1
+77,61,5,0,0,1,0,0,0,0,0,0,follow up period,unlikely,"mild, further observation",,1
+78,61,6,0,0,0,1,0,0,0,0,0,follow up period,unlikely,"mild, further observation",,1
+79,61,7,0,0,0,0,0,0,0,0,1,follow up period,unlikely,"moderate, needs medical attention",yes,1
+80,61,8,0,0,0,0,0,0,0,0,1,follow up period,unlikely,"moderate, needs medical attention",,1
+81,61,9,0,0,0,0,0,0,1,0,0,follow up period,unlikely,"mild, further observation",,1
+82,89,1,0,0,1,0,0,0,0,0,0,follow up period,unlikely,"mild, further observation",,2
+83,89,2,0,0,0,0,0,1,0,0,0,follow up period,unlikely,"mild, further observation",,2
+84,91,1,0,0,0,0,0,0,0,1,0,intervention period,likely,"mild, further observation",,2
+85,91,2,0,0,0,0,0,0,0,0,1,intervention period,possible,"mild, further observation",,2
+86,91,3,0,0,0,0,0,0,1,0,0,follow up period,unlikely,"mild, further observation",,2
+87,91,4,0,0,0,0,0,0,0,1,0,follow up period,unlikely,"mild, further observation",,2
+88,91,5,0,0,0,0,0,0,0,0,1,follow up period,unlikely,"very mild, no follow up needed",,2
+89,91,6,0,0,0,0,0,0,0,0,1,follow up period,unlikely,"very mild, no follow up needed",,2
+90,66,1,0,0,0,0,0,0,0,0,1,intervention period,possible,"moderate, needs medical attention",,1
+91,12,1,0,0,1,0,0,0,0,0,0,follow up period,unlikely,"mild, further observation",,2
+92,12,2,0,0,0,0,0,0,0,1,0,follow up period,unlikely,"mild, further observation",,2
+93,73,1,0,0,0,0,0,0,0,1,0,follow up period,unlikely,"mild, further observation",,2
+94,73,2,0,0,0,0,0,0,0,0,1,follow up period,unlikely,"moderate to severe, requires treatment",,2
+95,87,1,0,0,1,0,0,0,0,0,0,intervention period,possible,"mild, further observation",,1
+96,87,2,0,0,1,0,0,0,0,0,0,follow up period,unlikely,"mild, further observation",,1
+97,77,1,0,0,0,0,0,0,0,0,1,follow up period,unlikely,"moderate to severe, requires treatment",yes,2
+98,77,2,0,0,0,0,0,0,0,0,1,follow up period,unlikely,"mild, further observation",,2
+99,13,1,0,0,0,0,0,0,0,1,0,intervention period,likely,"mild, further observation",,2
+100,13,2,0,0,0,0,0,0,0,0,1,intervention period,likely,"mild, further observation",,2
+101,13,3,0,0,0,0,0,0,0,0,1,follow up period,unlikely,"very mild, no follow up needed",,2
+102,97,1,0,0,1,0,0,0,0,0,0,follow up period,unlikely,"mild, further observation",,2
+103,44,1,0,0,0,0,0,0,1,0,0,follow up period,unlikely,"mild, further observation",,1
+104,78,1,0,0,0,0,0,0,0,1,0,follow up period,unlikely,"mild, further observation",,2
+105,74,1,0,0,0,0,1,0,0,0,0,intervention period,likely,"very mild, no follow up needed",,1
+106,74,2,0,0,0,1,0,0,0,0,0,follow up period,unlikely,"mild, further observation",,1
+107,74,3,0,0,0,0,0,0,0,1,0,follow up period,unlikely,"mild, further observation",,1
+108,74,4,0,0,0,0,0,0,1,0,0,follow up period,unlikely,"mild, further observation",,1
+109,107,1,0,0,1,0,0,0,0,0,0,intervention period,likely,"moderate, needs medical attention",,1
+110,107,2,1,0,0,0,0,0,0,0,0,intervention period,possible,"moderate, needs medical attention",,1
+111,107,3,0,0,0,0,0,0,0,0,1,intervention period,possible,"moderate, needs medical attention",,1
+112,107,4,0,0,0,0,0,0,0,0,1,intervention period,possible,"mild, further observation",,1
+113,107,5,0,0,0,0,0,0,0,0,1,follow up period,unlikely,"mild, further observation",,1
+114,107,6,0,0,1,0,0,0,0,0,0,follow up period,unlikely,"mild, further observation",,1
+115,32,1,0,0,0,0,0,0,0,0,1,follow up period,unlikely,"mild, further observation",,2
+116,117,1,1,0,0,0,0,0,0,0,0,intervention period,possible,"moderate, needs medical attention",,1
+117,117,2,0,0,1,0,0,0,0,0,0,intervention period,possible,"mild, further observation",,1
+118,42,1,0,0,0,0,0,0,0,0,1,intervention period,likely,"very mild, no follow up needed",,1
+119,42,2,0,0,0,1,0,0,0,0,0,intervention period,possible,"mild, further observation",,1
+120,42,3,0,0,1,0,0,0,0,0,0,follow up period,unlikely,"mild, further observation",,1
+121,42,4,0,0,0,0,0,0,0,0,1,follow up period,unlikely,"mild, further observation",,1
+122,41,1,0,0,1,0,0,0,0,0,0,follow up period,unlikely,"mild, further observation",,2
+123,45,1,0,0,1,0,0,0,0,0,0,follow up period,unlikely,"mild, further observation",,2
+124,14,1,0,0,0,0,0,0,0,0,1,intervention period,unlikely,"very mild, no follow up needed",,2
+125,14,2,0,0,0,0,0,0,0,0,1,intervention period,unlikely,"mild, further observation",,2
+126,14,3,0,0,0,0,0,0,0,0,1,intervention period,unlikely,"moderate, needs medical attention",,2
+127,36,1,0,0,0,0,0,0,0,1,0,follow up period,unlikely,"mild, further observation",,1
+128,60,1,0,0,0,0,0,0,0,1,0,follow up period,unlikely,"mild, further observation",,1
+129,60,2,0,0,1,0,0,0,0,0,0,follow up period,unlikely,"mild, further observation",,1
+130,60,3,0,0,0,0,0,0,0,0,1,follow up period,unlikely,"moderate to severe, requires treatment",yes,1
+131,19,1,0,0,0,0,0,0,1,0,0,follow up period,unlikely,"mild, further observation",,2
+132,19,2,0,0,0,0,0,0,0,0,1,follow up period,unlikely,"mild, further observation",yes,2
+133,19,3,0,0,0,1,0,0,0,0,0,follow up period,unlikely,"mild, further observation",,2
+134,19,4,0,0,0,0,0,0,0,0,1,follow up period,unlikely,"moderate, needs medical attention",,2
+135,100,1,0,0,1,0,0,0,0,0,0,follow up period,unlikely,"mild, further observation",,1
+136,2,1,1,0,0,0,0,0,0,0,0,intervention period,possible,"mild, further observation",,2
+137,2,2,1,0,0,0,0,0,0,0,0,intervention period,possible,"mild, further observation",,2
+138,2,3,0,0,0,0,0,0,0,0,1,follow up period,unlikely,"very mild, no follow up needed",,2
+139,2,4,1,0,0,0,0,0,0,0,0,follow up period,unlikely,"mild, further observation",,2
+140,79,1,0,0,0,0,0,0,0,0,1,intervention period,possible,"mild, further observation",,1
+141,79,2,0,0,1,0,0,0,0,0,0,intervention period,likely,"mild, further observation",,1
+142,79,3,0,0,0,0,0,0,0,0,1,follow up period,unlikely,"very mild, no follow up needed",,1
+143,79,4,0,0,0,0,0,0,0,0,1,follow up period,unlikely,"mild, further observation",,1
+144,3,1,0,0,1,0,0,0,0,0,0,intervention period,likely,"mild, further observation",,1
+145,3,2,0,0,1,0,0,0,0,0,0,follow up period,unlikely,"mild, further observation",,1
+146,92,1,0,0,0,0,0,0,0,1,0,follow up period,unlikely,"mild, further observation",,2
+147,92,2,0,0,0,1,0,0,0,0,0,follow up period,unlikely,"mild, further observation",,2
+148,115,1,0,0,0,0,0,0,0,0,1,intervention period,likely,"mild, further observation",,2
+149,115,2,0,0,0,0,0,0,0,0,1,intervention period,likely,"mild, further observation",,2
+150,18,1,0,0,0,0,0,0,0,1,0,follow up period,unlikely,"mild, further observation",,2
+151,33,1,0,0,0,0,1,0,0,0,0,intervention period,likely,"very mild, no follow up needed",,1
+152,33,2,0,0,0,0,0,0,0,0,1,follow up period,unlikely,"mild, further observation",yes,1
+153,1,1,0,0,0,0,0,0,0,1,0,follow up period,unlikely,"mild, further observation",,2
+154,22,1,0,0,1,0,0,0,0,0,0,follow up period,unlikely,"mild, further observation",,2
+155,111,1,0,1,0,0,0,0,0,0,0,intervention period,likely,"moderate, needs medical attention",,1
+156,111,2,0,0,1,0,0,0,0,0,0,intervention period,likely,"mild, further observation",,1
+157,83,1,0,0,0,1,0,0,0,0,0,follow up period,unlikely,"mild, further observation",,2
+158,51,1,0,0,0,0,0,0,0,0,1,follow up period,unlikely,"very mild, no follow up needed",,2
+159,52,1,0,0,0,0,1,0,0,0,0,intervention period,likely,"very mild, no follow up needed",,1
+160,52,2,0,0,1,0,0,0,0,0,0,intervention period,possible,"mild, further observation",,1
+161,52,3,0,0,1,0,0,0,0,0,0,follow up period,unlikely,"mild, further observation",,1
+162,52,4,0,0,0,0,0,0,0,0,1,follow up period,unlikely,"very mild, no follow up needed",,1
+163,52,5,0,0,0,0,0,0,0,1,0,follow up period,unlikely,"mild, further observation",,1
+164,17,1,0,0,0,0,0,0,0,1,0,follow up period,unlikely,"mild, further observation",,2
+165,17,2,0,0,1,0,0,0,0,0,0,follow up period,unlikely,"mild, further observation",,2
+166,110,1,0,0,0,0,0,0,0,0,1,follow up period,unlikely,"moderate, needs medical attention",,1
+167,110,2,0,0,0,0,0,0,0,0,1,follow up period,unlikely,"moderate to severe, requires treatment",yes,1
+168,110,3,0,0,0,1,0,0,0,0,0,follow up period,unlikely,"mild, further observation",,1
+169,110,4,0,0,0,0,0,0,0,0,1,follow up period,unlikely,"moderate, needs medical attention",,1
+170,110,5,0,0,0,0,0,0,0,0,1,follow up period,unlikely,"very mild, no follow up needed",,1
+171,110,6,0,0,1,0,0,0,0,0,0,follow up period,unlikely,"mild, further observation",,1
+172,50,1,0,0,0,0,0,0,0,1,0,follow up period,unlikely,"mild, further observation",,2
+173,50,2,0,0,0,0,0,0,0,0,1,follow up period,unlikely,"very mild, no follow up needed",,2
+174,49,1,0,0,0,0,0,0,0,1,0,follow up period,unlikely,"mild, further observation",,2
