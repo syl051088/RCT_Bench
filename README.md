@@ -47,49 +47,23 @@ This repository contains a systematic empirical study comparing various covariat
 2. **Top-3 Correlation**: Select 3 covariates most correlated with the outcome
 3. **Manual/Baseline**: Domain-knowledge driven selection with baseline measures
 
-## 📂 Repository Structure
+## Repository Structure
 
-```
+```Text
 RCT_Data/
-├── raw_data/                    # Raw trial data from public sources
-│   ├── Non_Clustered_RCT/      # 50 individually randomized trials
-│   └── Clustered_RCT/          # 12 cluster-randomized trials
-├── cleaned_data/                # Standardized analysis-ready datasets
-│   ├── Non_Clustered_RCT/      # Processed trial data (.rds files)
-│   ├── Clustered_RCT/          # Processed cluster trial data
-│   ├── Plot/                   # Generated visualization outputs
-│   ├── meta_data.xlsx          # Trial metadata and characteristics
-│   ├── meta_data_cluster.xlsx  # Cluster trial metadata
-│   └── meta_data_comparison.xlsx  # Method comparison results
-├── RCT_data_cleaning.Rmd       # Unified data cleaning & variable standardization
-├── RCT_analysis.Rmd            # Main analysis pipeline (18 methods × 3 strategies)
-├── RCT_Workspace.Rmd           # Optional exploratory workspace
-├── README.md                   # Project documentation
-└── LICENSE                     # MIT License
-```
-
-## Installation & Requirements
-
-### R Version
-- R >= 4.0.0
-
-### Required R Packages
-
-```r
-# Data manipulation
-install.packages(c("tidyverse", "rio", "janitor", "readxl", "haven", "writexl"))
-
-# Statistical analysis
-install.packages(c("RobinCar", "AIPW", "PSW", "PSweight", "SuperLearner"))
-
-# Machine learning algorithms
-install.packages(c("glmnet", "rpart", "randomForest", "gam", "bartMachine"))
-
-# Utilities
-install.packages(c("DescTools", "kableExtra", "scales", "doSNOW", "doRNG"))
-
-# Visualization
-install.packages(c("ggplot2", "scales"))
+├── raw_data/                       # Raw trial data from public sources
+│   ├── Non_Clustered_RCT/          # 50 individually randomized trials
+│   └── Clustered_RCT/              # 6 cluster-randomized trials
+├── cleaned_data/                   # Standardized analysis-ready datasets
+│   ├── Non_Clustered_RCT/          # Processed trial data
+│   ├── Clustered_RCT/              # Processed cluster trial data
+│   ├── Plot/                       # Generated visualization outputs
+│   ├── meta_data.xlsx              # Trial metadata and characteristics
+│   ├── meta_data_cluster.xlsx      # Cluster trial metadata
+│   └── meta_data_comparison.xlsx   # Method comparison results
+├── RCT_data_cleaning.Rmd           # Unified data cleaning & variable standardization
+├── RCT_analysis.Rmd                # Main analysis pipeline (18 methods × 3 strategies)
+└── RCT_Workspace.Rmd               # Optional exploratory workspace
 ```
 
 ## Usage
@@ -104,7 +78,7 @@ The `RCT_data_cleaning.Rmd` script processes raw trial data and standardizes var
 # - Standardize variable naming conventions
 # - Compute outcome measures (YP_* for primary, YS_* for secondary)
 # - Create baseline covariates (X_*)
-# - Export cleaned .rds files
+# - Export cleaned .rds and .csv files
 ```
 
 **Variable Naming Convention:**
