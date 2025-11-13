@@ -1,10 +1,10 @@
 # RCT_Research
 
-A comprehensive comparison of covariate adjustment methods for randomized controlled trials (RCTs), evaluating 18 statistical methods across 3 variable selection strategies using real-world trial data.
+A comprehensive comparison of covariate adjustment methods for randomized controlled trials (RCTs), evaluating 6 statistical methods × 3 variable selection strategies (18 total combinations) using real-world trial data.
 
 ## Overview
 
-This repository contains a systematic empirical study comparing various covariate adjustment methods for analyzing randomized controlled trials. The research evaluates the performance of multiple statistical approaches using 62 real-world RCT datasets, examining both continuous and binary outcomes.
+This repository contains a systematic empirical study comparing various covariate adjustment methods for analyzing randomized controlled trials. The research evaluates the performance of multiple statistical approaches using 56 real-world RCT datasets, examining both continuous and binary outcomes.
 
 ## Key Features
 
@@ -60,9 +60,10 @@ RCT_Data/
 │   ├── Plot/                       # Generated visualization outputs
 │   ├── meta_data.xlsx              # Trial metadata and characteristics
 │   ├── meta_data_cluster.xlsx      # Cluster trial metadata
+│   ├── meta_data_demo.xlsx         # Demographic metadata
 │   └── meta_data_comparison.xlsx   # Method comparison results
 ├── RCT_data_cleaning.Rmd           # Unified data cleaning & variable standardization
-├── RCT_analysis.Rmd                # Main analysis pipeline (18 methods × 3 strategies)
+├── RCT_analysis.Rmd                # Main analysis pipeline (6 methods × 3 strategies = 18 combinations)
 └── RCT_Workspace.Rmd               # Optional exploratory workspace
 ```
 
@@ -94,7 +95,7 @@ The `RCT_analysis.Rmd` script performs the comprehensive method comparison:
 ```r
 # Open RCT_analysis.Rmd and execute sequentially:
 # 1. Load cleaned trial datasets
-# 2. Apply each of 18 methods with 3 selection strategies
+# 2. Apply each of 6 methods with 3 selection strategies (18 total combinations)
 # 3. Compare estimates and standard errors
 # 4. Generate visualizations
 # 5. Export comparison results

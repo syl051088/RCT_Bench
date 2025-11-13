@@ -37,6 +37,7 @@ library(rsvg)
 ```{r load meta data}
 df_comparison = read_xlsx("cleaned_data/meta_data_comparison.xlsx")
 df_meta = read_xlsx("cleaned_data/meta_data.xlsx")
+df_newcomp = df_comparison
 ```
 
 # Load Trial Data
@@ -755,7 +756,8 @@ analyze_rct_sl_tmle = function(data,
                                covariate_cols,
                                reference_arm  = NULL,
                                K              = 5,
-                               SL_methods     = c("SL.glm", "SL.mean", "SL.glmnet", "SL.rpart", "SL.gam"),
+                               q_library      = c("SL.glm", "SL.mean", "SL.glmnet", "SL.rpart", "SL.gam"),
+                               g_library      = "SL.mean",
                                n_cores        = parallel::detectCores() - 2) {
   require(dplyr)
   require(tmle)
@@ -829,8 +831,8 @@ analyze_rct_sl_tmle = function(data,
         tmle_fit = tmle(
           Y = Y_vec,
           A = A,
-          Q.SL.library = SL_methods,
-          g.SL.library = "SL.mean",
+          Q.SL.library = q_library,
+          g.SL.library = g_library,
           family = "gaussian",
           V.Q = K,
           V.g = K
@@ -840,8 +842,8 @@ analyze_rct_sl_tmle = function(data,
           Y = Y_vec,
           A = A,
           W = W,
-          Q.SL.library = SL_methods,
-          g.SL.library = "SL.mean",
+          Q.SL.library = q_library,
+          g.SL.library = g_library,
           family = "gaussian",
           V.Q = K,
           V.g = K
@@ -879,7 +881,8 @@ analyze_rct_tmle = function(df,
                             variable_selection_type = 1,  # 1: correlation, 2: manual
                             manual_covariates = NULL,
                             K = 5,
-                            SL_methods = c("SL.glm", "SL.mean", "SL.glmnet", "SL.rpart", "SL.gam"),
+                            q_library = c("SL.glm", "SL.mean", "SL.glmnet", "SL.rpart", "SL.gam"),
+                            g_library = "SL.mean",
                             n_select = 3,
                             n_cores = parallel::detectCores() - 2,
                             run_individual_SL = TRUE,
@@ -1069,7 +1072,7 @@ analyze_rct_tmle = function(df,
           
           # Add individual SL method columns if requested (excluding SL.mean)
           if (run_individual_SL) {
-            individual_methods = SL_methods[!SL_methods %in% c("SL.mean")]
+            individual_methods = q_library[!q_library %in% c("SL.mean")]
             for (method in individual_methods) {
               method_clean = gsub("SL\\.", "SL_", method)
               outcome_results[[paste0("Est_", method_clean)]] = rep(NA_real_, n_treat)
@@ -1124,7 +1127,8 @@ analyze_rct_tmle = function(df,
           treatment_col = treatment_col,
           reference_arm = control_level,
           K = K,
-          SL_methods = SL_methods,
+          q_library = q_library,
+          g_library = g_library,
           n_cores = n_cores
         )
         outcome_results$Est_SL = sl_res$Est_SL
@@ -1138,7 +1142,7 @@ analyze_rct_tmle = function(df,
     
     # Run individual SL methods (only if run_individual_SL = TRUE)
     if (run_individual_SL) {
-      individual_methods = SL_methods[!SL_methods %in% c("SL.mean")]
+      individual_methods = q_library[!q_library %in% c("SL.mean")]
       for (method in individual_methods) {
         tryCatch({
           sl_res_individual = analyze_rct_sl_tmle(
@@ -1148,7 +1152,8 @@ analyze_rct_tmle = function(df,
             treatment_col = treatment_col,
             reference_arm = control_level,
             K = K,
-            SL_methods = method,
+            q_library = method,
+            g_library = g_library,
             n_cores = n_cores
           )
           # Clean method name for column naming
@@ -2871,7 +2876,8 @@ process_single_trial_tmle = function(trial_no,
                                      variable_selection_type = 2,
                                      run_individual_SL = TRUE,
                                      run_ensemble_SL = F,
-                                     SL_methods = c("SL.glm", "SL.mean", "SL.glmnet", "SL.rpart", "SL.gam"),
+                                     q_library = c("SL.glm", "SL.mean", "SL.glmnet", "SL.rpart", "SL.gam"),
+                                     g_library = "SL.mean",
                                      n_cores = parallel::detectCores() - 2,
                                      K = 5,
                                      df_comparison) {
@@ -2897,7 +2903,8 @@ process_single_trial_tmle = function(trial_no,
     manual_covariates = manual_covariates,
     run_individual_SL = run_individual_SL,
     run_ensemble_SL = run_ensemble_SL,
-    SL_methods = SL_methods,
+    q_library = q_library,
+    g_library = g_library,
     n_cores = n_cores,
     K = K
   )
@@ -3150,7 +3157,8 @@ run_tmle_analysis = function(df_indices = 1:50,
                              variable_selection_type = 2,
                              run_individual_SL = TRUE,
                              run_ensemble_SL = TRUE,
-                             SL_methods = c("SL.glm", "SL.mean", "SL.glmnet", "SL.rpart", "SL.gam"),
+                             q_library = c("SL.glm", "SL.mean", "SL.glmnet", "SL.rpart", "SL.gam"),
+                             g_library = "SL.mean",
                              n_cores = parallel::detectCores() - 2,
                              K = 5,
                              df_comparison) {
@@ -3292,7 +3300,8 @@ run_tmle_analysis = function(df_indices = 1:50,
         variable_selection_type = variable_selection_type,
         run_individual_SL = run_individual_SL,
         run_ensemble_SL = run_ensemble_SL,
-        SL_methods = SL_methods,
+        q_library = q_library,
+        g_library = g_library,
         n_cores = n_cores,
         K = K,
         df_comparison = df_comparison
@@ -3867,6 +3876,7 @@ df_comparison = run_dml_analysis(
 ```
 
 # TMLE
+## Simple G
 ```{r}
 # Run TMLE analysis on all 50 trials (individual)
 df_comparison = run_tmle_analysis(
@@ -3875,9 +3885,9 @@ df_comparison = run_tmle_analysis(
   variable_selection_type = 1,           # Manual selection (1 = correlation, 2 = manual)
   run_individual_SL = TRUE,              # Run individual SL methods
   run_ensemble_SL = F,                # Run ensemble SL
-  # SL_methods = c("SL.glm", "SL.glmnet", "SL.rpart", "SL.gam", "SL.nnet", "SL.svm",
+  # q_library = c("SL.glm", "SL.glmnet", "SL.rpart", "SL.gam", "SL.nnet", "SL.svm",
   #                "SL.xgboost","SL.bartMachine"),
-  SL_methods = c("SL.randomForest"),
+  q_library = c("SL.randomForest"),
   n_cores = parallel::detectCores() - 2,
   K = 5,
   df_comparison = df_comparison
@@ -3890,9 +3900,7 @@ df_comparison = run_tmle_analysis(
   variable_selection_type = 1,           # Manual selection (1 = correlation, 2 = manual)
   run_individual_SL = F,              # Run individual SL methods
   run_ensemble_SL = T,                # Run ensemble SL
-  # SL_methods = c("SL.glm", "SL.glmnet", "SL.rpart", "SL.gam", "SL.nnet", "SL.svm",
-  #                "SL.xgboost","SL.bartMachine"),
-  SL_methods = SL2_lib,
+  q_library = SL2_lib,
   n_cores = parallel::detectCores() - 2,
   K = 5,
   df_comparison = df_comparison
@@ -3905,9 +3913,7 @@ df_comparison = run_tmle_analysis(
   variable_selection_type = 1,           # Manual selection (1 = correlation, 2 = manual)
   run_individual_SL = F,              # Run individual SL methods
   run_ensemble_SL = T,                # Run ensemble SL
-  # SL_methods = c("SL.glm", "SL.glmnet", "SL.rpart", "SL.gam", "SL.nnet", "SL.svm",
-  #                "SL.xgboost","SL.bartMachine"),
-  SL_methods = SL2_lib,
+  q_library = SL2_lib,
   n_cores = parallel::detectCores() - 2,
   K = 5,
   df_comparison = df_comparison
@@ -3920,16 +3926,60 @@ df_comparison = run_tmle_analysis(
   variable_selection_type = 2,           # Manual selection (1 = correlation, 2 = manual)
   run_individual_SL = F,              # Run individual SL methods
   run_ensemble_SL = T,                # Run ensemble SL
-  # SL_methods = c("SL.glm", "SL.glmnet", "SL.rpart", "SL.gam", "SL.nnet", "SL.svm",
-  #                "SL.xgboost","SL.bartMachine"),
-  SL_methods = SL2_lib,
+  q_library = SL2_lib,
   n_cores = parallel::detectCores() - 2,
   K = 5,
   df_comparison = df_comparison
 )
 ```
 
+## Complex G
+```{r}
+# ALL
+df_comparison = run_tmle_analysis(
+  df_indices = 1:50,                    # Which trials to analyze
+  selection = F,                      # Use variable selection
+  variable_selection_type = 1,           # Manual selection (1 = correlation, 2 = manual)
+  run_individual_SL = F,              # Run individual SL methods
+  run_ensemble_SL = T,                # Run ensemble SL
+  q_library = SL2_lib,
+  g_library = SL2_lib,
+  n_cores = parallel::detectCores() - 2,
+  K = 5,
+  df_comparison = df_newcomp
+)
+
+# Top3
+df_comparison = run_tmle_analysis(
+  df_indices = 1:50,                    # Which trials to analyze
+  selection = T,                      # Use variable selection
+  variable_selection_type = 1,           # Manual selection (1 = correlation, 2 = manual)
+  run_individual_SL = F,              # Run individual SL methods
+  run_ensemble_SL = T,                # Run ensemble SL
+  q_library = SL2_lib,
+  g_library = SL2_lib,
+  n_cores = parallel::detectCores() - 2,
+  K = 5,
+  df_comparison = df_newcomp
+)
+
+# Baseline+
+df_comparison = run_tmle_analysis(
+  df_indices = 1:50,                    # Which trials to analyze
+  selection = T,                      # Use variable selection
+  variable_selection_type = 2,           # Manual selection (1 = correlation, 2 = manual)
+  run_individual_SL = F,              # Run individual SL methods
+  run_ensemble_SL = T,                # Run ensemble SL
+  q_library = SL2_lib,
+  g_library = SL2_lib,
+  n_cores = parallel::detectCores() - 2,
+  K = 5,
+  df_comparison = df_newcomp
+)
+```
+
 # AIPW
+## Simple G
 ```{r}
 # Run AIPW analysis on all 50 trials (individual)
 df_comparison = run_aipw_analysis(
@@ -3990,6 +4040,53 @@ df_comparison = run_aipw_analysis(
   g_bound = 0.05,                        # Truncation level for propensity scores
   seed = 123,                            # Random seed for reproducibility
   df_comparison = df_comparison
+)
+```
+## Complex G
+```{r}
+# ALL
+df_comparison = run_aipw_analysis(
+  df_indices = 1:50,                    # Which trials to analyze
+  selection = FALSE,                     # Use variable selection
+  variable_selection_type = 1,           # Manual selection (1 = correlation, 2 = manual)
+  run_individual_SL = F,              # Run individual SL methods
+  run_ensemble_SL = T,               # Run ensemble SL
+  Q_SL_library = SL2_lib,   # SuperLearner library for outcome model
+  g_SL_library = SL2_lib,              # SuperLearner library for propensity score
+  k_split = 5,                           # Number of folds for cross-validation
+  g_bound = 0.05,                        # Truncation level for propensity scores
+  seed = 123,                            # Random seed for reproducibility
+  df_comparison = df_newcomp
+)
+
+# TOP3
+df_comparison = run_aipw_analysis(
+  df_indices = 1:50,                    # Which trials to analyze
+  selection = T,                     # Use variable selection
+  variable_selection_type = 1,           # Manual selection (1 = correlation, 2 = manual)
+  run_individual_SL = F,              # Run individual SL methods
+  run_ensemble_SL = T,               # Run ensemble SL
+  Q_SL_library = SL2_lib,   # SuperLearner library for outcome model
+  g_SL_library = SL2_lib,              # SuperLearner library for propensity score
+  k_split = 5,                           # Number of folds for cross-validation
+  g_bound = 0.05,                        # Truncation level for propensity scores
+  seed = 123,                            # Random seed for reproducibility
+  df_comparison = df_newcomp
+)
+
+# Baseline+
+df_comparison = run_aipw_analysis(
+  df_indices = 1:50,                    # Which trials to analyze
+  selection = T,                     # Use variable selection
+  variable_selection_type = 2,           # Manual selection (1 = correlation, 2 = manual)
+  run_individual_SL = F,              # Run individual SL methods
+  run_ensemble_SL = T,               # Run ensemble SL
+  Q_SL_library = SL2_lib,   # SuperLearner library for outcome model
+  g_SL_library = SL2_lib,              # SuperLearner library for propensity score
+  k_split = 5,                           # Number of folds for cross-validation
+  g_bound = 0.05,                        # Truncation level for propensity scores
+  seed = 123,                            # Random seed for reproducibility
+  df_comparison = df_newcomp
 )
 ```
 
