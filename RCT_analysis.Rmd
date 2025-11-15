@@ -4131,6 +4131,7 @@ df_comparison = run_ipw_analysis(
 # Export
 ```{r}
 write_xlsx(df_comparison, "cleaned_data/meta_data_comparison.xlsx")
+write_xlsx(df_newcomp, "cleaned_data/meta_data_comparison_new.xlsx")
 ```
 
 
