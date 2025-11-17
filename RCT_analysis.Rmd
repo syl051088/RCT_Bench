@@ -37,7 +37,7 @@ library(rsvg)
 ```{r load meta data}
 df_comparison = read_xlsx("cleaned_data/meta_data_comparison.xlsx")
 df_meta = read_xlsx("cleaned_data/meta_data.xlsx")
-df_newcomp = df_comparison
+df_newcomp = read_xlsx("cleaned_data/meta_data_comparison_new.xlsx")
 ```
 
 # Load Trial Data
@@ -51,7 +51,8 @@ df4 = read_rds("cleaned_data/Non_Clustered_RCT/trial4.rds")
 df5 = read_rds("cleaned_data/Non_Clustered_RCT/trial5.rds")
 df6 = read_rds("cleaned_data/Non_Clustered_RCT/trial6.rds")
 df7 = read_rds("cleaned_data/Non_Clustered_RCT/trial7.rds")
-df8 = read_rds("cleaned_data/Non_Clustered_RCT/trial8.rds")
+df8 = read_rds("cleaned_data/Non_Clustered_RCT/trial8.rds") %>% 
+  select(-X_comorbidities_0d)
 df9 = read_rds("cleaned_data/Non_Clustered_RCT/trial9.rds")
 df10 = read_rds("cleaned_data/Non_Clustered_RCT/trial10.rds")
 df11 = read_rds("cleaned_data/Non_Clustered_RCT/trial11.rds")
@@ -3863,7 +3864,7 @@ df_comparison = run_dml_analysis(
 
 # Baseline+
 df_comparison = run_dml_analysis(
-  df_indices = 1:49,
+  df_indices = 8,
   selection = T,
   variable_selection_type = 2,
   run_individual_SL = F,
@@ -3921,7 +3922,7 @@ df_comparison = run_tmle_analysis(
 
 # Baseline+
 df_comparison = run_tmle_analysis(
-  df_indices = 50,                    # Which trials to analyze
+  df_indices = 8,                    # Which trials to analyze
   selection = T,                      # Use variable selection
   variable_selection_type = 2,           # Manual selection (1 = correlation, 2 = manual)
   run_individual_SL = F,              # Run individual SL methods
@@ -3936,7 +3937,7 @@ df_comparison = run_tmle_analysis(
 ## Complex G
 ```{r}
 # ALL
-df_comparison = run_tmle_analysis(
+df_newcomp = run_tmle_analysis(
   df_indices = 1:50,                    # Which trials to analyze
   selection = F,                      # Use variable selection
   variable_selection_type = 1,           # Manual selection (1 = correlation, 2 = manual)
@@ -3950,7 +3951,7 @@ df_comparison = run_tmle_analysis(
 )
 
 # Top3
-df_comparison = run_tmle_analysis(
+df_newcomp = run_tmle_analysis(
   df_indices = 1:50,                    # Which trials to analyze
   selection = T,                      # Use variable selection
   variable_selection_type = 1,           # Manual selection (1 = correlation, 2 = manual)
@@ -3964,7 +3965,7 @@ df_comparison = run_tmle_analysis(
 )
 
 # Baseline+
-df_comparison = run_tmle_analysis(
+df_newcomp = run_tmle_analysis(
   df_indices = 1:50,                    # Which trials to analyze
   selection = T,                      # Use variable selection
   variable_selection_type = 2,           # Manual selection (1 = correlation, 2 = manual)
@@ -4045,7 +4046,7 @@ df_comparison = run_aipw_analysis(
 ## Complex G
 ```{r}
 # ALL
-df_comparison = run_aipw_analysis(
+df_newcomp = run_aipw_analysis(
   df_indices = 1:50,                    # Which trials to analyze
   selection = FALSE,                     # Use variable selection
   variable_selection_type = 1,           # Manual selection (1 = correlation, 2 = manual)
@@ -4060,7 +4061,7 @@ df_comparison = run_aipw_analysis(
 )
 
 # TOP3
-df_comparison = run_aipw_analysis(
+df_newcomp = run_aipw_analysis(
   df_indices = 1:50,                    # Which trials to analyze
   selection = T,                     # Use variable selection
   variable_selection_type = 1,           # Manual selection (1 = correlation, 2 = manual)
@@ -4075,7 +4076,7 @@ df_comparison = run_aipw_analysis(
 )
 
 # Baseline+
-df_comparison = run_aipw_analysis(
+df_newcomp = run_aipw_analysis(
   df_indices = 1:50,                    # Which trials to analyze
   selection = T,                     # Use variable selection
   variable_selection_type = 2,           # Manual selection (1 = correlation, 2 = manual)

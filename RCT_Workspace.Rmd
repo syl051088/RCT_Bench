@@ -4509,118 +4509,29 @@ analyze_rct_ipw = function(df,
 
 # res
 ```{r}
-###############################################################################
-##  Calculate average variance reduction for ANCOVA Baseline+ (Binary)
-##  Using FULL dataset (no outlier removal)
-###############################################################################
-
-# Filter for ANCOVA, Baseline+, binary outcomes (using FULL data)
-ancova_baseline_binary = df_long_full_all %>%
-  filter(method == "ANCOVA",
-         adjustment_type == "Baseline+",
-         outcome_group == "binary",
-         !is.na(pg))  # Only exclude missing values
-
-# Calculate proportional variance reduction (1 - precision_gain)
-ancova_baseline_binary = ancova_baseline_binary %>%
-  mutate(prop_var_reduction = 1 - pg)
-
-# Calculate mean and SD
-mean_var_reduction = mean(ancova_baseline_binary$prop_var_reduction, na.rm = TRUE)
-sd_var_reduction = sd(ancova_baseline_binary$prop_var_reduction, na.rm = TRUE)
-
-# Convert to percentage
-mean_pct = mean_var_reduction * 100
-sd_pct = sd_var_reduction * 100
-
-# Print the result
-cat("\n========================================\n")
-cat("ANCOVA under Baseline+ strategy (Binary outcomes)\n")
-cat("Using FULL dataset (no outlier removal)\n")
-cat("========================================\n")
-cat(sprintf("Average variance reduction: %.2f%% (SD = %.2f%%)\n", mean_pct, sd_pct))
-cat(sprintf("Sample size: %d\n", nrow(ancova_baseline_binary)))
-cat("========================================\n\n")
-
-# Alternative: Create a summary for all methods under Baseline+ (Binary)
-baseline_binary_summary = df_long_full_all %>%
-  filter(adjustment_type == "Baseline+",
-         outcome_group == "binary",
-         !is.na(pg)) %>%
-  mutate(prop_var_reduction = 1 - pg) %>%
-  group_by(method) %>%
-  summarise(
-    n = n(),
-    mean_reduction_pct = mean(prop_var_reduction, na.rm = TRUE) * 100,
-    sd_reduction_pct = sd(prop_var_reduction, na.rm = TRUE) * 100,
-    .groups = "drop"
+cols_diff = names(df_comparison)[
+  sapply(names(df_comparison), function(col)
+    any(df_comparison[[col]] != df_newcomp[[col]], na.rm = TRUE)
   )
+]
 
-cat("\nSummary for all methods (Baseline+, Binary outcomes - FULL data):\n")
-print(baseline_binary_summary)
+cols_diff
+
+```
+
+```{r}
+df_comparison$TMLE_VS1_est
 ```
 
 
 ```{r}
-###############################################################################
-##  Histogram of variance reduction for ANCOVA Baseline+ (Binary)
-##  Using FULL dataset (no outlier removal)
-###############################################################################
+keep_cols = c(
+  "Trial_No", "Sample_Size", "N_Covariates", "N_Covariates_VS1", "N_Covariates_VS2",
+  "Selected_Covariates_VS1", "Selected_Covariates_VS2",
+  "Treatment", "Control", "Contrast",
+  "Outcome", "Outcome Type", "Unadjust_se", "Unadjust_est"
+)
 
-# Filter for ANCOVA, Baseline+, binary outcomes (using FULL data)
-ancova_baseline_binary = df_long_full_all %>%
-  filter(method == "ANCOVA",
-         adjustment_type == "Baseline+",
-         outcome_group == "binary",
-         !is.na(pg))
-
-# Calculate proportional variance reduction (1 - precision_gain)
-ancova_baseline_binary = ancova_baseline_binary %>%
-  mutate(prop_var_reduction = (1 - pg) * 100)  # Convert to percentage
-
-# Calculate statistics for annotation
-mean_pct = mean(ancova_baseline_binary$prop_var_reduction, na.rm = TRUE)
-sd_pct = sd(ancova_baseline_binary$prop_var_reduction, na.rm = TRUE)
-n_obs = nrow(ancova_baseline_binary)
-
-# Create histogram
-p_ancova_hist = ggplot(ancova_baseline_binary, aes(x = prop_var_reduction)) +
-  geom_histogram(bins = 30, fill = "#F8766D", color = "grey25", alpha = 0.7) +
-  geom_vline(xintercept = mean_pct, linetype = "dashed", color = "black", linewidth = 1) +
-  labs(
-    title = "ANCOVA Variance Reduction Distribution",
-    subtitle = "Baseline+ Strategy for Binary Outcomes (Full Dataset)",
-    x = "Proportional Variance Reduction (%)",
-    y = "Count"
-  ) +
-  annotate("text", x = Inf, y = Inf, 
-           label = sprintf("Mean = %.2f%%\nSD = %.2f%%\nn = %d", mean_pct, sd_pct, n_obs),
-           hjust = 1.1, vjust = 1.5, size = 5, color = "black") +
-  theme_minimal(base_size = 14) +
-  theme(
-    plot.title = element_text(size = 16, face = "bold"),
-    plot.subtitle = element_text(size = 12),
-    axis.title = element_text(size = 14),
-    axis.text = element_text(size = 12),
-    panel.background = element_rect(fill = "white", colour = NA),
-    plot.background = element_rect(fill = "white", colour = NA)
-  )
-
-
-# Print summary statistics
-cat("\n========================================\n")
-cat("ANCOVA under Baseline+ strategy (Binary outcomes)\n")
-cat("Using FULL dataset (no outlier removal)\n")
-cat("========================================\n")
-cat(sprintf("Average variance reduction: %.2f%% (SD = %.2f%%)\n", mean_pct, sd_pct))
-cat(sprintf("Sample size: %d\n", n_obs))
-cat(sprintf("Median: %.2f%%\n", median(ancova_baseline_binary$prop_var_reduction, na.rm = TRUE)))
-cat(sprintf("Min: %.2f%%\n", min(ancova_baseline_binary$prop_var_reduction, na.rm = TRUE)))
-cat(sprintf("Max: %.2f%%\n", max(ancova_baseline_binary$prop_var_reduction, na.rm = TRUE)))
-cat("========================================\n\n")
-
-# Display the plot
-print(p_ancova_hist)
+df_newcomp[ , setdiff(names(df_newcomp), keep_cols)] = NA
 ```
-
 
