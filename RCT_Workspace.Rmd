@@ -4535,3 +4535,14 @@ keep_cols = c(
 df_newcomp[ , setdiff(names(df_newcomp), keep_cols)] = NA
 ```
 
+
+```{r}
+cols_bcss = grep("bcss", names(df11), value = TRUE, ignore.case = TRUE)
+cols_bcss
+
+```
+
+```{r}
+df11$simpson_ow1
+```
+

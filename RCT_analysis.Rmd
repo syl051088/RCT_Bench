@@ -3838,7 +3838,7 @@ SL2_lib = c("SL.glm", "SL.glmnet", "SL.bartMachine", "SL.randomForest")
 ```{r}
 # ALL
 df_comparison = run_dml_analysis(
-  df_indices = 50,
+  df_indices = 11,
   selection = F,
   variable_selection_type = 1,
   run_individual_SL = F,
@@ -3851,7 +3851,7 @@ df_comparison = run_dml_analysis(
 
 # Top3
 df_comparison = run_dml_analysis(
-  df_indices = c(1:4, 6:50),
+  df_indices = 11,
   selection = T,
   variable_selection_type = 1,
   run_individual_SL = F,
@@ -3864,7 +3864,7 @@ df_comparison = run_dml_analysis(
 
 # Baseline+
 df_comparison = run_dml_analysis(
-  df_indices = 8,
+  df_indices = 11,
   selection = T,
   variable_selection_type = 2,
   run_individual_SL = F,
@@ -3922,7 +3922,7 @@ df_comparison = run_tmle_analysis(
 
 # Baseline+
 df_comparison = run_tmle_analysis(
-  df_indices = 8,                    # Which trials to analyze
+  df_indices = 11,                    # Which trials to analyze
   selection = T,                      # Use variable selection
   variable_selection_type = 2,           # Manual selection (1 = correlation, 2 = manual)
   run_individual_SL = F,              # Run individual SL methods
@@ -3966,7 +3966,7 @@ df_newcomp = run_tmle_analysis(
 
 # Baseline+
 df_newcomp = run_tmle_analysis(
-  df_indices = 1:50,                    # Which trials to analyze
+  df_indices = 11,                    # Which trials to analyze
   selection = T,                      # Use variable selection
   variable_selection_type = 2,           # Manual selection (1 = correlation, 2 = manual)
   run_individual_SL = F,              # Run individual SL methods
@@ -4030,7 +4030,7 @@ df_comparison = run_aipw_analysis(
 
 # Baseline+
 df_comparison = run_aipw_analysis(
-  df_indices = 50,                    # Which trials to analyze
+  df_indices = 11,                    # Which trials to analyze
   selection = T,                     # Use variable selection
   variable_selection_type = 2,           # Manual selection (1 = correlation, 2 = manual)
   run_individual_SL = F,              # Run individual SL methods
@@ -4117,7 +4117,7 @@ df_comparison = run_ipw_analysis(
 
 # Baseline+
 df_comparison = run_ipw_analysis(
-  df_indices = 1:50,
+  df_indices = 11,
   selection = TRUE,             # variable selection on
   variable_selection_type = 2,  # manual/baseline+
   weight_method = "IPW",        # ATE

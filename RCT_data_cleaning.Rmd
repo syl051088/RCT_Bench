@@ -1090,6 +1090,7 @@ df11_final = df11 %>%
     X_current_smoker_0w = current_smoker,
     X_years_smoke_0w = years_smoke,
     X_pack_years_0w = pack_years,
+    
 
     # Baseline inflammatory markers
     X_crp_0w = crp,
@@ -1097,12 +1098,15 @@ df11_final = df11 %>%
     X_leukocyte_0w = leukocyte,
 
     # Baseline microbiota composition
-    X_biomass_log10_raw_ow1_0w = log10(biomass_raw_ow1),
-    X_biomass_log10_raw_spt1_0w = log10(as.numeric(biomass_raw_spt1)),
-    X_shannon_ow1_0w = shannon_ow1,
-    X_shannon_spt1_0w = as.numeric(shannon_spt1),
-    X_simpson_ow1_0w = simpson_ow1,
-    X_simpson_spt1_0w = as.numeric(simpson_spt1),
+    X_log10_biomass_oral_0w = log10(biomass_raw_ow1),
+    X_log10_biomass_sputum_0w = log10(as.numeric(biomass_raw_spt1)),
+    X_shannon_oral_0w = as.numeric(shannon_ow1),
+    X_shannon_sputum_0w = as.numeric(shannon_spt1),
+    X_simpson_oral_0w = as.numeric(simpson_ow1),
+    X_simpson_sputum_0w = as.numeric(simpson_spt1),
+    X_bcss_0w = as.numeric(bcss_ave_base),
+    X_sgrq_total_0w = as.numeric(sgrq_total_score_visit1),
+    
     
     Treatment = relevel(factor(Treatment), ref = "placebo"),
     across(c(X_sex_0w, X_current_smoker_0w), as_factor),
