@@ -4543,6 +4543,85 @@ cols_bcss
 ```
 
 ```{r}
-df11$simpson_ow1
+library(ggplot2)
+library(tidyr)  # Need this for pivot_longer
+library(dplyr)
+
+# Create sample data
+df <- data.frame(
+  Model = c("MF-based", "BioBERT", "PubMedBERT", "DL-based", "KG-based"),
+  Task1_AUROC = c(0.85, 0.87, 0.89, 0.86, 0.84),
+  Task1_F1 = c(0.78, 0.80, 0.82, 0.79, 0.77),
+  Task2_AUROC = c(0.88, 0.90, 0.91, 0.89, 0.87),
+  Task2_F1 = c(0.81, 0.83, 0.85, 0.82, 0.80)
+)
+
+# Prepare data in long format
+plot_data <- df %>%
+  pivot_longer(cols = -Model, 
+               names_to = "Task", 
+               values_to = "Performance")
+
+# Create plot
+ggplot(plot_data, aes(x = Task, y = Model)) +
+  geom_point(aes(size = Performance, color = Performance), 
+             alpha = 0.7) +
+  scale_size_continuous(range = c(3, 12)) +
+  scale_color_gradient(low = "lightblue", high = "darkblue") +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    panel.grid.major = element_line(color = "gray90"),
+    panel.background = element_rect(fill = "white")
+  ) +
+  labs(title = "Model Performance Across Tasks")
+
+library(ComplexHeatmap)
+library(circlize)
+library(grid)
+
+# Create the dot plot function
+create_dot_matrix <- function(mat, colors) {
+  Heatmap(mat,
+    name = "Performance",
+    col = colorRamp2(c(0, 0.5, 1), c("white", "lightblue", "darkblue")),
+    
+    # Use circles instead of rectangles
+    rect_gp = gpar(type = "none"),
+    layer_fun = function(j, i, x, y, width, height, fill) {
+      grid.circle(x = x, y = y, 
+                  r = pindex(mat, i, j) * unit(3, "mm"),
+                  gp = gpar(fill = fill, col = NA))
+    },
+    
+    # Styling
+    border = TRUE,
+    show_row_names = TRUE,
+    show_column_names = TRUE,
+    column_names_rot = 45,
+    cluster_rows = FALSE,
+    cluster_columns = FALSE
+  )
+}
+
+# Create left annotation (model summary)
+left_anno = rowAnnotation(
+  Model = anno_text(model_types, gp = gpar(fontsize = 10)),
+  Type = model_categories,
+  col = list(Type = c("MF" = "gray", "DL" = "blue", "KG" = "green"))
+)
+
+# Combine multiple heatmaps
+ht_list = left_anno + 
+  create_dot_matrix(cv1_data, "blue") + 
+  create_dot_matrix(cv2_data, "blue") +
+  create_dot_matrix(ranking_data, "green") +
+  Heatmap(scalability_data, name = "Scalability", 
+          col = colorRamp2(c(0, 0.5, 1), c("white", "orange", "red")))
+
+# Add top annotations for task groupings
+draw(ht_list, 
+     column_title = "Model Performance Evaluation",
+     heatmap_legend_side = "right")
 ```
 

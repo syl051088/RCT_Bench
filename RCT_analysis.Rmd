@@ -4117,7 +4117,7 @@ df_comparison = run_ipw_analysis(
 
 # Baseline+
 df_comparison = run_ipw_analysis(
-  df_indices = 11,
+  df_indices = 1:50,
   selection = TRUE,             # variable selection on
   variable_selection_type = 2,  # manual/baseline+
   weight_method = "IPW",        # ATE
