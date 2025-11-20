@@ -4543,85 +4543,448 @@ cols_bcss
 ```
 
 ```{r}
-library(ggplot2)
-library(tidyr)  # Need this for pivot_longer
-library(dplyr)
-
-# Create sample data
-df <- data.frame(
-  Model = c("MF-based", "BioBERT", "PubMedBERT", "DL-based", "KG-based"),
-  Task1_AUROC = c(0.85, 0.87, 0.89, 0.86, 0.84),
-  Task1_F1 = c(0.78, 0.80, 0.82, 0.79, 0.77),
-  Task2_AUROC = c(0.88, 0.90, 0.91, 0.89, 0.87),
-  Task2_F1 = c(0.81, 0.83, 0.85, 0.82, 0.80)
-)
-
-# Prepare data in long format
-plot_data <- df %>%
-  pivot_longer(cols = -Model, 
-               names_to = "Task", 
-               values_to = "Performance")
-
-# Create plot
-ggplot(plot_data, aes(x = Task, y = Model)) +
-  geom_point(aes(size = Performance, color = Performance), 
-             alpha = 0.7) +
-  scale_size_continuous(range = c(3, 12)) +
-  scale_color_gradient(low = "lightblue", high = "darkblue") +
-  theme_minimal() +
-  theme(
-    axis.text.x = element_text(angle = 45, hjust = 1),
-    panel.grid.major = element_line(color = "gray90"),
-    panel.background = element_rect(fill = "white")
-  ) +
-  labs(title = "Model Performance Across Tasks")
+# Install and load required packages
+if (!require("ComplexHeatmap")) {
+  if (!require("BiocManager")) install.packages("BiocManager")
+  BiocManager::install("ComplexHeatmap")
+}
 
 library(ComplexHeatmap)
 library(circlize)
 library(grid)
 
-# Create the dot plot function
-create_dot_matrix <- function(mat, colors) {
-  Heatmap(mat,
-    name = "Performance",
-    col = colorRamp2(c(0, 0.5, 1), c("white", "lightblue", "darkblue")),
+# Define all 18 methods
+methods <- c(
+  "CellOracle", "RCTD", "DestVI", "stereoscope", "SpatialDecon", "STRIDE",
+  "CARD", "NMFreg", "SpatialDWLS", "SPOTlight",
+  "DSTG", "SD2",
+  "Tangram",
+  "SpaOTsc", "novoSpaRc",
+  "Berglund", "SpiceMix", "STdeconvolve"
+)
+
+# Method categories for row annotations
+method_categories <- c(
+  rep("Probabilistic-based", 6),
+  rep("NMF-based", 4),
+  rep("Graph-based", 2),
+  rep("DL-based", 1),
+  rep("Optimal transport-based", 2),
+  rep("Without scRNA-seq ref", 3)
+)
+
+# Location requirement (Y/N)
+location_required <- c("N", "Y", "Y", "N", "Y", "N",
+                       "Y", "Y", "Y", "N",
+                       "N", "Y",
+                       "N",
+                       "Y", "Y",
+                       "N", "Y", "N")
+
+# Programming language
+programming_lang <- c("Python", "Python", "R", "Python", "R", "Python",
+                     "Python", "Python", "R", "R",
+                     "R", "R",
+                     "Python",
+                     "Python", "Python",
+                     "C++", "Python", "R")
+
+# Create simulated performance data based on the paper's Figure 2
+set.seed(42)
+
+# Accuracy metrics
+accuracy_cols <- c("JSD\nseqFISH+", "RMSE\nseqFISH+", "JSD\nMERFISH", "RMSE\nMERFISH",
+                  "Corr\nST", "Corr\nVisium", "Corr\nSlide-seq", "Corr\nStereo-seq", "Overall")
+
+accuracy_data <- matrix(c(
+  0.5, 0.5, 0.6, 0.6, 0.4, 0.7, 0.7, 0.7, 0.6,
+  0.7, 0.7, 0.8, 0.8, 0.6, 0.8, 0.9, 0.9, 0.8,
+  0.9, 0.9, 0.9, 0.9, 0.7, 0.8, 0.8, 0.7, 0.85,
+  0.6, 0.6, 0.8, 0.8, 0.7, 0.8, 0.8, 0.8, 0.75,
+  0.7, 0.7, 0.9, 0.9, 0.8, 0.9, 0.9, 0.9, 0.85,
+  0.5, 0.5, 0.6, 0.6, 0.5, 0.7, 0.7, 0.7, 0.6,
+  0.9, 0.9, 0.9, 0.9, 0.8, 0.9, 0.9, 0.9, 0.9,
+  0.6, 0.6, 0.7, 0.7, 0.6, 0.7, 0.7, 0.7, 0.65,
+  0.8, 0.8, 0.8, 0.8, 0.3, 0.4, 0.4, 0.4, 0.6,
+  0.7, 0.7, 0.8, 0.8, 0.7, 0.8, 0.8, 0.8, 0.75,
+  0.4, 0.4, 0.4, 0.4, 0.4, 0.5, 0.5, 0.5, 0.45,
+  0.6, 0.6, 0.7, 0.7, 0.6, 0.7, 0.7, 0.7, 0.65,
+  0.7, 0.7, 0.9, 0.9, 0.7, 0.8, 0.9, 0.9, 0.85,
+  0.5, 0.5, 0.6, 0.6, 0.5, 0.6, 0.6, 0.6, 0.55,
+  0.4, 0.4, 0.5, 0.5, 0.4, 0.5, 0.5, 0.5, 0.45,
+  0.6, 0.6, 0.7, 0.7, 0.5, 0.6, 0.6, 0.6, 0.6,
+  0.4, 0.4, 0.3, 0.3, 0.3, 0.4, 0.4, 0.4, 0.35,
+  0.6, 0.6, 0.7, 0.7, 0.6, 0.7, 0.8, 0.8, 0.7
+), nrow = 18, byrow = TRUE)
+
+colnames(accuracy_data) <- accuracy_cols
+rownames(accuracy_data) <- methods
+
+# Robustness metrics
+robustness_cols <- c("Gene\nnum", "Spot\nnum", "Resolution", "Cell\ntypes",
+                    "Normali-\nzation", "Hyper-\nparameter", "Stability", "Overall")
+
+robustness_data <- matrix(c(
+  0.5, 0.6, 0.6, 0.6, 0.7, 0.7, 0.7, 0.6,
+  0.8, 0.8, 0.8, 0.9, 0.8, 0.8, 0.9, 0.85,
+  0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9,
+  0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8,
+  0.9, 0.9, 0.9, 0.9, 0.8, 0.9, 0.9, 0.9,
+  0.6, 0.5, 0.6, 0.6, 0.7, 0.7, 0.7, 0.6,
+  0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9,
+  0.7, 0.7, 0.7, 0.7, 0.7, 0.8, 0.8, 0.7,
+  0.8, 0.8, 0.8, 0.8, 0.7, 0.8, 0.8, 0.8,
+  0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8,
+  0.4, 0.4, 0.4, 0.5, 0.6, 0.4, 0.5, 0.45,
+  0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.6, 0.7,
+  0.9, 0.9, 0.9, 0.9, 0.8, 0.9, 0.9, 0.9,
+  0.6, 0.6, 0.6, 0.6, 0.7, 0.7, 0.7, 0.65,
+  0.5, 0.5, 0.5, 0.5, 0.6, 0.6, 0.6, 0.55,
+  0.6, 0.6, 0.6, 0.6, 0.7, 0.7, 0.7, 0.65,
+  0.3, 0.3, 0.3, 0.4, 0.5, 0.5, 0.5, 0.4,
+  0.7, 0.7, 0.7, 0.7, 0.8, 0.8, 0.8, 0.75
+), nrow = 18, byrow = TRUE)
+
+colnames(robustness_data) <- robustness_cols
+rownames(robustness_data) <- methods
+
+# Usability metrics
+usability_cols <- c("Compu-\ntational\ntime", "Code\nquality", "Instal-\nlation",
+                   "Document\nquality", "Compati-\nbility", "Example", "Overall")
+
+usability_data <- matrix(c(
+  0.6, 0.7, 0.7, 0.7, 0.8, 0.7, 0.7,
+  0.7, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9,
+  0.6, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9,
+  0.6, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8,
+  0.7, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8,
+  0.9, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7,
+  0.7, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9,
+  0.8, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7,
+  0.6, 0.6, 0.6, 0.6, 0.7, 0.6, 0.6,
+  0.7, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8,
+  0.7, 0.6, 0.6, 0.6, 0.7, 0.6, 0.65,
+  0.7, 0.6, 0.6, 0.6, 0.7, 0.6, 0.65,
+  0.9, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8,
+  0.6, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7,
+  0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6,
+  0.5, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6,
+  0.6, 0.5, 0.5, 0.5, 0.6, 0.5, 0.55,
+  0.7, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8
+), nrow = 18, byrow = TRUE)
+
+colnames(usability_data) <- usability_cols
+rownames(usability_data) <- methods
+
+# Overall scores
+overall_scores <- matrix(rowMeans(cbind(
+  accuracy_data[, "Overall"],
+  robustness_data[, "Overall"],
+  usability_data[, "Overall"]
+)), ncol = 1)
+colnames(overall_scores) <- "Overall"
+rownames(overall_scores) <- methods
+
+# Create cell_fun with alternating row backgrounds
+create_circle_heatmap_with_stripes <- function(data, col_fun, title, title_color, 
+                                                show_row_names = FALSE) {
+  Heatmap(
+    data,
+    name = title,
+    col = col_fun,
     
-    # Use circles instead of rectangles
-    rect_gp = gpar(type = "none"),
+    # Draw alternating row backgrounds
     layer_fun = function(j, i, x, y, width, height, fill) {
-      grid.circle(x = x, y = y, 
-                  r = pindex(mat, i, j) * unit(3, "mm"),
-                  gp = gpar(fill = fill, col = NA))
+      # Draw alternating row backgrounds first
+      n_rows <- nrow(data)
+      for(row_idx in 1:n_rows) {
+        if(row_idx %% 2 == 0) {
+          grid.rect(
+            x = 0.5,
+            y = 1 - (row_idx - 0.5) / n_rows,
+            width = 1,
+            height = 1 / n_rows,
+            gp = gpar(fill = "gray95", col = NA),
+            just = "center"
+          )
+        }
+      }
     },
     
-    # Styling
-    border = TRUE,
-    show_row_names = TRUE,
-    show_column_names = TRUE,
+    rect_gp = gpar(type = "none"),
+    cell_fun = function(j, i, x, y, width, height, fill) {
+      v = data[i, j]
+      
+      if(!is.na(v)) {
+        # Draw circle with size proportional to value
+        grid.circle(x = x, y = y, 
+                   r = v * unit(2.2, "mm"),
+                   gp = gpar(fill = col_fun(v), col = NA))
+      }
+    },
+    
+    column_title = title,
+    column_title_gp = gpar(fill = title_color, col = "white", 
+                           fontsize = 10, fontface = "bold"),
     column_names_rot = 45,
+    column_names_gp = gpar(fontsize = 6.5),
+    column_names_side = "top",
+    
+    show_row_names = show_row_names,
+    row_names_gp = gpar(fontsize = 8),
     cluster_rows = FALSE,
-    cluster_columns = FALSE
+    cluster_columns = FALSE,
+    border = TRUE,
+    show_heatmap_legend = FALSE,
+    width = unit(ncol(data) * 0.7, "cm")
   )
 }
 
-# Create left annotation (model summary)
-left_anno = rowAnnotation(
-  Model = anno_text(model_types, gp = gpar(fontsize = 10)),
-  Type = model_categories,
-  col = list(Type = c("MF" = "gray", "DL" = "blue", "KG" = "green"))
+# Color functions matching Nature Communications style
+red_col_fun = colorRamp2(c(0, 0.5, 1), c("white", "#FF9999", "#CC0000"))
+blue_col_fun = colorRamp2(c(0, 0.5, 1), c("white", "#99CCFF", "#0066CC"))
+green_col_fun = colorRamp2(c(0, 0.5, 1), c("white", "#99FF99", "#009900"))
+gray_col_fun = colorRamp2(c(0, 0.5, 1), c("white", "gray60", "gray20"))
+
+# Create heatmaps
+ht_accuracy <- create_circle_heatmap_with_stripes(
+  accuracy_data, red_col_fun, "Accuracy", "#CC0000"
 )
 
-# Combine multiple heatmaps
-ht_list = left_anno + 
-  create_dot_matrix(cv1_data, "blue") + 
-  create_dot_matrix(cv2_data, "blue") +
-  create_dot_matrix(ranking_data, "green") +
-  Heatmap(scalability_data, name = "Scalability", 
-          col = colorRamp2(c(0, 0.5, 1), c("white", "orange", "red")))
+ht_robustness <- create_circle_heatmap_with_stripes(
+  robustness_data, blue_col_fun, "Robustness", "#0066CC"
+)
 
-# Add top annotations for task groupings
+ht_useability <- create_circle_heatmap_with_stripes(
+  usability_data, green_col_fun, "Useability", "#009900"
+)
+
+ht_overall <- create_circle_heatmap_with_stripes(
+  overall_scores, gray_col_fun, "Overall", "gray40"
+)
+
+# Create left annotations with alternating backgrounds
+anno_location <- rowAnnotation(
+  Location = location_required,
+  col = list(Location = c("Y" = "#FFD700", "N" = "gray85")),
+  show_annotation_name = TRUE,
+  annotation_name_side = "top",
+  annotation_name_gp = gpar(fontsize = 7),
+  width = unit(0.6, "cm"),
+  show_legend = FALSE,
+  
+  # Add alternating background
+  annotation_legend_param = list(
+    title_gp = gpar(fontsize = 8, fontface = "bold")
+  )
+)
+
+anno_programming <- rowAnnotation(
+  Programming = programming_lang,
+  col = list(Programming = c(
+    "Python" = "#5DADE2",
+    "R" = "#EC7063",
+    "C++" = "#52BE80"
+  )),
+  show_annotation_name = TRUE,
+  annotation_name_side = "top",
+  annotation_name_gp = gpar(fontsize = 7),
+  width = unit(1.2, "cm"),
+  show_legend = FALSE
+)
+
+# Method names with alternating background
+anno_names <- rowAnnotation(
+  foo = anno_text(
+    methods,
+    gp = gpar(fontsize = 8),
+    location = unit(0.5, "npc"),
+    just = "center"
+  ),
+  width = unit(2.2, "cm"),
+  show_annotation_name = FALSE
+)
+
+# Add section labels
+section_df <- data.frame(
+  section = method_categories,
+  row.names = methods
+)
+
+anno_section <- rowAnnotation(
+  df = section_df,
+  col = list(section = c(
+    "Probabilistic-based" = "#FFEBEE",
+    "NMF-based" = "#FFF3E0",
+    "Graph-based" = "#E8F5E9",
+    "DL-based" = "#E0F7FA",
+    "Optimal transport-based" = "#F3E5F5",
+    "Without scRNA-seq ref" = "#FFF9C4"
+  )),
+  show_legend = FALSE,
+  show_annotation_name = FALSE,
+  width = unit(0.3, "cm")
+)
+
+# Combine all components
+ht_list <- anno_section + anno_names + anno_location + 
+           anno_programming + ht_overall + ht_accuracy + 
+           ht_robustness + ht_useability
+
+# Draw the complete figure
+pdf("Figure2_method_comparison.pdf", width = 20, height = 11)
+
 draw(ht_list, 
-     column_title = "Model Performance Evaluation",
-     heatmap_legend_side = "right")
+     padding = unit(c(2, 2, 2, 2), "mm"),
+     ht_gap = unit(2, "mm"))
+
+# Add section labels on the left
+decorate_annotation("section", {
+  # Probabilistic-based (rows 1-6)
+  grid.text("Probabilistic-based", x = unit(-1, "mm"), y = unit(1 - 3.5/18, "npc"),
+           gp = gpar(fontsize = 7, fontface = "bold"), just = "right", rot = 0)
+  
+  # NMF-based (rows 7-10)
+  grid.text("NMF-based", x = unit(-1, "mm"), y = unit(1 - 8.5/18, "npc"),
+           gp = gpar(fontsize = 7, fontface = "bold"), just = "right", rot = 0)
+  
+  # Graph-based (rows 11-12)
+  grid.text("Graph-based", x = unit(-1, "mm"), y = unit(1 - 11.5/18, "npc"),
+           gp = gpar(fontsize = 7, fontface = "bold"), just = "right", rot = 0)
+  
+  # DL-based (row 13)
+  grid.text("DL-based", x = unit(-1, "mm"), y = unit(1 - 13/18, "npc"),
+           gp = gpar(fontsize = 7, fontface = "bold"), just = "right", rot = 0)
+  
+  # Optimal transport-based (rows 14-15)
+  grid.text("Optimal transport-based", x = unit(-1, "mm"), y = unit(1 - 14.5/18, "npc"),
+           gp = gpar(fontsize = 7, fontface = "bold"), just = "right", rot = 0)
+  
+  # Without scRNA-seq ref (rows 16-18)
+  grid.text("Without scRNA-seq ref", x = unit(-1, "mm"), y = unit(1 - 17/18, "npc"),
+           gp = gpar(fontsize = 7, fontface = "bold"), just = "right", rot = 0)
+})
+
+dev.off()
+
+png("Figure2_method_comparison.png", width = 6000, height = 3300, res = 300)
+draw(ht_list, 
+     padding = unit(c(2, 2, 2, 2), "mm"),
+     ht_gap = unit(2, "mm"))
+
+# Add section labels
+decorate_annotation("section", {
+  grid.text("Probabilistic-based", x = unit(-1, "mm"), y = unit(1 - 3.5/18, "npc"),
+           gp = gpar(fontsize = 7, fontface = "bold"), just = "right", rot = 0)
+  grid.text("NMF-based", x = unit(-1, "mm"), y = unit(1 - 8.5/18, "npc"),
+           gp = gpar(fontsize = 7, fontface = "bold"), just = "right", rot = 0)
+  grid.text("Graph-based", x = unit(-1, "mm"), y = unit(1 - 11.5/18, "npc"),
+           gp = gpar(fontsize = 7, fontface = "bold"), just = "right", rot = 0)
+  grid.text("DL-based", x = unit(-1, "mm"), y = unit(1 - 13/18, "npc"),
+           gp = gpar(fontsize = 7, fontface = "bold"), just = "right", rot = 0)
+  grid.text("Optimal transport-based", x = unit(-1, "mm"), y = unit(1 - 14.5/18, "npc"),
+           gp = gpar(fontsize = 7, fontface = "bold"), just = "right", rot = 0)
+  grid.text("Without scRNA-seq ref", x = unit(-1, "mm"), y = unit(1 - 17/18, "npc"),
+           gp = gpar(fontsize = 7, fontface = "bold"), just = "right", rot = 0)
+})
+
+dev.off()
+
+cat("✓ Figure 2 generated successfully with alternating row colors!\n")
+cat("  - Figure2_method_comparison.pdf\n")
+cat("  - Figure2_method_comparison.png\n")
+```
+
+# new
+```{r}
+# Diagnostic code to investigate the error rate issue
+# Focus on all_continuous_Baseline+ panel
+
+# Get the raw slice for this specific panel
+diagnostic_slice = df_long_full_all %>%
+  filter(outcome_group == "continuous", 
+         adjustment_type == "All",
+         method %in% c("ANCOVA", "DML"))
+
+# ------------------ DML NA rows ------------------
+cat("\n========================================\n")
+cat("Rows where DML has NA (all_continuous_Baseline+):\n")
+cat("========================================\n")
+
+dml_na_rows = diagnostic_slice %>%
+  filter(method == "DML", is.na(pg)) %>%
+  select(
+    Trial_No, Outcome,          # <<< NEW
+    outcome_group, method, pg, adjustment_type, method_raw,
+    everything()
+  )
+
+print(dml_na_rows)
+cat("\nCount of DML NA rows:", nrow(dml_na_rows), "\n")
+
+# ------------------ ANCOVA NA rows ------------------
+cat("\n========================================\n")
+cat("Rows where ANCOVA has NA (all_continuous_Baseline+):\n")
+cat("========================================\n")
+
+ancova_na_rows = diagnostic_slice %>%
+  filter(method == "ANCOVA", is.na(pg)) %>%
+  select(
+    Trial_No, Outcome,          # <<< NEW
+    outcome_group, method, pg, adjustment_type, method_raw,
+    everything()
+  )
+
+print(ancova_na_rows)
+cat("\nCount of ANCOVA NA rows:", nrow(ancova_na_rows), "\n")
+
+# ------------------ Summary statistics ------------------
+cat("\n========================================\n")
+cat("Summary Statistics for all_continuous_Baseline+:\n")
+cat("========================================\n")
+
+summary_stats = diagnostic_slice %>%
+  group_by(method) %>%
+  summarise(
+    Total_n = n(),
+    NA_count = sum(is.na(pg)),
+    Non_NA_count = sum(!is.na(pg)),
+    .groups = "drop"
+  )
+print(summary_stats)
+
+# ------------------ DML NA but NOT ANCOVA NA ------------------
+cat("\n========================================\n")
+cat("Rows where DML has NA but ANCOVA does NOT:\n")
+cat("========================================\n")
+
+dml_only_na = dml_na_rows %>%
+  anti_join(ancova_na_rows, by = c("Trial_No", "Outcome"))
+
+print(dml_only_na)
+cat("\nCount:", nrow(dml_only_na), "\n")
+
+# ------------------ ANCOVA NA but NOT DML NA ------------------
+cat("\n========================================\n")
+cat("Rows where ANCOVA has NA but DML does NOT:\n")
+cat("========================================\n")
+
+ancova_only_na = ancova_na_rows %>%
+  anti_join(dml_na_rows, by = c("Trial_No", "Outcome"))
+
+print(ancova_only_na)
+cat("\nCount:", nrow(ancova_only_na), "\n")
+
+# ------------------ BOTH NA ------------------
+cat("\n========================================\n")
+cat("Rows where BOTH have NA:\n")
+cat("========================================\n")
+
+both_na = dml_na_rows %>%
+  semi_join(ancova_na_rows, by = c("Trial_No", "Outcome"))
+
+print(both_na)
+cat("\nCount:", nrow(both_na), "\n")
+
 ```
 

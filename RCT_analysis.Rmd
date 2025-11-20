@@ -4268,10 +4268,12 @@ df_new_primary = df_new %>%
   filter(str_detect(Outcome, "^YP_"))
 
 # Function to prepare long data
+# UPDATED: Includes Covariate columns in selection
 prepare_long_data = function(data) {
   data %>%
-    select(outcome_group, starts_with("precision_gain_")) %>%
-    pivot_longer(cols      = starts_with("precision_gain_"),
+    select(outcome_group, starts_with("precision_gain_"), Trial_No, Outcome,
+           N_Covariates, N_Covariates_VS1, N_Covariates_VS2) %>% 
+    pivot_longer(cols       = starts_with("precision_gain_"),
                  names_to  = "method_raw",
                  values_to = "pg") %>%
     mutate(
@@ -4284,7 +4286,7 @@ prepare_long_data = function(data) {
       # Simplified method names
       method = case_match(
         method_raw,
-        # All methods - excluding SL1 and individual SL methods and AIPW
+        # All methods
         "precision_gain_ANCOVA"                       ~ "ANCOVA",
         "precision_gain_ANHECOVA"                     ~ "ANHECOVA",
         "precision_gain_G_Logistic"                   ~ "G-Logistic",
@@ -4292,7 +4294,7 @@ prepare_long_data = function(data) {
         "precision_gain_TMLE"                         ~ "TMLE",
         "precision_gain_IPW"                          ~ "IPW",
         
-        # Top-3 methods (same names, no suffix)
+        # Top-3 methods
         "precision_gain_ANCOVA_Top-3"                 ~ "ANCOVA",
         "precision_gain_ANHECOVA_Top-3"               ~ "ANHECOVA",
         "precision_gain_G_Logistic_Top-3"             ~ "G-Logistic",
@@ -4300,7 +4302,7 @@ prepare_long_data = function(data) {
         "precision_gain_TMLE_Top-3"                   ~ "TMLE",
         "precision_gain_IPW_Top-3"                    ~ "IPW",
         
-        # Baseline+ methods (same names, no suffix)
+        # Baseline+ methods
         "precision_gain_ANCOVA_Baseline+"             ~ "ANCOVA",
         "precision_gain_ANHECOVA_Baseline+"           ~ "ANHECOVA",
         "precision_gain_G_Logistic_Baseline+"         ~ "G-Logistic",
@@ -4320,11 +4322,8 @@ pg_manual_threshold = 5
 
 ###############################################################################
 ##  1.  Build ONE comprehensive summary table for ALL plots ------------------
-##      Columns: Method | #NA | #Outlier(Manual) | #Tukey | #Shown | Panel
-##      * #NA:               missing pg in the raw slice
-##      * #Outlier(Manual):  pg >= pg_manual_threshold in raw non-NA
-##      * #Tukey:            Tukey outliers hidden by outlier.shape=NA
-##      * #Shown:            count after removing manual outliers (shown in plots)
+##      Columns: Method | #NA | Error Rate | #Outlier(Manual) | #Tukey | #Shown
+##      UPDATED: Error Rate considers only cases where N_Covariates != 0
 ###############################################################################
 
 # Methods that appear on plots by outcome type
@@ -4368,12 +4367,28 @@ build_comprehensive_summary_table = function() {
                  adjustment_type == vs_type,
                  method %in% shown_methods)
         
-        # #NA
-        na_tbl = raw_slice %>%
-          group_by(method) %>%
-          summarise(`#NA` = sum(is.na(pg)), .groups = "drop")
+        # ---------- Calculate Error Rate (Where Covariates != 0)
+        # 1. Determine which covariate column applies to this adjustment type
+        # 2. Filter for cases where covariates exist (N != 0)
+        # 3. Calculate Error Rate = NA count / Total valid trials
         
-        # Non-NA for outlier counting
+        error_stats = raw_slice %>%
+          mutate(relevant_n_cov = case_when(
+            adjustment_type == "Top-3"     ~ N_Covariates_VS1,
+            adjustment_type == "Baseline+" ~ N_Covariates_VS2,
+            TRUE                           ~ N_Covariates # Default to "All"
+          )) %>%
+          filter(relevant_n_cov != 0) %>% # Exclude trials where no covariates existed
+          group_by(method) %>%
+          summarise(
+            `#NA` = sum(is.na(pg)),
+            n_valid_trials = n(),
+            `Error Rate` = `#NA` / n_valid_trials,
+            .groups = "drop"
+          ) %>%
+          select(method, `#NA`, `Error Rate`)
+        
+        # ---------- Outlier Stats (Standard logic on non-NA data)
         non_na = raw_slice %>% filter(!is.na(pg))
         
         # Manual outliers (pg >= threshold)
@@ -4382,7 +4397,7 @@ build_comprehensive_summary_table = function() {
           summarise(`#Outlier(Manual)` = sum(pg >= pg_manual_threshold, na.rm = TRUE),
                     .groups = "drop")
         
-        # Tukey outliers (for reference - hidden by outlier.shape=NA in plots)
+        # Tukey outliers
         tb = compute_tukey_bounds(raw_slice)
         tukey_tbl = non_na %>%
           inner_join(tb, by = "method") %>%
@@ -4390,22 +4405,24 @@ build_comprehensive_summary_table = function() {
           summarise(`#Tukey` = sum(pg < lower | pg > upper, na.rm = TRUE),
                     .groups = "drop")
         
-        # #Shown = after removing manual outliers (what appears in plots)
+        # #Shown
         shown_tbl = non_na %>%
           filter(pg < pg_manual_threshold) %>%
           group_by(method) %>%
           summarise(`#Shown` = n(), .groups = "drop")
         
         # ---------- Combine and order
-        combo = na_tbl %>%
+        # Start with error_stats to ensure Error Rate is mapped correctly
+        combo = error_stats %>%
           full_join(manual_tbl, by = "method") %>%
           full_join(tukey_tbl,  by = "method") %>%
           full_join(shown_tbl,  by = "method") %>%
-          mutate(across(-method, ~ replace_na(., 0L))) %>%
+          mutate(across(c(`#NA`, `#Outlier(Manual)`, `#Tukey`, `#Shown`), ~ replace_na(., 0L))) %>%
+          mutate(`Error Rate` = replace_na(`Error Rate`, 0)) %>%
           filter(method %in% shown_methods) %>%
           arrange(factor(method, levels = shown_methods)) %>%
           mutate(Panel = paste(data_type, outcome_type, vs_type, sep = "_")) %>%
-          select(Method = method, `#NA`, `#Outlier(Manual)`, `#Tukey`, `#Shown`, Panel)
+          select(Method = method, `#NA`, `Error Rate`, `#Outlier(Manual)`, `#Tukey`, `#Shown`, Panel)
         
         all_rows[[length(all_rows) + 1]] = combo
       }
@@ -4616,14 +4633,18 @@ ggsave("cleaned_data/Plot/precision_gain_continuous_baseline_primary.png",
 ###############################################################################
 comprehensive_table = build_comprehensive_summary_table()
 
+# Filter to show only "all" outcomes if you strictly only want those, 
+# or keep both to verify primary is cleaner.
+# Here I print the whole table but you can inspect the 'Panel' column.
+
 cat("\n========================================\n")
-cat("Comprehensive PRECISION GAIN table (Method, #NA, #Outlier(Manual), #Tukey, #Shown, Panel)\n")
-cat(paste0("Manual threshold: pg >= ", pg_manual_threshold, "\n"))
-cat("Note: #Tukey shows outliers hidden by outlier.shape=NA\n")
-cat("      #Outlier(Manual) shows outliers removed from data\n")
-cat("      #Shown = actual count displayed in plots\n")
+cat("Comprehensive Table with ERROR RATE\n")
+cat("Error Rate defined as: #NA / Total Rows (inc. NA)\n")
 cat("========================================\n\n")
-print(comprehensive_table)
+
+# Formatting Error Rate as percentage for easier reading
+print(comprehensive_table %>% 
+        mutate(`Error Rate` = scales::percent(`Error Rate`, accuracy = 0.1)))
 
 # Display all 12 plots in console
 cat("\n========================================\n")
