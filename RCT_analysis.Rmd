@@ -3838,11 +3838,11 @@ SL2_lib = c("SL.glm", "SL.glmnet", "SL.bartMachine", "SL.randomForest")
 ```{r}
 # ALL
 df_comparison = run_dml_analysis(
-  df_indices = 11,
+  df_indices = 49,
   selection = F,
   variable_selection_type = 1,
   run_individual_SL = F,
-  run_ensemble_SL = TRUE,
+  run_ensemble_SL = F,
   SL_methods = SL2_lib,
   n_cores = parallel::detectCores() - 2,
   K = 5,
@@ -3864,7 +3864,7 @@ df_comparison = run_dml_analysis(
 
 # Baseline+
 df_comparison = run_dml_analysis(
-  df_indices = 11,
+  df_indices = 49,
   selection = T,
   variable_selection_type = 2,
   run_individual_SL = F,
@@ -4878,6 +4878,7 @@ make_diff_plot = function(panel_clean_df, outcome_type) {
     scale_fill_manual(values = method_colors) +
     labs(x = NULL, y = "Difference from Unadjusted Estimate") +
     coord_cartesian(ylim = c(-3, 3), clip = "off") +
+    scale_y_continuous(breaks = c(-3, -1.5, 0, 1.5, 3))+
     theme_minimal(base_size = 18) +
     theme(
       axis.text.x   = element_blank(),
@@ -5035,6 +5036,74 @@ print(p_diff_cont_all_primary)
 print(p_diff_cont_top3_primary)
 print(p_diff_cont_baseline_primary)
 
+```
+# PVR Summary
+```{r}
+###############################################################################
+##  Calculate mean proportional variance reduction across all methods --------
+###############################################################################
+
+# Function to calculate mean proportional variance reduction
+calculate_mean_variance_reduction = function(data, outcome_type_filter) {
+  data %>%
+    filter(outcome_group == outcome_type_filter) %>%
+    # Calculate proportional variance reduction (1 - variance ratio)
+    mutate(prop_var_reduction = 1 - pg) %>%
+    # Remove NA values only
+    filter(!is.na(prop_var_reduction)) %>%
+    # Calculate overall mean across all methods and adjustment types
+    summarise(
+      mean_reduction = mean(prop_var_reduction),
+      median_reduction = median(prop_var_reduction),
+      n_observations = n(),
+      .groups = "drop"
+    ) %>%
+    mutate(
+      mean_reduction_pct = mean_reduction * 100,
+      median_reduction_pct = median_reduction * 100
+    )
+}
+
+# Calculate for continuous outcomes (all outcomes dataset)
+continuous_summary = calculate_mean_variance_reduction(df_long_full_all, "continuous")
+
+# Calculate for binary outcomes (all outcomes dataset)
+binary_summary = calculate_mean_variance_reduction(df_long_full_all, "binary")
+
+# Print results
+cat("\n========================================\n")
+cat("Mean Proportional Variance Reduction\n")
+cat("(Averaged across all 18 method-adjustment combinations)\n")
+cat("========================================\n\n")
+
+cat("CONTINUOUS OUTCOMES:\n")
+cat(sprintf("Mean reduction: %.1f%%\n", continuous_summary$mean_reduction_pct))
+cat(sprintf("Median reduction: %.1f%%\n", continuous_summary$median_reduction_pct))
+cat(sprintf("Based on %d observations\n\n", continuous_summary$n_observations))
+
+cat("BINARY OUTCOMES:\n")
+cat(sprintf("Mean reduction: %.1f%%\n", binary_summary$mean_reduction_pct))
+cat(sprintf("Median reduction: %.1f%%\n", binary_summary$median_reduction_pct))
+cat(sprintf("Based on %d observations\n\n", binary_summary$n_observations))
+
+# Optional: More detailed breakdown by adjustment type
+detailed_summary = df_long_full_all %>%
+  filter(!is.na(pg)) %>%
+  mutate(prop_var_reduction = 1 - pg) %>%
+  group_by(outcome_group, adjustment_type) %>%
+  summarise(
+    mean_reduction_pct = mean(prop_var_reduction, na.rm = TRUE) * 100,
+    median_reduction_pct = median(prop_var_reduction, na.rm = TRUE) * 100,
+    n = n(),
+    .groups = "drop"
+  ) %>%
+  arrange(outcome_group, adjustment_type)
+
+cat("\n========================================\n")
+cat("Detailed breakdown by adjustment type:\n")
+cat("========================================\n\n")
+print(detailed_summary, n = Inf)
+print(detailed_summary, n = Inf)
 ```
 
 
@@ -6136,8 +6205,8 @@ cat('Flowchart saved to cleaned_data/Plot/data_curation_flowchart.png\n')
 ##  ERROR RATE AND MEAN/MEDIAN VARIANCE REDUCTION FOR INDIVIDUAL SL METHODS --
 ###############################################################################
 # Individual SL methods (All covariates - base versions only, no VS1 or VS2)
-individual_sl_methods = c("SL_glm", "SL_glmnet", "SL_rpart", "SL_gam", "SL_nnet", 
-                          "SL_svm", "SL_xgboost","SL_bartMachine", "SL_randomForest")
+individual_sl_methods = c("SL_glm", "SL_glmnet", "SL_rpart", "SL_gam", "SL_randomForest", "SL_nnet", 
+                          "SL_svm", "SL_xgboost","SL_bartMachine")
 
 ###############################################################################
 ##  Function to calculate error rate and mean/median variance reduction -------
@@ -6157,8 +6226,9 @@ calculate_sl_stats = function(data, outcome_type) {
   results = data.frame(
     method = character(),
     error_rate = numeric(),
-    mean_variance_reduction = numeric(),
-    median_variance_reduction = numeric(),  # Added median column
+    mean = numeric(),
+    median = numeric(),
+    sd = numeric(),
     n_total = integer(),
     n_valid = integer(),
     n_na = integer(),
@@ -6182,22 +6252,25 @@ calculate_sl_stats = function(data, outcome_type) {
       error_rate = n_na / n_total
       n_valid = n_total - n_na
       
-      # Calculate mean and median variance reduction (1 - precision_gain), excluding NA
+      # Calculate mean, median, and SD of variance reduction (1 - precision_gain), excluding NA
       if (n_valid > 0) {
         var_reduction = 1 - pg_values
         mean_var_reduction = mean(var_reduction, na.rm = TRUE)
-        median_var_reduction = median(var_reduction, na.rm = TRUE)  # Calculate median
+        median_var_reduction = median(var_reduction, na.rm = TRUE)
+        sd_var_reduction = sd(var_reduction, na.rm = TRUE)
       } else {
         mean_var_reduction = NA
         median_var_reduction = NA
+        sd_var_reduction = NA
       }
       
       # Add to results
       results = rbind(results, data.frame(
         method = method,
         error_rate = error_rate,
-        mean_variance_reduction = mean_var_reduction,
-        median_variance_reduction = median_var_reduction,  # Add median to results
+        mean = mean_var_reduction,
+        median = median_var_reduction,
+        sd = sd_var_reduction,
         n_total = n_total,
         n_valid = n_valid,
         n_na = n_na,
@@ -6210,8 +6283,9 @@ calculate_sl_stats = function(data, outcome_type) {
   results = results %>%
     mutate(
       error_rate = round(error_rate, 2),
-      mean_variance_reduction = round(mean_variance_reduction, 4),
-      median_variance_reduction = round(median_variance_reduction, 4)  # Round median
+      mean = round(mean, 4),
+      median = round(median, 4),
+      sd = round(sd, 4)
     )
   
   return(results)
@@ -6228,20 +6302,34 @@ cat("Individual SL Methods (All Covariates)\n")
 cat("========================================\n\n")
 
 binary_all_sl_stats = calculate_sl_stats(df_comparison, "binary")
-# Display with desired column order
-print(binary_all_sl_stats[, c("method", "error_rate", "mean_variance_reduction", 
-                                "median_variance_reduction", "n_total", "n_valid", "n_na")])
+
+# Table 1: Error Rate Statistics
+cat("TABLE 1: ERROR RATE STATISTICS\n")
+cat("----------------------------------------\n\n")
+print(binary_all_sl_stats[, c("method", "error_rate", "n_total", "n_valid", "n_na")])
+
+# Table 2: Variance Reduction Statistics
+cat("\n\nTABLE 2: VARIANCE REDUCTION STATISTICS\n")
+cat("----------------------------------------\n\n")
+print(binary_all_sl_stats[, c("method", "mean", "sd", "median")])
 
 # Continuous outcomes - All outcomes
-cat("\n========================================\n")
+cat("\n\n========================================\n")
 cat("CONTINUOUS OUTCOMES - ALL OUTCOMES\n")
 cat("Individual SL Methods (All Covariates)\n")
 cat("========================================\n\n")
 
 continuous_all_sl_stats = calculate_sl_stats(df_comparison, "continuous")
-# Display with desired column order
-print(continuous_all_sl_stats[, c("method", "error_rate", "mean_variance_reduction", 
-                                   "median_variance_reduction", "n_total", "n_valid", "n_na")])
+
+# Table 1: Error Rate Statistics
+cat("TABLE 1: ERROR RATE STATISTICS\n")
+cat("----------------------------------------\n\n")
+print(continuous_all_sl_stats[, c("method", "error_rate", "n_total", "n_valid", "n_na")])
+
+# Table 2: Variance Reduction Statistics
+cat("\n\nTABLE 2: VARIANCE REDUCTION STATISTICS\n")
+cat("----------------------------------------\n\n")
+print(continuous_all_sl_stats[, c("method", "mean", "sd", "median")])
 ```
 
 ## AIPW
