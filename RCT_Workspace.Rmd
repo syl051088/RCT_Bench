@@ -4897,94 +4897,479 @@ cat("  - Figure2_method_comparison.png\n")
 
 # new
 ```{r}
-# Diagnostic code to investigate the error rate issue
-# Focus on all_continuous_Baseline+ panel
+###############################################################################
+##  6.  Sample Size vs Variance Ratio Plots (3 versions) - LOESS + ALL PLOTS
+###############################################################################
 
-# Get the raw slice for this specific panel
-diagnostic_slice = df_long_full_all %>%
-  filter(outcome_group == "continuous", 
-         adjustment_type == "All",
-         method %in% c("ANCOVA", "DML"))
+library(future)
+library(furrr)
 
-# ------------------ DML NA rows ------------------
-cat("\n========================================\n")
-cat("Rows where DML has NA (all_continuous_Baseline+):\n")
-cat("========================================\n")
+plan(multisession, workers = parallel::detectCores() - 1)
 
-dml_na_rows = diagnostic_slice %>%
-  filter(method == "DML", is.na(pg)) %>%
-  select(
-    Trial_No, Outcome,          # <<< NEW
-    outcome_group, method, pg, adjustment_type, method_raw,
-    everything()
+###############################################################################
+##  Color palette for consistent colors across all plots
+###############################################################################
+method_colors = c(
+  "ANCOVA" = "#F8766D",
+  "ANHECOVA" = "#B79F00",
+  "G-Logistic" = "#00BA38",
+  "DML" = "#00BFC4",
+  "TMLE" = "#619CFF",
+  "IPW" = "#C77CFF"
+)
+
+# CORRECT APPROACH: Add Sample_Size directly when creating long data
+prepare_long_data_with_size = function(data) {
+  data %>%
+    select(outcome_group, Sample_Size, starts_with("precision_gain_")) %>%
+    pivot_longer(cols = starts_with("precision_gain_"),
+                 names_to = "method_raw",
+                 values_to = "pg") %>%
+    mutate(
+      # Track adjustment type
+      adjustment_type = case_when(
+        grepl("_Top-3$", method_raw) ~ "Top-3",
+        grepl("_Baseline\\+$", method_raw) ~ "Baseline+",
+        TRUE ~ "All"
+      ),
+      # Simplified method names (no adjustment type suffix)
+      method = dplyr::case_match(
+        method_raw,
+        # All methods (AIPW removed)
+        "precision_gain_ANCOVA"                       ~ "ANCOVA",
+        "precision_gain_ANHECOVA"                     ~ "ANHECOVA",
+        "precision_gain_G_Logistic"                   ~ "G-Logistic",
+        "precision_gain_DML"                          ~ "DML",
+        "precision_gain_TMLE"                         ~ "TMLE",
+        "precision_gain_IPW"                          ~ "IPW",
+        
+        # Top-3 methods (same names, no suffix)
+        "precision_gain_ANCOVA_Top-3"                 ~ "ANCOVA",
+        "precision_gain_ANHECOVA_Top-3"               ~ "ANHECOVA",
+        "precision_gain_G_Logistic_Top-3"             ~ "G-Logistic",
+        "precision_gain_DML_Top-3"                    ~ "DML",
+        "precision_gain_TMLE_Top-3"                   ~ "TMLE",
+        "precision_gain_IPW_Top-3"                    ~ "IPW",
+        
+        # Baseline+ methods (same names, no suffix)
+        "precision_gain_ANCOVA_Baseline+"             ~ "ANCOVA",
+        "precision_gain_ANHECOVA_Baseline+"           ~ "ANHECOVA",
+        "precision_gain_G_Logistic_Baseline+"         ~ "G-Logistic",
+        "precision_gain_DML_Baseline+"                ~ "DML",
+        "precision_gain_TMLE_Baseline+"               ~ "TMLE",
+        "precision_gain_IPW_Baseline+"                ~ "IPW"
+      )) %>%
+    filter(!is.na(method))
+}
+
+# Create long data WITH Sample_Size
+df_long_with_size_all = prepare_long_data_with_size(df_new_all_outcomes)
+df_long_with_size_primary = prepare_long_data_with_size(df_new_primary)
+
+cat("Sample size data prepared:\n")
+cat("All outcomes:", nrow(df_long_with_size_all), "rows\n")
+cat("Primary outcomes:", nrow(df_long_with_size_primary), "rows\n")
+
+# Remove outliers (same as violin plots)
+df_long_size_cleaned_all = df_long_with_size_all %>%
+  mutate(precision_gain = ifelse(pg >= 2, NA, pg)) %>%
+  filter(!is.na(precision_gain), !is.na(Sample_Size)) %>%
+  mutate(prop_var_reduction = 1 - precision_gain)  # Transform to proportional variance reduction
+
+df_long_size_cleaned_primary = df_long_with_size_primary %>%
+  mutate(precision_gain = ifelse(pg >= 2, NA, pg)) %>%
+  filter(!is.na(precision_gain), !is.na(Sample_Size)) %>%
+  mutate(prop_var_reduction = 1 - precision_gain)  # Transform to proportional variance reduction
+
+cat("After outlier removal:\n")
+cat("All outcomes:", nrow(df_long_size_cleaned_all), "rows\n")
+cat("Primary outcomes:", nrow(df_long_size_cleaned_primary), "rows\n")
+cat("Sample size range:", min(df_long_size_cleaned_all$Sample_Size), 
+    "to", max(df_long_size_cleaned_all$Sample_Size), "\n\n")
+
+# Function for smoothed plot (log10 sample size) - USING LOESS
+# Modified to accept show_legend parameter
+make_plot_smooth_log = function(data, outcome_type, show_legend = FALSE) {
+  if (outcome_type == "binary") {
+    method_levels = c("ANCOVA", "ANHECOVA", "G-Logistic", "DML", "TMLE", "IPW")
+    data = data %>% mutate(method = factor(method, levels = method_levels))
+  } else {
+    # For continuous, exclude G-Logistic
+    method_levels = c("ANCOVA", "ANHECOVA", "DML", "TMLE", "IPW")
+    data = data %>% mutate(method = factor(method, levels = method_levels))
+  }
+  
+  p = ggplot(data, aes(x = log10(Sample_Size), y = prop_var_reduction, color = method)) +
+    geom_smooth(method = "loess", span = 0.75, se = FALSE, linewidth = 1.2) +
+    geom_hline(yintercept = 0, linetype = "dashed", colour = "grey40") +
+    scale_color_manual(values = method_colors) +
+    labs(x = "Log10(Sample Size)", y = "Proportional Variance Reduction", color = "Method") +
+    coord_cartesian(ylim = c(-1, 1)) +
+    theme_minimal(base_size = 18) +
+    theme(panel.grid.minor = element_blank(),
+          panel.background = element_rect(fill = "white", colour = NA),
+          plot.background = element_rect(fill = "white", colour = NA),
+          axis.text = element_text(size = 16),
+          axis.title = element_text(size = 18))
+  
+  # Conditionally add legend
+  if (show_legend) {
+    p = p + theme(
+      legend.position = "inside",
+      legend.position.inside = c(0.82, 0.82),
+      legend.background = element_rect(fill = "white", color = "gray80", linewidth = 0.5),
+      legend.text = element_text(size = 14),
+      legend.title = element_text(size = 16)
+    )
+  } else {
+    p = p + theme(legend.position = "none")
+  }
+  
+  return(p)
+}
+
+# Function for scatter plot (original sample size)
+make_plot_scatter = function(data, outcome_type, show_legend = FALSE) {
+  if (outcome_type == "binary") {
+    method_levels = c("ANCOVA", "ANHECOVA", "G-Logistic", "DML", "TMLE", "IPW")
+    data = data %>% mutate(method = factor(method, levels = method_levels))
+  } else {
+    # For continuous, exclude G-Logistic
+    method_levels = c("ANCOVA", "ANHECOVA", "DML", "TMLE", "IPW")
+    data = data %>% mutate(method = factor(method, levels = method_levels))
+  }
+  
+  p = ggplot(data, aes(x = Sample_Size, y = prop_var_reduction, color = method)) +
+    geom_point(alpha = 0.4, size = 1.5) +
+    geom_hline(yintercept = 0, linetype = "dashed", colour = "grey40") +
+    scale_color_manual(values = method_colors) +
+    labs(x = "Sample Size", y = "Proportional Variance Reduction", color = "Method") +
+    coord_cartesian(ylim = c(-1, 1)) +
+    theme_minimal(base_size = 18) +
+    theme(panel.grid.minor = element_blank(),
+          panel.background = element_rect(fill = "white", colour = NA),
+          plot.background = element_rect(fill = "white", colour = NA),
+          axis.text = element_text(size = 16),
+          axis.title = element_text(size = 18))
+  
+  # Conditionally add legend
+  if (show_legend) {
+    p = p + theme(
+      legend.position = "inside",
+      legend.position.inside = c(0.82, 0.82),
+      legend.background = element_rect(fill = "white", color = "gray80", linewidth = 0.5),
+      legend.text = element_text(size = 14),
+      legend.title = element_text(size = 16)
+    )
+  } else {
+    p = p + theme(legend.position = "none")
+  }
+  
+  return(p)
+}
+
+# Function for scatter plot (log10 sample size)
+make_plot_scatter_log = function(data, outcome_type, show_legend = FALSE) {
+  if (outcome_type == "binary") {
+    method_levels = c("ANCOVA", "ANHECOVA", "G-Logistic", "DML", "TMLE", "IPW")
+    data = data %>% mutate(method = factor(method, levels = method_levels))
+  } else {
+    # For continuous, exclude G-Logistic
+    method_levels = c("ANCOVA", "ANHECOVA", "DML", "TMLE", "IPW")
+    data = data %>% mutate(method = factor(method, levels = method_levels))
+  }
+  
+  p = ggplot(data, aes(x = log10(Sample_Size), y = prop_var_reduction, color = method)) +
+    geom_point(alpha = 0.4, size = 1.5) +
+    geom_hline(yintercept = 0, linetype = "dashed", colour = "grey40") +
+    scale_color_manual(values = method_colors) +
+    labs(x = "Log10(Sample Size)", y = "Proportional Variance Reduction", color = "Method") +
+    coord_cartesian(ylim = c(-1, 1)) +
+    theme_minimal(base_size = 18) +
+    theme(panel.grid.minor = element_blank(),
+          panel.background = element_rect(fill = "white", colour = NA),
+          plot.background = element_rect(fill = "white", colour = NA),
+          axis.text = element_text(size = 16),
+          axis.title = element_text(size = 18))
+  
+  # Conditionally add legend
+  if (show_legend) {
+    p = p + theme(
+      legend.position = "inside",
+      legend.position.inside = c(0.82, 0.82),
+      legend.background = element_rect(fill = "white", color = "gray80", linewidth = 0.5),
+      legend.text = element_text(size = 14),
+      legend.title = element_text(size = 16)
+    )
+  } else {
+    p = p + theme(legend.position = "none")
+  }
+  
+  return(p)
+}
+
+# Create plot configs - only the necessary columns
+plot_configs = tibble::tibble(
+  data_source = rep(c(rep("all", 6), rep("primary", 6)), 3),
+  outcome_type = rep(rep(c("binary", "binary", "binary", "continuous", "continuous", "continuous"), 2), 3),
+  vs_type = rep(rep(c("all", "top3", "baseline", "all", "top3", "baseline"), 2), 3),
+  version = c(rep("smooth_log", 12), rep("scatter", 12), rep("scatter_log", 12))
+) %>%
+  mutate(
+    # NEW NAMING SCHEME: Add "v2" suffix to distinguish from original plots
+    plot_name = paste0("samplesize_", outcome_type, "_", vs_type, "_", data_source, "_", version, "_v2")
   )
 
-print(dml_na_rows)
-cat("\nCount of DML NA rows:", nrow(dml_na_rows), "\n")
+# Function to generate single plot - matches the column names exactly
+generate_single_plot = function(data_source, outcome_type, vs_type, version, plot_name) {
+  
+  # Select appropriate dataset
+  df_long_cleaned = if (data_source == "all") df_long_size_cleaned_all else df_long_size_cleaned_primary
+  
+  # Filter based on outcome type and adjustment type
+  if (vs_type == "all") {
+    df_filtered = df_long_cleaned %>% 
+      filter(outcome_group == outcome_type, adjustment_type == "All")
+  } else if (vs_type == "top3") {
+    df_filtered = df_long_cleaned %>% 
+      filter(outcome_group == outcome_type, adjustment_type == "Top-3")
+  } else if (vs_type == "baseline") {
+    df_filtered = df_long_cleaned %>% 
+      filter(outcome_group == outcome_type, adjustment_type == "Baseline+")
+  }
+  
+  # Check if we have data
+  if (nrow(df_filtered) == 0) {
+    warning(paste("No data for", plot_name))
+    return(NULL)
+  }
+  
+  # Determine if legend should be shown
+  # Only show legend for continuous + all + all data source
+  show_legend = (outcome_type == "continuous" && vs_type == "all" && data_source == "all")
+  
+  # Create appropriate plot based on version
+  p = if (version == "smooth_log") {
+    make_plot_smooth_log(df_filtered, outcome_type, show_legend)
+  } else if (version == "scatter") {
+    make_plot_scatter(df_filtered, outcome_type, show_legend)
+  } else if (version == "scatter_log") {
+    make_plot_scatter_log(df_filtered, outcome_type, show_legend)
+  }
+  
+  return(list(plot_name = plot_name, plot = p))
+}
 
-# ------------------ ANCOVA NA rows ------------------
+###############################################################################
+##  Publication quality settings ---------------------------------------------
+###############################################################################
+pub_width = 10
+pub_height = 6.5
+pub_dpi = 600
+
 cat("\n========================================\n")
-cat("Rows where ANCOVA has NA (all_continuous_Baseline+):\n")
-cat("========================================\n")
-
-ancova_na_rows = diagnostic_slice %>%
-  filter(method == "ANCOVA", is.na(pg)) %>%
-  select(
-    Trial_No, Outcome,          # <<< NEW
-    outcome_group, method, pg, adjustment_type, method_raw,
-    everything()
+cat("Generating 12 Version 2 plots (Smoothed Log10 Scale - Selective Legend)...\n")
+cat(sprintf("Using %d cores\n", parallel::detectCores() - 1))
+cat("========================================\n\n")
+# Get indices for smooth_log version only
+version1_indices = which(plot_configs$version == "smooth_log")
+start_time = Sys.time()
+results = future_pmap(
+  plot_configs[version1_indices, ],
+  generate_single_plot,
+  .options = furrr_options(seed = TRUE),
+  .progress = TRUE
+)
+end_time = Sys.time()
+cat("\n========================================\n")
+cat("12 plots generated\n")
+cat(sprintf("Time elapsed: %.2f seconds\n", as.numeric(end_time - start_time, units = "secs")))
+cat("========================================\n\n")
+###############################################################################
+##  Save all Version 2 plots (Smoothed Log10 Scale) with clear labels
+###############################################################################
+cat("\n", strrep("=", 70), "\n")
+cat("SAVING VERSION 2: SMOOTHED (Log10 Scale) - SELECTIVE LEGEND - ALL 12 PLOTS\n")
+cat(strrep("=", 70), "\n\n")
+for (i in seq_along(version1_indices)) {
+  idx = version1_indices[i]
+  
+  # Get plot details
+  outcome = plot_configs$outcome_type[idx]
+  vs = plot_configs$vs_type[idx]
+  data_src = plot_configs$data_source[idx]
+  
+  # Create descriptive label for console output
+  outcome_label = ifelse(outcome == "binary", "Binary", "Continuous")
+  vs_label = case_when(
+    vs == "all" ~ "All Methods",
+    vs == "top3" ~ "Top-3 Methods",
+    vs == "baseline" ~ "Baseline+ Methods"
   )
+  data_label = ifelse(data_src == "all", "ALL OUTCOMES", "PRIMARY OUTCOMES ONLY")
+  
+  # Determine if this plot has legend
+  has_legend = (outcome == "continuous" && vs == "all" && data_src == "all")
+  legend_status = ifelse(has_legend, "[WITH LEGEND]", "[NO LEGEND]")
+  
+  # Create filename
+  filename = paste0("cleaned_data/Plot/", plot_configs$plot_name[idx], ".png")
+  
+  # Save the plot
+  ggsave(filename, results[[i]]$plot, 
+         width = pub_width, height = pub_height, dpi = pub_dpi, bg = "white")
+  
+  cat(sprintf("✓ Saved: %s - %s [%s] %s\n", outcome_label, vs_label, data_label, legend_status))
+  cat(sprintf("  File: %s\n\n", filename))
+}
+cat(strrep("=", 70), "\n")
+cat("ALL 12 VERSION 2 PLOTS SAVED (Legend only on Continuous-All-All)\n")
+cat(strrep("=", 70), "\n")
+plan(sequential)
+```
 
-print(ancova_na_rows)
-cat("\nCount of ANCOVA NA rows:", nrow(ancova_na_rows), "\n")
+## newnew
+```{r}
+# helper to build a single row with a skinny label column
+row_with_label = function(label_plot, p_left, p_right,
+                          label_width = 0.11,
+                          left_weight = 1,
+                          right_weight = 1.00) {
+  (label_plot | p_left | p_right) +
+    plot_layout(widths = c(label_width, left_weight, right_weight))
+}
 
-# ------------------ Summary statistics ------------------
+create_6panel_samplesize_figure = function() {
+  # Get smooth plots for binary outcomes (all data source)
+  idx_binary_all = which(plot_configs$outcome_type == "binary" &
+                    plot_configs$vs_type == "all" &
+                    plot_configs$data_source == "all" &
+                    plot_configs$version == "smooth_log")
+  idx_binary_top3 = which(plot_configs$outcome_type == "binary" &
+                     plot_configs$vs_type == "top3" &
+                     plot_configs$data_source == "all" &
+                     plot_configs$version == "smooth_log")
+  idx_binary_baseline = which(plot_configs$outcome_type == "binary" &
+                         plot_configs$vs_type == "baseline" &
+                         plot_configs$data_source == "all" &
+                         plot_configs$version == "smooth_log")
+  
+  # Get smooth plots for continuous outcomes (all data source)
+  idx_cont_all = which(plot_configs$outcome_type == "continuous" &
+                    plot_configs$vs_type == "all" &
+                    plot_configs$data_source == "all" &
+                    plot_configs$version == "smooth_log")
+  idx_cont_top3 = which(plot_configs$outcome_type == "continuous" &
+                     plot_configs$vs_type == "top3" &
+                     plot_configs$data_source == "all" &
+                     plot_configs$version == "smooth_log")
+  idx_cont_baseline = which(plot_configs$outcome_type == "continuous" &
+                         plot_configs$vs_type == "baseline" &
+                         plot_configs$data_source == "all" &
+                         plot_configs$version == "smooth_log")
+  
+  # Extract the plots
+  p_binary_all = results[[idx_binary_all]]$plot
+  p_binary_top3 = results[[idx_binary_top3]]$plot
+  p_binary_baseline = results[[idx_binary_baseline]]$plot
+  
+  p_cont_all = results[[idx_cont_all]]$plot
+  p_cont_top3 = results[[idx_cont_top3]]$plot
+  p_cont_baseline = results[[idx_cont_baseline]]$plot
+
+  # Create label plots for each covariate adjustment method (rows)
+  base_label_theme = theme_void() + theme(plot.margin = margin(0,0,0,0))
+  
+  label_all = ggplot() + 
+    annotate("text", x=0, y=0, label="All",
+             size=8, fontface="bold", angle=90) + 
+    base_label_theme
+  
+  label_top3 = ggplot() + 
+    annotate("text", x=0, y=0, label="Top-3",
+             size=8, fontface="bold", angle=90) + 
+    base_label_theme
+  
+  label_baseline = ggplot() + 
+    annotate("text", x=0, y=0, label="Baseline+",
+             size=8, fontface="bold", angle=90) + 
+    base_label_theme
+
+  # Create column header plots
+  header_continuous = ggplot() + 
+    annotate("text", x=0, y=0, label="Continuous",
+             size=9, fontface="bold") + 
+    base_label_theme
+  
+  header_binary = ggplot() + 
+    annotate("text", x=0, y=0, label="Binary",
+             size=9, fontface="bold") + 
+    base_label_theme
+  
+  # Empty plot for top-left corner
+  empty_corner = ggplot() + base_label_theme
+
+  # Build header row: Empty corner | Continuous | Binary
+  header_row = (empty_corner | header_continuous | header_binary) +
+    plot_layout(widths = c(0.11, 1, 1.00))
+
+  # Build three data rows: Label | Continuous | Binary
+  row1 = row_with_label(label_all, p_cont_all, p_binary_all,
+                        label_width = 0.11, left_weight = 1, right_weight = 1.00)
+  row2 = row_with_label(label_top3, p_cont_top3, p_binary_top3,
+                        label_width = 0.11, left_weight = 1, right_weight = 1.00)
+  row3 = row_with_label(label_baseline, p_cont_baseline, p_binary_baseline,
+                        label_width = 0.11, left_weight = 1, right_weight = 1.00)
+
+  # Stack header row and all three data rows
+  combined = header_row / row1 / row2 / row3 + 
+    plot_layout(heights = c(0.15, 1, 1, 1))
+  combined
+}
+
+# Adjusted dimensions for 4x2 layout (header + 3 data rows)
+combined_width = 23
+combined_height = 22  # Slightly increased for header
+
 cat("\n========================================\n")
-cat("Summary Statistics for all_continuous_Baseline+:\n")
-cat("========================================\n")
+cat("Creating 6-panel Sample Size Figure...\n")
+cat("========================================\n\n")
 
-summary_stats = diagnostic_slice %>%
-  group_by(method) %>%
-  summarise(
-    Total_n = n(),
-    NA_count = sum(is.na(pg)),
-    Non_NA_count = sum(!is.na(pg)),
-    .groups = "drop"
-  )
-print(summary_stats)
+combined_fig = create_6panel_samplesize_figure()
 
-# ------------------ DML NA but NOT ANCOVA NA ------------------
+# Save as PNG
+filename_png = "cleaned_data/Plot/PVR_by_sample_size.png"
+ggsave(filename_png, combined_fig,
+       width = combined_width, height = combined_height, dpi = pub_dpi, bg = "white")
+
+cat(sprintf("✓ Saved PNG: %s\n", filename_png))
+cat(sprintf("  Dimensions: %d × %d inches @ %d dpi\n\n", 
+            combined_width, combined_height, pub_dpi))
+
+# Save as PDF
+filename_pdf = "cleaned_data/Plot/PVR_by_sample_size.pdf"
+ggsave(filename_pdf, combined_fig,
+       width = combined_width, height = combined_height, device = "pdf", bg = "white")
+
+cat(sprintf("✓ Saved PDF: %s\n", filename_pdf))
+cat(sprintf("  Dimensions: %d × %d inches\n\n", 
+            combined_width, combined_height))
+
+print(combined_fig)
+
 cat("\n========================================\n")
-cat("Rows where DML has NA but ANCOVA does NOT:\n")
+cat("6-PANEL SAMPLE SIZE FIGURE CREATED\n")
 cat("========================================\n")
-
-dml_only_na = dml_na_rows %>%
-  anti_join(ancova_na_rows, by = c("Trial_No", "Outcome"))
-
-print(dml_only_na)
-cat("\nCount:", nrow(dml_only_na), "\n")
-
-# ------------------ ANCOVA NA but NOT DML NA ------------------
-cat("\n========================================\n")
-cat("Rows where ANCOVA has NA but DML does NOT:\n")
-cat("========================================\n")
-
-ancova_only_na = ancova_na_rows %>%
-  anti_join(dml_na_rows, by = c("Trial_No", "Outcome"))
-
-print(ancova_only_na)
-cat("\nCount:", nrow(ancova_only_na), "\n")
-
-# ------------------ BOTH NA ------------------
-cat("\n========================================\n")
-cat("Rows where BOTH have NA:\n")
-cat("========================================\n")
-
-both_na = dml_na_rows %>%
-  semi_join(ancova_na_rows, by = c("Trial_No", "Outcome"))
-
-print(both_na)
-cat("\nCount:", nrow(both_na), "\n")
-
+cat(sprintf("• Figure: %d × %d inches\n", 
+            combined_width, combined_height))
+cat(sprintf("• PNG: %d dpi\n", pub_dpi))
+cat("• PDF: vector format\n")
+cat("• Layout: Label (left) | Continuous | Binary\n")
+cat("          Header: Column names\n")
+cat("          Row 1: All\n")
+cat("          Row 2: Top-3\n")
+cat("          Row 3: Baseline+\n")
+cat("• Data source: All outcomes only\n")
+cat("========================================\n\n")
 ```
 

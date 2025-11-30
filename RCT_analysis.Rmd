@@ -4095,7 +4095,7 @@ df_newcomp = run_aipw_analysis(
 ```{r}
 # ALL
 df_comparison = run_ipw_analysis(
-  df_indices = 1:50,
+  df_indices = 21,
   selection = FALSE,            # no variable selection
   variable_selection_type = 1,
   weight_method = "IPW",        # PSweight keyword for ATE
@@ -5650,9 +5650,6 @@ cat("========================================\n\n")
 
 # N Hist
 ```{r}
-# Create output directory if it doesn't exist
-dir.create("cleaned_data/Plot", recursive = TRUE, showWarnings = FALSE)
-
 # Create a data frame
 df = data.frame(sample_size = df_meta$'Sample Size')
 
