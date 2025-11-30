@@ -5005,12 +5005,12 @@ make_plot_smooth_log = function(data, outcome_type, show_legend = FALSE) {
     scale_color_manual(values = method_colors) +
     labs(x = "Log10(Sample Size)", y = "Proportional Variance Reduction", color = "Method") +
     coord_cartesian(ylim = c(-1, 1)) +
-    theme_minimal(base_size = 18) +
+    theme_minimal(base_size = 22) +
     theme(panel.grid.minor = element_blank(),
           panel.background = element_rect(fill = "white", colour = NA),
           plot.background = element_rect(fill = "white", colour = NA),
-          axis.text = element_text(size = 16),
-          axis.title = element_text(size = 18))
+          axis.text = element_text(size = 20),
+          axis.title = element_text(size = 22))
   
   # Conditionally add legend
   if (show_legend) {
@@ -5018,8 +5018,8 @@ make_plot_smooth_log = function(data, outcome_type, show_legend = FALSE) {
       legend.position = "inside",
       legend.position.inside = c(0.82, 0.82),
       legend.background = element_rect(fill = "white", color = "gray80", linewidth = 0.5),
-      legend.text = element_text(size = 14),
-      legend.title = element_text(size = 16)
+      legend.text = element_text(size = 18),
+      legend.title = element_text(size = 20)
     )
   } else {
     p = p + theme(legend.position = "none")
@@ -5045,12 +5045,12 @@ make_plot_scatter = function(data, outcome_type, show_legend = FALSE) {
     scale_color_manual(values = method_colors) +
     labs(x = "Sample Size", y = "Proportional Variance Reduction", color = "Method") +
     coord_cartesian(ylim = c(-1, 1)) +
-    theme_minimal(base_size = 18) +
+    theme_minimal(base_size = 22) +
     theme(panel.grid.minor = element_blank(),
           panel.background = element_rect(fill = "white", colour = NA),
           plot.background = element_rect(fill = "white", colour = NA),
-          axis.text = element_text(size = 16),
-          axis.title = element_text(size = 18))
+          axis.text = element_text(size = 20),
+          axis.title = element_text(size = 22))
   
   # Conditionally add legend
   if (show_legend) {
@@ -5058,8 +5058,8 @@ make_plot_scatter = function(data, outcome_type, show_legend = FALSE) {
       legend.position = "inside",
       legend.position.inside = c(0.82, 0.82),
       legend.background = element_rect(fill = "white", color = "gray80", linewidth = 0.5),
-      legend.text = element_text(size = 14),
-      legend.title = element_text(size = 16)
+      legend.text = element_text(size = 18),
+      legend.title = element_text(size = 20)
     )
   } else {
     p = p + theme(legend.position = "none")
@@ -5085,12 +5085,12 @@ make_plot_scatter_log = function(data, outcome_type, show_legend = FALSE) {
     scale_color_manual(values = method_colors) +
     labs(x = "Log10(Sample Size)", y = "Proportional Variance Reduction", color = "Method") +
     coord_cartesian(ylim = c(-1, 1)) +
-    theme_minimal(base_size = 18) +
+    theme_minimal(base_size = 22) +
     theme(panel.grid.minor = element_blank(),
           panel.background = element_rect(fill = "white", colour = NA),
           plot.background = element_rect(fill = "white", colour = NA),
-          axis.text = element_text(size = 16),
-          axis.title = element_text(size = 18))
+          axis.text = element_text(size = 20),
+          axis.title = element_text(size = 22))
   
   # Conditionally add legend
   if (show_legend) {
@@ -5098,8 +5098,8 @@ make_plot_scatter_log = function(data, outcome_type, show_legend = FALSE) {
       legend.position = "inside",
       legend.position.inside = c(0.82, 0.82),
       legend.background = element_rect(fill = "white", color = "gray80", linewidth = 0.5),
-      legend.text = element_text(size = 14),
-      legend.title = element_text(size = 16)
+      legend.text = element_text(size = 18),
+      legend.title = element_text(size = 20)
     )
   } else {
     p = p + theme(legend.position = "none")
@@ -5163,7 +5163,7 @@ generate_single_plot = function(data_source, outcome_type, vs_type, version, plo
 ###############################################################################
 ##  Publication quality settings ---------------------------------------------
 ###############################################################################
-pub_width = 10
+pub_width = 8
 pub_height = 6.5
 pub_dpi = 600
 
@@ -5231,12 +5231,13 @@ plan(sequential)
 ## newnew
 ```{r}
 # helper to build a single row with a skinny label column
-row_with_label = function(label_plot, p_left, p_right,
-                          label_width = 0.11,
+row_with_label = function(label_plot, p_left, p_middle, p_right,
+                          label_width = 0.09,
                           left_weight = 1,
-                          right_weight = 1.00) {
-  (label_plot | p_left | p_right) +
-    plot_layout(widths = c(label_width, left_weight, right_weight))
+                          middle_weight = 1,
+                          right_weight = 1) {
+  (label_plot | p_left | p_middle | p_right) +
+    plot_layout(widths = c(label_width, left_weight, middle_weight, right_weight))
 }
 
 create_6panel_samplesize_figure = function() {
@@ -5277,62 +5278,62 @@ create_6panel_samplesize_figure = function() {
   p_cont_top3 = results[[idx_cont_top3]]$plot
   p_cont_baseline = results[[idx_cont_baseline]]$plot
 
-  # Create label plots for each covariate adjustment method (rows)
+  # Create label plots for rows (Binary and Continuous)
   base_label_theme = theme_void() + theme(plot.margin = margin(0,0,0,0))
   
-  label_all = ggplot() + 
-    annotate("text", x=0, y=0, label="All",
-             size=8, fontface="bold", angle=90) + 
+  label_continuous = ggplot() + 
+    annotate("text", x=0, y=0, label="Continuous",
+             size=10, fontface="bold", angle=90) + 
     base_label_theme
   
-  label_top3 = ggplot() + 
-    annotate("text", x=0, y=0, label="Top-3",
-             size=8, fontface="bold", angle=90) + 
-    base_label_theme
-  
-  label_baseline = ggplot() + 
-    annotate("text", x=0, y=0, label="Baseline+",
-             size=8, fontface="bold", angle=90) + 
+  label_binary = ggplot() + 
+    annotate("text", x=0, y=0, label="Binary",
+             size=10, fontface="bold", angle=90) + 
     base_label_theme
 
-  # Create column header plots
-  header_continuous = ggplot() + 
-    annotate("text", x=0, y=0, label="Continuous",
-             size=9, fontface="bold") + 
+  # Create column header plots (All, Top-3, Baseline+)
+  header_all = ggplot() + 
+    annotate("text", x=0, y=0, label="All",
+             size=11, fontface="bold") + 
     base_label_theme
   
-  header_binary = ggplot() + 
-    annotate("text", x=0, y=0, label="Binary",
-             size=9, fontface="bold") + 
+  header_top3 = ggplot() + 
+    annotate("text", x=0, y=0, label="Top-3",
+             size=11, fontface="bold") + 
+    base_label_theme
+  
+  header_baseline = ggplot() + 
+    annotate("text", x=0, y=0, label="Baseline+",
+             size=11, fontface="bold") + 
     base_label_theme
   
   # Empty plot for top-left corner
   empty_corner = ggplot() + base_label_theme
 
-  # Build header row: Empty corner | Continuous | Binary
-  header_row = (empty_corner | header_continuous | header_binary) +
-    plot_layout(widths = c(0.11, 1, 1.00))
+  # Build header row: Empty corner | All | Top-3 | Baseline+
+  header_row = (empty_corner | header_all | header_top3 | header_baseline) +
+    plot_layout(widths = c(0.09, 1, 1, 1))
 
-  # Build three data rows: Label | Continuous | Binary
-  row1 = row_with_label(label_all, p_cont_all, p_binary_all,
-                        label_width = 0.11, left_weight = 1, right_weight = 1.00)
-  row2 = row_with_label(label_top3, p_cont_top3, p_binary_top3,
-                        label_width = 0.11, left_weight = 1, right_weight = 1.00)
-  row3 = row_with_label(label_baseline, p_cont_baseline, p_binary_baseline,
-                        label_width = 0.11, left_weight = 1, right_weight = 1.00)
+  # Build two data rows: 
+  # Row 1: Label (Continuous) | Cont_All | Cont_Top3 | Cont_Baseline+
+  # Row 2: Label (Binary) | Binary_All | Binary_Top3 | Binary_Baseline+
+  row1 = row_with_label(label_continuous, p_cont_all, p_cont_top3, p_cont_baseline,
+                        label_width = 0.09, left_weight = 1, middle_weight = 1, right_weight = 1)
+  row2 = row_with_label(label_binary, p_binary_all, p_binary_top3, p_binary_baseline,
+                        label_width = 0.09, left_weight = 1, middle_weight = 1, right_weight = 1)
 
-  # Stack header row and all three data rows
-  combined = header_row / row1 / row2 / row3 + 
-    plot_layout(heights = c(0.15, 1, 1, 1))
+  # Stack header row and two data rows
+  combined = header_row / row1 / row2 + 
+    plot_layout(heights = c(0.12, 1, 1))
   combined
 }
 
-# Adjusted dimensions for 4x2 layout (header + 3 data rows)
-combined_width = 23
-combined_height = 22  # Slightly increased for header
+# Adjusted dimensions for 2x3 layout (header + 2 data rows, 3 columns)
+combined_width = 28
+combined_height = 16
 
 cat("\n========================================\n")
-cat("Creating 6-panel Sample Size Figure...\n")
+cat("Creating 6-panel Sample Size Figure (2x3 layout)...\n")
 cat("========================================\n\n")
 
 combined_fig = create_6panel_samplesize_figure()
@@ -5358,18 +5359,40 @@ cat(sprintf("  Dimensions: %d × %d inches\n\n",
 print(combined_fig)
 
 cat("\n========================================\n")
-cat("6-PANEL SAMPLE SIZE FIGURE CREATED\n")
+cat("6-PANEL SAMPLE SIZE FIGURE CREATED (2x3 LAYOUT)\n")
 cat("========================================\n")
 cat(sprintf("• Figure: %d × %d inches\n", 
             combined_width, combined_height))
 cat(sprintf("• PNG: %d dpi\n", pub_dpi))
 cat("• PDF: vector format\n")
-cat("• Layout: Label (left) | Continuous | Binary\n")
-cat("          Header: Column names\n")
-cat("          Row 1: All\n")
-cat("          Row 2: Top-3\n")
-cat("          Row 3: Baseline+\n")
+cat("• Layout: Label (left) | All | Top-3 | Baseline+\n")
+cat("          Header: Column names (adjustment types)\n")
+cat("          Row 1: Continuous outcomes\n")
+cat("          Row 2: Binary outcomes\n")
 cat("• Data source: All outcomes only\n")
 cat("========================================\n\n")
+```
+
+# newtest
+```{r}
+dfold = read_xlsx("cleaned_data/2.xlsx")
+```
+
+```{r}
+df_diff <- dfold %>%
+  select(IPW_VS2_se) %>%
+  rename(IPW_VS2_se_old = IPW_VS2_se) %>%
+  bind_cols(df_comparison %>% select(IPW_VS2_se) %>%
+              rename(IPW_VS2_se_new = IPW_VS2_se)) %>%
+  mutate(
+    different = IPW_VS2_se_old != IPW_VS2_se_new
+  )
+
+df_diff
+
+```
+
+```{r}
+which(dfold$IPW_VS2_se != df_comparison$IPW_VS2_se)
 ```
 
