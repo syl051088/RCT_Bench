@@ -3635,299 +3635,21 @@ res$high_corr_pairs  # High correlations (|r| > 0.9)
 
 
 ```
-# analyze_rct_ipw()
+# psw process
 ```{r}
-analyze_rct_ipw = function(df,
-                          selection = FALSE,
-                          variable_selection_type = 1,
-                          manual_covariates = NULL,
-                          seed = 123,
-                          outcome_cols = NULL,
-                          covariate_col = NULL,
-                          treatment_col = "Treatment",
-                          n_select = 3,
-                          trunc = 0.01) {
-  require(dplyr)
-  require(ipw)
-  require(survey)
-  require(tidyr)
-  require(DescTools)
-  
-  set.seed(seed)
-  
-  # Auto-detect outcome columns if not specified
-  if (is.null(outcome_cols)) {
-    yp_cols = names(df)[startsWith(names(df), "YP")]
-    
-    ys_cols = names(df)[startsWith(names(df), "YS")]
-    ys_valid = character(0)
-    for (col in ys_cols) {
-      if (is.numeric(df[[col]]) ||
-          (is.factor(df[[col]]) &&
-           length(levels(df[[col]])) == 2)) {
-        ys_valid = c(ys_valid, col)
-      }
-    }
-    
-    outcome_cols = c(yp_cols, ys_valid)
-    cat(
-      "Auto-detected",
-      length(outcome_cols),
-      "outcome columns:",
-      paste(outcome_cols, collapse = ", "),
-      "\n"
-    )
-  }
-  
-  # Setup covariates
-  if (is.null(covariate_col)) {
-    covariates = names(df)[startsWith(names(df), "X_")]
-    if ("n_participants" %in% names(df)) {
-      covariates = c(covariates, "n_participants")
-    }
-  } else {
-    covariates = covariate_col
-  }
-  
-  cat("DEBUG: Found", length(covariates), "covariates\n")
-  
-  # Fill missing values in covariates
-  df = df %>%
-    mutate(across(all_of(covariates), ~ if (is.numeric(.)) {
-      replace(., is.na(.), mean(., na.rm = TRUE))
-    } else if (is.factor(.)) {
-      replace(., is.na(.), Mode(., na.rm = TRUE)[1])
-    }))
-  
-  # Get treatment arms
-  arms = levels(df[[treatment_col]])
-  control_level = arms[1]
-  treatment_levels = arms[-1]
-  
-  cat("DEBUG: Treatment arms:", paste(arms, collapse = ", "), "\n")
-  cat("DEBUG: Control level:", control_level, "\n")
-  cat("DEBUG: Treatment levels:", paste(treatment_levels, collapse = ", "), "\n")
-  
-  # Process each outcome
-  all_results = vector("list", length(outcome_cols))
-  valid_outcomes = character(0)
-  
-  for (i in seq_along(outcome_cols)) {
-    outcome = outcome_cols[i]
-    
-    cat("\n========================================\n")
-    cat("Processing outcome:", outcome, "\n")
-    cat("========================================\n")
-    
-    # Check missing proportion for outcome
-    missing_prop = mean(is.na(df[[outcome]]))
-    cat("Missing proportion:", round(missing_prop, 3), "\n")
-    
-    if (missing_prop > 0.4) {
-      cat("REMOVED outcome:", outcome, "- Missing proportion:", 
-          round(missing_prop, 3), "(> 0.4)\n")
-      next
-    }
-    
-    # Filter complete cases for this outcome
-    complete_vars = c(outcome, treatment_col, covariates)
-    complete_cases_idx = complete.cases(df[, complete_vars, drop = FALSE])
-    df_complete = df[complete_cases_idx, , drop = FALSE]
-    
-    cat("Outcome:", outcome, "- Sample size:", nrow(df_complete),
-        "(", nrow(df) - nrow(df_complete), "rows removed)\n")
-    
-    # Check for single-level factors after filtering
-    if (is.factor(df_complete[[outcome]]) &&
-        length(levels(droplevels(df_complete[[outcome]]))) <= 1) {
-      cat("REMOVED outcome:", outcome, "- Only one level after filtering\n")
-      next
-    }
-    
-    # Check covariates for single levels and remove them
-    valid_covariates = character(0)
-    for (cov in covariates) {
-      if (is.factor(df_complete[[cov]]) &&
-          length(levels(droplevels(df_complete[[cov]]))) <= 1) {
-        cat("REMOVED covariate:", cov, "- Only one level after filtering (outcome:",
-            outcome, ")\n")
-      } else {
-        valid_covariates = c(valid_covariates, cov)
-      }
-    }
-    
-    cat("Valid covariates:", length(valid_covariates), "\n")
-    
-    # Convert outcome to numeric
-    df_complete_numeric = df_complete
-    if (is.factor(df_complete[[outcome]])) {
-      numeric_outcome = as.numeric(df_complete_numeric[[outcome]])
-      unique_vals = sort(unique(numeric_outcome))
-      
-      if (all(unique_vals == c(0, 1))) {
-        df_complete_numeric[[outcome]] = numeric_outcome
-      } else if (all(unique_vals == c(1, 2))) {
-        df_complete_numeric[[outcome]] = numeric_outcome - 1
-      } else {
-        df_complete_numeric[[outcome]] = numeric_outcome
-      }
-    } else {
-      df_complete_numeric[[outcome]] = as.numeric(df_complete_numeric[[outcome]])
-    }
-    
-    cat("Outcome class:", class(df_complete_numeric[[outcome]]), "\n")
-    cat("Outcome range:", range(df_complete_numeric[[outcome]], na.rm = TRUE), "\n")
-    
-    # Variable selection
-    if (selection && length(valid_covariates) > 0) {
-      if (variable_selection_type == 1) {
-        selected_covariates = variable_selection_correlation(
-          outcome, valid_covariates, df_complete_numeric, n_select
-        )
-      } else if (variable_selection_type == 2) {
-        selected_covariates = variable_selection_manual(
-          outcome, valid_covariates, manual_covariates
-        )
-        
-        if (length(selected_covariates) == 0) {
-          cat("No valid covariates found for outcome:", outcome, 
-              "- Setting all estimates to NA\n")
-          
-          outcome_results_list = lapply(treatment_levels, function(treat_level) {
-            tibble(
-              Outcome = outcome,
-              Treatment = treat_level,
-              Control = control_level,
-              N = sum(df_complete[[treatment_col]] %in% c(control_level, treat_level)),
-              N_Covariates = 0,
-              Selected_Covariates = "",
-              Est_IPW = NA_real_,
-              SE_IPW = NA_real_
-            )
-          })
-          outcome_results = bind_rows(outcome_results_list)
-          
-          valid_outcomes = c(valid_outcomes, outcome)
-          all_results[[length(valid_outcomes)]] = outcome_results
-          next
-        }
-      }
-      
-      valid_covariates = selected_covariates
-      cat("Selected covariates for", outcome, ":", 
-          paste(valid_covariates, collapse = ", "), "\n")
-    }
-    
-    ## PAIRWISE COMPARISONS
-    outcome_results_list = vector("list", length(treatment_levels))
-    
-    for (j in seq_along(treatment_levels)) {
-      treat_level = treatment_levels[j]
-      
-      cat("\n--- Comparing", treat_level, "vs", control_level, "---\n")
-      
-      # Subset data
-      df_pairwise = df_complete_numeric %>%
-        filter(!!sym(treatment_col) %in% c(control_level, treat_level))
-      
-      cat("Pairwise sample size:", nrow(df_pairwise), "\n")
-      
-      # Create binary treatment
-      df_pairwise_binary = df_pairwise
-      df_pairwise_binary$treatment_binary = as.numeric(
-        df_pairwise_binary[[treatment_col]] == treat_level
-      )
-      
-      cat("Binary treatment distribution:", 
-          table(df_pairwise_binary$treatment_binary), "\n")
-      
-      # FIX: Use eval() and parse() to handle formula properly
-      cat("Estimating IPW weights...\n")
-      
-      if (length(valid_covariates) > 0) {
-        # Build the formula string
-        formula_str = paste("~", paste(valid_covariates, collapse = " + "))
-        cat("Denominator formula string:", formula_str, "\n")
-        
-        # Use do.call to pass the formula directly
-        weights_obj = do.call(ipwpoint, list(
-          exposure = quote(treatment_binary),
-          family = "binomial",
-          link = "logit",
-          numerator = ~ 1,
-          denominator = as.formula(formula_str),
-          data = quote(df_pairwise_binary),
-          trunc = trunc
-        ))
-      } else {
-        weights_obj = ipwpoint(
-          exposure = treatment_binary,
-          family = "binomial",
-          link = "logit",
-          numerator = ~ 1,
-          denominator = ~ 1,
-          data = df_pairwise_binary,
-          trunc = trunc
-        )
-      }
-      
-      cat("Weight summary:\n")
-      print(summary(weights_obj$ipw.weights))
-      
-      # Add weights to data
-      df_pairwise_binary$ipw = weights_obj$ipw.weights
-      
-      cat("Fitting weighted outcome model...\n")
-      
-      # Fit weighted model
-      design = svydesign(~ 1, weights = ~ ipw, data = df_pairwise_binary)
-      model = svyglm(
-        as.formula(paste(outcome, "~ treatment_binary")),
-        design = design
-      )
-      
-      cat("Model fitted successfully\n")
-      
-      # Extract ATE and SE
-      est = coef(model)["treatment_binary"]
-      se = sqrt(diag(vcov(model)))["treatment_binary"]
-      
-      cat("ATE Estimate:", est, "\n")
-      cat("SE:", se, "\n")
-      
-      # Store results
-      outcome_results_list[[j]] = tibble(
-        Outcome = outcome,
-        Treatment = treat_level,
-        Control = control_level,
-        N = nrow(df_pairwise),
-        N_Covariates = length(valid_covariates),
-        Est_IPW = est,
-        SE_IPW = se
-      )
-      
-      if (selection) {
-        outcome_results_list[[j]]$Selected_Covariates = paste(valid_covariates, collapse = ", ")
-      }
-    }
-    
-    outcome_results = bind_rows(outcome_results_list)
-    valid_outcomes = c(valid_outcomes, outcome)
-    all_results[[length(valid_outcomes)]] = outcome_results
-  }
-  
-  if (length(valid_outcomes) == 0) {
-    stop("No valid outcomes remaining after data cleaning")
-  }
-  
-  # Combine all outcomes
-  final_results = bind_rows(all_results[1:length(valid_outcomes)]) %>%
-    mutate(across(starts_with("Est_"), ~ round(.x, 5)),
-           across(starts_with("SE_"), ~ round(.x, 5)))
-  
-  return(final_results)
-}
+df_psw = read_xlsx("cleaned_data/psw.xlsx")
 ```
+
+```{r}
+df_psw <- df_psw %>%
+  mutate(across(contains("IPW"), ~ NA))
+```
+
+```{r}
+write_xlsx(df_psw, "cleaned_data/psw.xlsx")
+```
+
+
 
 ## test
 
@@ -4522,7 +4244,7 @@ df_comparison %>%
 
 ```
 
-# new
+# 
 ```{r}
 ###############################################################################
 ##  6.  Sample Size vs Variance Ratio Plots (3 versions) - LOESS + ALL PLOTS
@@ -4855,7 +4577,7 @@ cat(strrep("=", 70), "\n")
 plan(sequential)
 ```
 
-## newnew
+## figure3
 ```{r}
 # helper to build a single row with a skinny label column
 row_with_label = function(label_plot, p_left, p_middle, p_right,
@@ -5002,7 +4724,7 @@ cat("========================================\n\n")
 
 # newtest
 ```{r}
-dfold = read_xlsx("cleaned_data/2.xlsx")
+dfold = read_xlsx("cleaned_data/psw.xlsx")
 ```
 
 ```{r}
@@ -5116,9 +4838,14 @@ analyze_rct_ipw = function(df,
       }
     }
 
-    # Force numeric outcome for Gaussian family
+    # Force numeric outcome AND covariates for Gaussian family
     df_complete_num = df_complete
     df_complete_num[[outcome]] = as.numeric(df_complete_num[[outcome]])
+    
+    # CRITICAL: Convert all covariates to numeric (including factors)
+    for (cov in valid_covariates) {
+      df_complete_num[[cov]] = as.numeric(df_complete_num[[cov]])
+    }
 
     # Optional variable selection
     if (selection && length(valid_covariates) > 0) {
@@ -5169,9 +4896,11 @@ analyze_rct_ipw = function(df,
 
       # ---- PSW block ----
       ipw = tryCatch({
-        # Clean data for PSW - ensure all columns are atomic
+        # Clean data for PSW - keep only necessary columns
         keep_cols = c("Z", outcome, valid_covariates)
         clean_df = as.data.frame(df_pair[, keep_cols, drop = FALSE])
+        
+        # Verify all columns are atomic (numeric or factor)
         ok = vapply(clean_df, function(x) is.atomic(x) || is.factor(x), logical(1))
         
         if (!all(ok)) {
@@ -5182,14 +4911,20 @@ analyze_rct_ipw = function(df,
           ps.formula = if (length(valid_covariates2) > 0) {
             paste("Z ~", paste(valid_covariates2, collapse = " + "))
           } else "Z ~ 1"
+        } else {
+          valid_covariates2 = valid_covariates
         }
 
-        # Ensure numeric outcome and treatment
+        # Ensure ALL columns are numeric (treatment, outcome, and covariates)
         clean_df$Z = as.numeric(clean_df$Z)
         clean_df[[outcome]] = as.numeric(clean_df[[outcome]])
+        
+        # Convert all covariates to numeric (critical for PSW)
+        for (cov in valid_covariates2) {
+          clean_df[[cov]] = as.numeric(clean_df[[cov]])
+        }
 
         # Fit PSW model
-        # psw.wt estimates treatment effect with propensity score weighting
         psw_fit = psw.wt(
           data = clean_df,
           form.ps = ps.formula,
@@ -5233,5 +4968,69 @@ analyze_rct_ipw = function(df,
            across(starts_with("SE_"),  ~ round(.x, 5)))
   return(final_results)
 }
+```
+
+# run ipw with PSW
+```{r}
+# ALL
+df_psw = run_ipw_analysis(
+  df_indices = 1:50,
+  selection = FALSE,            # no variable selection
+  variable_selection_type = 1,
+  weight_method = "ATE",        # PSweight keyword for ATE
+  n_select = 3,
+  seed = 123,
+  df_comparison = df_psw
+)
+
+# Top3
+df_psw = run_ipw_analysis(
+  df_indices = 1:50,
+  selection = TRUE,             # variable selection on
+  variable_selection_type = 1,  # correlation-based (Top3)
+  weight_method = "ATE",        # ATE
+  n_select = 3,
+  seed = 123,
+  df_comparison = df_psw
+)
+
+# Baseline+
+df_psw = run_ipw_analysis(
+  df_indices = 1:50,
+  selection = TRUE,             # variable selection on
+  variable_selection_type = 2,  # manual/baseline+
+  weight_method = "ATE",        # ATE
+  n_select = 3,
+  seed = 123,
+  df_comparison = df_psw
+)
+```
+## newtest
+```{r}
+df_comparison %>%
+  filter(Sample_Size > 1000) %>%
+  select(
+    Trial_No,
+    Treatment,
+    Control,
+    Outcome,
+    `How much precision gain can IPW_VS2 provide?`,
+    `How much precision gain can TMLE_VS2 provide?`
+  )
+
+df_psw %>%
+  filter(Sample_Size > 1000) %>%
+  select(
+    Trial_No,
+    Treatment,
+    Control,
+    Outcome,
+    `How much precision gain can IPW_VS2 provide?`,
+    `How much precision gain can TMLE_VS2 provide?`
+  )
+```
+
+```{r}
+df_psw$IPW_est
 ```
 

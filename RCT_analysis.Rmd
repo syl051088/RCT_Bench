@@ -3838,7 +3838,7 @@ SL2_lib = c("SL.glm", "SL.glmnet", "SL.bartMachine", "SL.randomForest")
 ```{r}
 # ALL
 df_comparison = run_dml_analysis(
-  df_indices = 49,
+  df_indices = 50,
   selection = F,
   variable_selection_type = 1,
   run_individual_SL = F,
@@ -3864,7 +3864,7 @@ df_comparison = run_dml_analysis(
 
 # Baseline+
 df_comparison = run_dml_analysis(
-  df_indices = 49,
+  df_indices = 50,
   selection = T,
   variable_selection_type = 2,
   run_individual_SL = F,
@@ -4095,10 +4095,10 @@ df_newcomp = run_aipw_analysis(
 ```{r}
 # ALL
 df_comparison = run_ipw_analysis(
-  df_indices = c(1:2, 4, 6:50),
+  df_indices = 1:50,
   selection = FALSE,            # no variable selection
   variable_selection_type = 1,
-  weight_method = "IPW",        # PSweight keyword for ATE
+  weight_method = "ATE",        # PSweight keyword for ATE
   n_select = 3,
   seed = 123,
   df_comparison = df_comparison
@@ -4106,10 +4106,10 @@ df_comparison = run_ipw_analysis(
 
 # Top3
 df_comparison = run_ipw_analysis(
-  df_indices = 21,
+  df_indices = 1:50,
   selection = TRUE,             # variable selection on
   variable_selection_type = 1,  # correlation-based (Top3)
-  weight_method = "IPW",        # ATE
+  weight_method = "ATE",        # ATE
   n_select = 3,
   seed = 123,
   df_comparison = df_comparison
@@ -4120,7 +4120,7 @@ df_comparison = run_ipw_analysis(
   df_indices = 1:50,
   selection = TRUE,             # variable selection on
   variable_selection_type = 2,  # manual/baseline+
-  weight_method = "IPW",        # ATE
+  weight_method = "ATE",        # ATE
   n_select = 3,
   seed = 123,
   df_comparison = df_comparison
