@@ -5023,333 +5023,215 @@ df_diff
 which(dfold$IPW_VS1_se != df_comparison$IPW_VS1_se)
 ```
 
-# newplot
+# PSW ipw
 ```{r}
-###############################################################################
-##  OVERALL VARIANCE REDUCTION ANALYSIS
-##  Extract raw variances, calculate mean/median, and create visualization
-###############################################################################
+analyze_rct_ipw = function(df,
+                           selection = FALSE,
+                           variable_selection_type = 1,   # 1: correlation, 2: manual
+                           manual_covariates = NULL,
+                           weight_method = "ATE",         # PSW keywords: "ATE","ATT","ATC","MW","OVERLAP","TRAPEZOIDAL"
+                           n_select = 3,
+                           outcome_cols = NULL,
+                           covariate_col = NULL,
+                           treatment_col = "Treatment",
+                           seed = 123) {
+  suppressPackageStartupMessages({
+    require(dplyr)
+    require(PSW)
+    require(DescTools)
+  })
 
-library(tidyverse)
-library(patchwork)
+  set.seed(seed)
 
-###############################################################################
-##  1. Extract Raw Variances from df_comparison -------------------------------
-###############################################################################
-
-# Define all methods and adjustment types
-methods = c("ANCOVA", "ANHECOVA", "Logistic G-Computation", "DML", "TMLE", "IPW")
-adjustment_types = c("", "_VS1", "_VS2")  # "" = All, _VS1 = Top-3, _VS2 = Baseline+
-
-# Extract unadjusted variance (squared SE)
-df_variance = df_comparison %>%
-  mutate(
-    unadjusted_variance = `Unadjust_se`^2,
-    outcome_group = case_when(
-      `Outcome Type` %in% c("continuous", "continuous proportion") ~ "continuous",
-      `Outcome Type` %in% c("binary", "composite binary") ~ "binary",
-      TRUE ~ "other"
-    )
-  ) %>%
-  filter(outcome_group %in% c("continuous", "binary"))
-
-# Extract all adjusted variances
-for (method in methods) {
-  for (adj_suffix in adjustment_types) {
-    # Construct column name for SE
-    se_col = paste0(method, adj_suffix, "_se")
-    
-    # Create variance column name
-    if (adj_suffix == "") {
-      var_col = paste0("variance_", gsub(" ", "_", method))
-    } else if (adj_suffix == "_VS1") {
-      var_col = paste0("variance_", gsub(" ", "_", method), "_Top-3")
-    } else if (adj_suffix == "_VS2") {
-      var_col = paste0("variance_", gsub(" ", "_", method), "_Baseline+")
+  # --- Outcomes autodetect ---
+  if (is.null(outcome_cols)) {
+    yp_cols = names(df)[startsWith(names(df), "YP")]
+    ys_cols = names(df)[startsWith(names(df), "YS")]
+    ys_valid = character(0)
+    for (col in ys_cols) {
+      if (is.numeric(df[[col]]) ||
+          (is.factor(df[[col]]) && length(levels(df[[col]])) == 2)) {
+        ys_valid = c(ys_valid, col)
+      }
     }
-    
-    # Calculate variance (SE^2) if column exists
-    if (se_col %in% colnames(df_variance)) {
-      df_variance[[var_col]] = df_variance[[se_col]]^2
-    }
+    outcome_cols = c(yp_cols, ys_valid)
+    cat("Auto-detected", length(outcome_cols), "outcome columns:", paste(outcome_cols, collapse = ", "), "\n")
   }
+
+  # --- Covariates ---
+  if (is.null(covariate_col)) {
+    covariates = names(df)[startsWith(names(df), "X_")]
+    if ("n_participants" %in% names(df)) covariates = c(covariates, "n_participants")
+  } else {
+    covariates = covariate_col
+  }
+
+  # --- Simple imputations for covariates ---
+  df = df %>%
+    mutate(across(all_of(covariates), ~ if (is.numeric(.)) {
+      replace(., is.na(.), mean(., na.rm = TRUE))
+    } else if (is.factor(.)) {
+      replace(., is.na(.), DescTools::Mode(., na.rm = TRUE)[1])
+    }))
+
+  # --- Arms (first level is control) ---
+  arms = levels(df[[treatment_col]])
+  control_level = arms[1]
+  treatment_levels = arms[-1]
+
+  all_results = vector("list", length(outcome_cols))
+  valid_outcomes = character(0)
+
+  for (i in seq_along(outcome_cols)) {
+    outcome = outcome_cols[i]
+
+    # Skip high-missing outcomes
+    miss = mean(is.na(df[[outcome]]))
+    if (miss > 0.4) {
+      cat("REMOVED outcome:", outcome, "- Missing proportion:", round(miss, 3), "(> 0.4)\n")
+      next
+    }
+
+    # Complete cases for current outcome + treatment + covariates
+    keep_vars = c(outcome, treatment_col, covariates)
+    idx = complete.cases(df[, keep_vars, drop = FALSE])
+    df_complete = df[idx, , drop = FALSE]
+    cat("Outcome:", outcome, "- Sample size:", nrow(df_complete), "(", nrow(df) - nrow(df_complete), "rows removed)\n")
+
+    # Remove degenerate outcome
+    if (is.factor(df_complete[[outcome]]) &&
+        length(levels(droplevels(df_complete[[outcome]]))) <= 1) {
+      cat("REMOVED outcome:", outcome, "- Only one level after filtering\n")
+      next
+    }
+
+    # Drop covariates with single level post-filter
+    valid_covariates = character(0)
+    for (cov in covariates) {
+      if (is.factor(df_complete[[cov]]) &&
+          length(levels(droplevels(df_complete[[cov]]))) <= 1) {
+        cat("REMOVED covariate:", cov, "- Only one level after filtering (outcome:", outcome, ")\n")
+      } else {
+        valid_covariates = c(valid_covariates, cov)
+      }
+    }
+
+    # Force numeric outcome for Gaussian family
+    df_complete_num = df_complete
+    df_complete_num[[outcome]] = as.numeric(df_complete_num[[outcome]])
+
+    # Optional variable selection
+    if (selection && length(valid_covariates) > 0) {
+      if (variable_selection_type == 1) {
+        selected_covariates = variable_selection_correlation(outcome, valid_covariates, df_complete_num, n_select)
+      } else {
+        selected_covariates = variable_selection_manual(outcome, valid_covariates, manual_covariates)
+        if (length(selected_covariates) == 0) {
+          cat("No valid covariates found for outcome:", outcome, "- Setting all estimates to NA\n")
+          outcome_results_list = lapply(treatment_levels, function(trt) {
+            tibble(Outcome = outcome,
+                   Treatment = trt,
+                   Control = control_level,
+                   N = sum(df_complete[[treatment_col]] %in% c(control_level, trt)),
+                   N_Covariates = 0,
+                   Est_IPW = NA_real_,
+                   SE_IPW = NA_real_)
+          })
+          if (selection) {
+            outcome_results_list = lapply(outcome_results_list, function(x) { x$Selected_Covariates = ""; x })
+          }
+          outcome_results = bind_rows(outcome_results_list)
+          valid_outcomes = c(valid_outcomes, outcome)
+          all_results[[length(valid_outcomes)]] = outcome_results
+          next
+        }
+      }
+      valid_covariates = selected_covariates
+      cat("Selected covariates for", outcome, ":", paste(valid_covariates, collapse = ", "), "\n")
+    }
+
+    # Pairwise treatment vs control
+    outcome_results_list = vector("list", length(treatment_levels))
+
+    for (j in seq_along(treatment_levels)) {
+      trt = treatment_levels[j]
+      df_pair = df_complete_num %>% dplyr::filter(!!rlang::sym(treatment_col) %in% c(control_level, trt))
+      
+      # PSW requires treatment coded as 0/1 (0=control, 1=treated)
+      df_pair$Z = as.numeric(df_pair[[treatment_col]] == trt)
+
+      # Build propensity score formula
+      ps.formula = if (length(valid_covariates) > 0) {
+        paste("Z ~", paste(valid_covariates, collapse = " + "))
+      } else {
+        "Z ~ 1"
+      }
+
+      # ---- PSW block ----
+      ipw = tryCatch({
+        # Clean data for PSW - ensure all columns are atomic
+        keep_cols = c("Z", outcome, valid_covariates)
+        clean_df = as.data.frame(df_pair[, keep_cols, drop = FALSE])
+        ok = vapply(clean_df, function(x) is.atomic(x) || is.factor(x), logical(1))
+        
+        if (!all(ok)) {
+          bad = names(clean_df)[!ok]
+          cat("Dropping non-atomic columns for PSW:", paste(bad, collapse = ", "), "\n")
+          clean_df = clean_df[, ok, drop = FALSE]
+          valid_covariates2 = intersect(valid_covariates, names(clean_df))
+          ps.formula = if (length(valid_covariates2) > 0) {
+            paste("Z ~", paste(valid_covariates2, collapse = " + "))
+          } else "Z ~ 1"
+        }
+
+        # Ensure numeric outcome and treatment
+        clean_df$Z = as.numeric(clean_df$Z)
+        clean_df[[outcome]] = as.numeric(clean_df[[outcome]])
+
+        # Fit PSW model
+        # psw.wt estimates treatment effect with propensity score weighting
+        psw_fit = psw.wt(
+          data = clean_df,
+          form.ps = ps.formula,
+          weight = weight_method,
+          out.var = outcome,
+          family = "gaussian"
+        )
+
+        est = psw_fit$est.wt
+        se  = psw_fit$std.wt
+        
+        list(est = est, se = se, success = TRUE)
+      }, error = function(e) {
+        cat("PSW Error for outcome", outcome, "treatment", trt, ":", e$message, "\n")
+        list(est = NA_real_, se = NA_real_, success = FALSE)
+      })
+      # ---- end PSW block ----
+
+      res_row = tibble(
+        Outcome = outcome,
+        Treatment = trt,
+        Control = control_level,
+        N = nrow(df_pair),
+        N_Covariates = length(valid_covariates),
+        Est_IPW = ipw$est,
+        SE_IPW  = ipw$se
+      )
+      if (selection) res_row$Selected_Covariates = paste(valid_covariates, collapse = ", ")
+      outcome_results_list[[j]] = res_row
+    }
+
+    outcome_results = bind_rows(outcome_results_list)
+    valid_outcomes = c(valid_outcomes, outcome)
+    all_results[[length(valid_outcomes)]] = outcome_results
+  }
+
+  if (length(valid_outcomes) == 0) stop("No valid outcomes remaining after data cleaning")
+
+  final_results = bind_rows(all_results[1:length(valid_outcomes)]) %>%
+    mutate(across(starts_with("Est_"), ~ round(.x, 5)),
+           across(starts_with("SE_"),  ~ round(.x, 5)))
+  return(final_results)
 }
-
-cat("\n========================================\n")
-cat("RAW VARIANCES EXTRACTED\n")
-cat("========================================\n\n")
-
-###############################################################################
-##  2. Prepare Long Format Data -----------------------------------------------
-###############################################################################
-
-# Create long format with all adjusted variances
-variance_long = df_variance %>%
-  select(Trial_No, Outcome, outcome_group, unadjusted_variance, 
-         starts_with("variance_")) %>%
-  pivot_longer(cols = starts_with("variance_"),
-               names_to = "method_type",
-               values_to = "adjusted_variance") %>%
-  filter(!is.na(unadjusted_variance), !is.na(adjusted_variance))
-
-cat("Total observations with both unadjusted and adjusted variance:", 
-    nrow(variance_long), "\n\n")
-
-###############################################################################
-##  3. Calculate Summary Statistics -------------------------------------------
-###############################################################################
-
-# Overall statistics for UNADJUSTED
-unadjusted_stats = df_variance %>%
-  filter(!is.na(unadjusted_variance)) %>%
-  summarise(
-    n = n(),
-    mean = mean(unadjusted_variance, na.rm = TRUE),
-    median = median(unadjusted_variance, na.rm = TRUE),
-    sd = sd(unadjusted_variance, na.rm = TRUE),
-    q25 = quantile(unadjusted_variance, 0.25, na.rm = TRUE),
-    q75 = quantile(unadjusted_variance, 0.75, na.rm = TRUE)
-  )
-
-# Overall statistics for ADJUSTED (across all methods and selections)
-adjusted_stats = variance_long %>%
-  summarise(
-    n = n(),
-    mean = mean(adjusted_variance, na.rm = TRUE),
-    median = median(adjusted_variance, na.rm = TRUE),
-    sd = sd(adjusted_variance, na.rm = TRUE),
-    q25 = quantile(adjusted_variance, 0.25, na.rm = TRUE),
-    q75 = quantile(adjusted_variance, 0.75, na.rm = TRUE)
-  )
-
-cat("========================================\n")
-cat("UNADJUSTED VARIANCE STATISTICS\n")
-cat("========================================\n")
-cat(sprintf("N: %d\n", unadjusted_stats$n))
-cat(sprintf("Mean: %.6f\n", unadjusted_stats$mean))
-cat(sprintf("Median: %.6f\n", unadjusted_stats$median))
-cat(sprintf("SD: %.6f\n", unadjusted_stats$sd))
-cat(sprintf("Q25: %.6f\n", unadjusted_stats$q25))
-cat(sprintf("Q75: %.6f\n\n", unadjusted_stats$q75))
-
-cat("========================================\n")
-cat("ADJUSTED VARIANCE STATISTICS\n")
-cat("(Across all methods and selections)\n")
-cat("========================================\n")
-cat(sprintf("N: %d\n", adjusted_stats$n))
-cat(sprintf("Mean: %.6f\n", adjusted_stats$mean))
-cat(sprintf("Median: %.6f\n", adjusted_stats$median))
-cat(sprintf("SD: %.6f\n", adjusted_stats$sd))
-cat(sprintf("Q25: %.6f\n", adjusted_stats$q25))
-cat(sprintf("Q75: %.6f\n\n", adjusted_stats$q75))
-
-###############################################################################
-##  4. Calculate Variance Reduction -------------------------------------------
-###############################################################################
-
-# Absolute reduction
-mean_reduction = unadjusted_stats$mean - adjusted_stats$mean
-median_reduction = unadjusted_stats$median - adjusted_stats$median
-
-# Proportional reduction
-mean_prop_reduction = mean_reduction / unadjusted_stats$mean
-median_prop_reduction = median_reduction / unadjusted_stats$median
-
-cat("========================================\n")
-cat("VARIANCE REDUCTION\n")
-cat("========================================\n")
-cat(sprintf("Mean reduction: %.6f (%.1f%%)\n", 
-            mean_reduction, mean_prop_reduction * 100))
-cat(sprintf("Median reduction: %.6f (%.1f%%)\n\n", 
-            median_reduction, median_prop_reduction * 100))
-
-###############################################################################
-##  5. Create Summary Table ----------------------------------------------------
-###############################################################################
-
-summary_table = data.frame(
-  Statistic = c("Mean", "Median", "SD", "Q25", "Q75", "N"),
-  Unadjusted = c(
-    unadjusted_stats$mean,
-    unadjusted_stats$median,
-    unadjusted_stats$sd,
-    unadjusted_stats$q25,
-    unadjusted_stats$q75,
-    unadjusted_stats$n
-  ),
-  Adjusted = c(
-    adjusted_stats$mean,
-    adjusted_stats$median,
-    adjusted_stats$sd,
-    adjusted_stats$q25,
-    adjusted_stats$q75,
-    adjusted_stats$n
-  )
-) %>%
-  mutate(
-    Difference = Unadjusted - Adjusted,
-    `Prop_Reduction_%` = (Difference / Unadjusted) * 100
-  )
-
-cat("========================================\n")
-cat("SUMMARY TABLE\n")
-cat("========================================\n\n")
-print(summary_table, digits = 6)
-
-###############################################################################
-##  6. Prepare Data for Boxplot -----------------------------------------------
-###############################################################################
-
-# Create a combined dataset for plotting
-plot_data = bind_rows(
-  df_variance %>%
-    select(unadjusted_variance) %>%
-    filter(!is.na(unadjusted_variance)) %>%
-    mutate(Type = "Unadjusted") %>%
-    rename(variance = unadjusted_variance),
-  
-  variance_long %>%
-    select(adjusted_variance) %>%
-    rename(variance = adjusted_variance) %>%
-    mutate(Type = "Adjusted")
-) %>%
-  mutate(Type = factor(Type, levels = c("Unadjusted", "Adjusted")))
-
-cat("\n========================================\n")
-cat("PLOT DATA PREPARED\n")
-cat("========================================\n")
-cat(sprintf("Unadjusted observations: %d\n", sum(plot_data$Type == "Unadjusted")))
-cat(sprintf("Adjusted observations: %d\n\n", sum(plot_data$Type == "Adjusted")))
-
-###############################################################################
-##  7. Create Boxplot ----------------------------------------------------------
-###############################################################################
-
-# Color scheme matching your preference
-bar_colors = c("Unadjusted" = "#4682B4", "Adjusted" = "#87CEEB")
-
-p_boxplot = ggplot(plot_data, aes(x = Type, y = variance, fill = Type)) +
-  geom_boxplot(alpha = 0.7, outlier.shape = NA, width = 0.6) +
-  scale_fill_manual(values = bar_colors) +
-  labs(
-    x = NULL,
-    y = "Variance",
-    title = "Variance Reduction: Unadjusted vs Adjusted"
-  ) +
-  theme_minimal(base_size = 18) +
-  theme(
-    legend.position = "none",
-    panel.grid.major.x = element_blank(),
-    panel.background = element_rect(fill = "white", colour = NA),
-    plot.background = element_rect(fill = "white", colour = NA),
-    axis.text = element_text(size = 16),
-    axis.title = element_text(size = 18),
-    plot.title = element_text(size = 20, face = "bold", hjust = 0.5)
-  ) +
-  coord_cartesian(ylim = c(0, quantile(plot_data$variance, 0.95)))
-
-# Add mean lines
-mean_data = plot_data %>%
-  group_by(Type) %>%
-  summarise(mean_var = mean(variance, na.rm = TRUE), .groups = "drop")
-
-p_boxplot = p_boxplot +
-  geom_segment(data = mean_data,
-               aes(x = as.numeric(Type) - 0.3, 
-                   xend = as.numeric(Type) + 0.3,
-                   y = mean_var, yend = mean_var),
-               color = "red", linewidth = 1, linetype = "dashed")
-
-# Save the plot
-ggsave("cleaned_data/Plot/variance_reduction_boxplot.png",
-       p_boxplot, width = 8, height = 8, dpi = 600, bg = "white")
-
-cat("✓ Boxplot saved: cleaned_data/Plot/variance_reduction_boxplot.png\n\n")
-
-###############################################################################
-##  8. Create Simple Bar Chart (Alternative Visualization) --------------------
-###############################################################################
-
-bar_data = data.frame(
-  Type = c("Unadjusted", "Adjusted"),
-  Mean_Variance = c(unadjusted_stats$mean, adjusted_stats$mean),
-  Median_Variance = c(unadjusted_stats$median, adjusted_stats$median)
-)
-
-p_bar_mean = ggplot(bar_data, aes(x = Type, y = Mean_Variance, fill = Type)) +
-  geom_bar(stat = "identity", alpha = 0.7, width = 0.6) +
-  scale_fill_manual(values = bar_colors) +
-  labs(
-    x = NULL,
-    y = "Mean Variance",
-    title = "Mean Variance: Unadjusted vs Adjusted"
-  ) +
-  theme_minimal(base_size = 18) +
-  theme(
-    legend.position = "none",
-    panel.grid.major.x = element_blank(),
-    panel.background = element_rect(fill = "white", colour = NA),
-    plot.background = element_rect(fill = "white", colour = NA),
-    axis.text = element_text(size = 16),
-    axis.title = element_text(size = 18),
-    plot.title = element_text(size = 20, face = "bold", hjust = 0.5)
-  )
-
-p_bar_median = ggplot(bar_data, aes(x = Type, y = Median_Variance, fill = Type)) +
-  geom_bar(stat = "identity", alpha = 0.7, width = 0.6) +
-  scale_fill_manual(values = bar_colors) +
-  labs(
-    x = NULL,
-    y = "Median Variance",
-    title = "Median Variance: Unadjusted vs Adjusted"
-  ) +
-  theme_minimal(base_size = 18) +
-  theme(
-    legend.position = "none",
-    panel.grid.major.x = element_blank(),
-    panel.background = element_rect(fill = "white", colour = NA),
-    plot.background = element_rect(fill = "white", colour = NA),
-    axis.text = element_text(size = 16),
-    axis.title = element_text(size = 18),
-    plot.title = element_text(size = 20, face = "bold", hjust = 0.5)
-  )
-
-# Save bar charts
-ggsave("cleaned_data/Plot/variance_mean_barchart.png",
-       p_bar_mean, width = 8, height = 8, dpi = 600, bg = "white")
-
-ggsave("cleaned_data/Plot/variance_median_barchart.png",
-       p_bar_median, width = 8, height = 8, dpi = 600, bg = "white")
-
-cat("✓ Bar chart (mean) saved: cleaned_data/Plot/variance_mean_barchart.png\n")
-cat("✓ Bar chart (median) saved: cleaned_data/Plot/variance_median_barchart.png\n\n")
-
-###############################################################################
-##  9. Display Plots -----------------------------------------------------------
-###############################################################################
-
-print(p_boxplot)
-print(p_bar_mean)
-print(p_bar_median)
-
-cat("\n========================================\n")
-cat("ANALYSIS COMPLETE\n")
-cat("========================================\n")
-cat("• Boxplot comparing unadjusted vs adjusted variance\n")
-cat("• Bar charts showing mean and median variance\n")
-cat("• Summary statistics and variance reduction metrics\n")
-cat("========================================\n\n")
-
-###############################################################################
-##  10. Export Summary Statistics to CSV --------------------------------------
-###############################################################################
-
-write.csv(summary_table, "cleaned_data/variance_reduction_summary.csv", row.names = FALSE)
-cat("✓ Summary table saved: cleaned_data/variance_reduction_summary.csv\n\n")
-```
-
-```{r}
-df21 %>% 
-  count(YS_undiagnosed_tb)
 ```
 
