@@ -3922,7 +3922,7 @@ df_comparison = run_tmle_analysis(
 
 # Baseline+
 df_comparison = run_tmle_analysis(
-  df_indices = 11,                    # Which trials to analyze
+  df_indices = 38,                    # Which trials to analyze
   selection = T,                      # Use variable selection
   variable_selection_type = 2,           # Manual selection (1 = correlation, 2 = manual)
   run_individual_SL = F,              # Run individual SL methods
@@ -4095,7 +4095,7 @@ df_newcomp = run_aipw_analysis(
 ```{r}
 # ALL
 df_comparison = run_ipw_analysis(
-  df_indices = 21,
+  df_indices = c(1:2, 4, 6:50),
   selection = FALSE,            # no variable selection
   variable_selection_type = 1,
   weight_method = "IPW",        # PSweight keyword for ATE
@@ -4117,7 +4117,7 @@ df_comparison = run_ipw_analysis(
 
 # Baseline+
 df_comparison = run_ipw_analysis(
-  df_indices = 23,
+  df_indices = 1:50,
   selection = TRUE,             # variable selection on
   variable_selection_type = 2,  # manual/baseline+
   weight_method = "IPW",        # ATE
@@ -4645,6 +4645,54 @@ cat("========================================\n\n")
 # Formatting Error Rate as percentage for easier reading
 print(comprehensive_table %>% 
         mutate(`Error Rate` = scales::percent(`Error Rate`, accuracy = 0.1)))
+
+###############################################################################
+##  8.  Calculate OVERALL ERROR RATE (All Outcomes Only) ---------------------
+###############################################################################
+
+cat("\n========================================\n")
+cat("OVERALL ERROR RATE (All Outcomes Only)\n")
+cat("========================================\n\n")
+
+# Filter for "all" outcomes only (exclude primary)
+all_outcomes_table = comprehensive_table %>%
+  filter(grepl("^all_", Panel))
+
+# Calculate overall error rate across all methods and panels
+overall_error_rate = all_outcomes_table %>%
+  summarise(
+    total_NA = sum(`#NA`),
+    total_NA_plus_shown = sum(`#NA`) + sum(`#Shown`),
+    overall_error_rate = total_NA / total_NA_plus_shown
+  )
+
+cat(sprintf("Total #NA across all methods/panels: %d\n", overall_error_rate$total_NA))
+cat(sprintf("Total cases (NA + Shown): %d\n", overall_error_rate$total_NA_plus_shown))
+cat(sprintf("Overall Error Rate: %.3f (%s)\n\n", 
+            overall_error_rate$overall_error_rate,
+            scales::percent(overall_error_rate$overall_error_rate, accuracy = 0.1)))
+
+# Also show breakdown by outcome type and adjustment type
+cat("Breakdown by Outcome Type and Adjustment Type:\n")
+cat("-----------------------------------------------\n\n")
+
+breakdown_table = all_outcomes_table %>%
+  mutate(
+    outcome_type = sub("^all_([^_]+)_.*", "\\1", Panel),
+    adjustment_type = sub("^all_[^_]+_(.*)", "\\1", Panel)
+  ) %>%
+  group_by(outcome_type, adjustment_type) %>%
+  summarise(
+    total_NA = sum(`#NA`),
+    total_cases = sum(`#NA`) + sum(`#Shown`),
+    error_rate = total_NA / total_cases,
+    .groups = "drop"
+  ) %>%
+  mutate(error_rate_pct = scales::percent(error_rate, accuracy = 0.1))
+
+print(breakdown_table)
+
+cat("\n========================================\n")
 
 # Display all 12 plots in console
 cat("\n========================================\n")
@@ -6160,14 +6208,28 @@ p2 <- ggplot(area_counts,
             position = position_stack(vjust = 0.5),
             color = "white", size = 3.5, fontface = "bold")
 
-# Display and save
+# Display plot
 print(p2)
+
+# Save PNG
 ggsave("cleaned_data/Plot/research_area_pie.png", p2, 
        width = 10, height = 6, dpi = 600, bg = "white")
+
+# Save PDF
+ggsave("cleaned_data/Plot/research_area_pie.pdf", p2, 
+       width = 10, height = 6, device = "pdf", bg = "white")
+
+cat("✓ Saved PNG: cleaned_data/Plot/research_area_pie.png\n")
+cat("✓ Saved PDF: cleaned_data/Plot/research_area_pie.pdf\n\n")
 
 # Print summary
 cat("\n=== Research Area Summary ===\n")
 print(area_counts %>% select(-label))
+
+cat("\n========================================\n")
+cat("Plot files saved to cleaned_data/Plot/\n")
+cat("Nature Communications quality: 600 dpi PNG + vector PDF\n")
+cat("========================================\n")
 ```
 
 # Rand Scheme Pie Chart 
@@ -6581,6 +6643,9 @@ calculate_cag_cal = function(data, outcome_type, method_name, adjustment_type = 
   } else if (outcome_type == "binary") {
     data_filtered = data %>%
       filter(`Outcome Type` %in% c("binary", "composite binary"))
+  } else if (outcome_type == "overall") {
+    # Include all outcome types for overall calculation
+    data_filtered = data
   }
   
   # Construct column names based on adjustment type
@@ -6595,7 +6660,7 @@ calculate_cag_cal = function(data, outcome_type, method_name, adjustment_type = 
   # Check if columns exist
   if (!("Unadjust_pval" %in% colnames(data_filtered)) || 
       !(pval_col %in% colnames(data_filtered))) {
-    return(list(CAG = NA, CAL = NA))
+    return(list(CAG = NA, CAL = NA, n = 0))
   }
   
   # Get p-values
@@ -6607,17 +6672,19 @@ calculate_cag_cal = function(data, outcome_type, method_name, adjustment_type = 
   unadjust_pval = unadjust_pval[valid_cases]
   adjusted_pval = adjusted_pval[valid_cases]
   
+  n_total = length(unadjust_pval)
+  
   # Calculate CAG: unadjusted is NOT significant (>= 0.05) AND adjusted IS significant (< 0.05)
   cag_cases = (unadjust_pval >= 0.05) & (adjusted_pval < 0.05)
   cag_count = sum(cag_cases)
-  cag_probability = cag_count / length(unadjust_pval)  # as proportion
+  cag_probability = cag_count / n_total  # as proportion
   
   # Calculate CAL: unadjusted IS significant (< 0.05) AND adjusted is NOT significant (>= 0.05)
   cal_cases = (unadjust_pval < 0.05) & (adjusted_pval >= 0.05)
   cal_count = sum(cal_cases)
-  cal_probability = cal_count / length(unadjust_pval)  # as proportion
+  cal_probability = cal_count / n_total  # as proportion
   
-  return(list(CAG = cag_probability, CAL = cal_probability))
+  return(list(CAG = cag_probability, CAL = cal_probability, n = n_total))
 }
 
 ###############################################################################
@@ -6642,6 +6709,8 @@ results = data.frame(
   Continuous_CAL = numeric(),
   Binary_CAG = numeric(),
   Binary_CAL = numeric(),
+  Overall_CAG = numeric(),
+  Overall_CAL = numeric(),
   stringsAsFactors = FALSE,
   check.names = FALSE
 )
@@ -6658,6 +6727,9 @@ for (i in 1:nrow(methods)) {
     # Calculate for binary outcomes
     binary_results = calculate_cag_cal(df_comparison, "binary", method_data, adj_type)
     
+    # Calculate for overall (all outcomes combined)
+    overall_results = calculate_cag_cal(df_comparison, "overall", method_data, adj_type)
+    
     # Add to results
     results = rbind(results, data.frame(
       Method = method_display,
@@ -6666,6 +6738,8 @@ for (i in 1:nrow(methods)) {
       Continuous_CAL = cont_results$CAL,
       Binary_CAG = binary_results$CAG,
       Binary_CAL = binary_results$CAL,
+      Overall_CAG = overall_results$CAG,
+      Overall_CAL = overall_results$CAL,
       stringsAsFactors = FALSE,
       check.names = FALSE
     ))
@@ -6678,7 +6752,9 @@ results = results %>%
     Continuous_CAG = round(Continuous_CAG, 2),
     Continuous_CAL = round(Continuous_CAL, 2),
     Binary_CAG = round(Binary_CAG, 2),
-    Binary_CAL = round(Binary_CAL, 2)
+    Binary_CAL = round(Binary_CAL, 2),
+    Overall_CAG = round(Overall_CAG, 2),
+    Overall_CAL = round(Overall_CAL, 2)
   )
 
 # Print the table
@@ -6694,15 +6770,80 @@ results_formatted = results %>%
     `Continuous outcome` = paste0(sprintf("%.2f", Continuous_CAG), " / ", 
                                    sprintf("%.2f", Continuous_CAL)),
     `Binary outcome` = paste0(sprintf("%.2f", Binary_CAG), " / ", 
-                              sprintf("%.2f", Binary_CAL))
+                              sprintf("%.2f", Binary_CAL)),
+    `Overall` = paste0(sprintf("%.2f", Overall_CAG), " / ", 
+                       sprintf("%.2f", Overall_CAL))
   ) %>%
-  select(Method, `Covariate selection`, `Continuous outcome`, `Binary outcome`)
+  select(Method, `Covariate selection`, `Continuous outcome`, `Binary outcome`, `Overall`)
 
 cat("\n========================================\n")
 cat("CAG AND CAL TABLE (FORMATTED)\n")
 cat("CAG / CAL format (proportions)\n")
 cat("========================================\n\n")
 print(results_formatted)
+
+###############################################################################
+##  GRAND OVERALL CAG/CAL (across all methods, selections, and outcomes) ----
+###############################################################################
+
+cat("\n========================================\n")
+cat("GRAND OVERALL CAG AND CAL\n")
+cat("(Across ALL methods, ALL covariate selections, ALL outcomes)\n")
+cat("========================================\n\n")
+
+# Calculate mean CAG and CAL across all rows for each outcome type
+grand_overall = results %>%
+  summarise(
+    Continuous_CAG_mean = mean(Continuous_CAG, na.rm = TRUE),
+    Continuous_CAL_mean = mean(Continuous_CAL, na.rm = TRUE),
+    Binary_CAG_mean = mean(Binary_CAG, na.rm = TRUE),
+    Binary_CAL_mean = mean(Binary_CAL, na.rm = TRUE),
+    Overall_CAG_mean = mean(Overall_CAG, na.rm = TRUE),
+    Overall_CAL_mean = mean(Overall_CAL, na.rm = TRUE)
+  ) %>%
+  mutate(across(everything(), ~round(., 3)))
+
+cat("Mean CAG/CAL across all methods and covariate selections:\n\n")
+cat(sprintf("Continuous outcomes: CAG = %.3f, CAL = %.3f\n", 
+            grand_overall$Continuous_CAG_mean, grand_overall$Continuous_CAL_mean))
+cat(sprintf("Binary outcomes:     CAG = %.3f, CAL = %.3f\n", 
+            grand_overall$Binary_CAG_mean, grand_overall$Binary_CAL_mean))
+cat(sprintf("Overall (all):       CAG = %.3f, CAL = %.3f\n\n", 
+            grand_overall$Overall_CAG_mean, grand_overall$Overall_CAL_mean))
+
+# Also calculate by covariate selection method (aggregated across all methods and outcomes)
+by_selection = results %>%
+  group_by(`Covariate selection`) %>%
+  summarise(
+    CAG_mean = mean(Overall_CAG, na.rm = TRUE),
+    CAL_mean = mean(Overall_CAL, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  mutate(across(c(CAG_mean, CAL_mean), ~round(., 3)))
+
+cat("========================================\n")
+cat("By Covariate Selection Method:\n")
+cat("(Averaged across all methods and outcomes)\n")
+cat("========================================\n\n")
+print(by_selection)
+
+# Calculate by method (aggregated across all covariate selections and outcomes)
+by_method = results %>%
+  group_by(Method) %>%
+  summarise(
+    CAG_mean = mean(Overall_CAG, na.rm = TRUE),
+    CAL_mean = mean(Overall_CAL, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  mutate(across(c(CAG_mean, CAL_mean), ~round(., 3)))
+
+cat("\n========================================\n")
+cat("By Method:\n")
+cat("(Averaged across all covariate selections and outcomes)\n")
+cat("========================================\n\n")
+print(by_method)
+
+cat("\n========================================\n")
 ```
 
 

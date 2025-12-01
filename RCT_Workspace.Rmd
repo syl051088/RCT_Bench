@@ -4507,392 +4507,19 @@ analyze_rct_ipw = function(df,
 ```
 
 
-# res
+# comp
 ```{r}
-cols_diff = names(df_comparison)[
-  sapply(names(df_comparison), function(col)
-    any(df_comparison[[col]] != df_newcomp[[col]], na.rm = TRUE)
+df_comparison %>%
+  filter(Sample_Size > 1000) %>%
+  select(
+    Trial_No,
+    Treatment,
+    Control,
+    Outcome,
+    `How much precision gain can IPW_VS2 provide?`,
+    `How much precision gain can TMLE_VS2 provide?`
   )
-]
 
-cols_diff
-
-```
-
-```{r}
-df_comparison$TMLE_VS1_est
-```
-
-
-```{r}
-keep_cols = c(
-  "Trial_No", "Sample_Size", "N_Covariates", "N_Covariates_VS1", "N_Covariates_VS2",
-  "Selected_Covariates_VS1", "Selected_Covariates_VS2",
-  "Treatment", "Control", "Contrast",
-  "Outcome", "Outcome Type", "Unadjust_se", "Unadjust_est"
-)
-
-df_newcomp[ , setdiff(names(df_newcomp), keep_cols)] = NA
-```
-
-
-```{r}
-cols_bcss = grep("bcss", names(df11), value = TRUE, ignore.case = TRUE)
-cols_bcss
-
-```
-
-```{r}
-# Install and load required packages
-if (!require("ComplexHeatmap")) {
-  if (!require("BiocManager")) install.packages("BiocManager")
-  BiocManager::install("ComplexHeatmap")
-}
-
-library(ComplexHeatmap)
-library(circlize)
-library(grid)
-
-# Define all 18 methods
-methods <- c(
-  "CellOracle", "RCTD", "DestVI", "stereoscope", "SpatialDecon", "STRIDE",
-  "CARD", "NMFreg", "SpatialDWLS", "SPOTlight",
-  "DSTG", "SD2",
-  "Tangram",
-  "SpaOTsc", "novoSpaRc",
-  "Berglund", "SpiceMix", "STdeconvolve"
-)
-
-# Method categories for row annotations
-method_categories <- c(
-  rep("Probabilistic-based", 6),
-  rep("NMF-based", 4),
-  rep("Graph-based", 2),
-  rep("DL-based", 1),
-  rep("Optimal transport-based", 2),
-  rep("Without scRNA-seq ref", 3)
-)
-
-# Location requirement (Y/N)
-location_required <- c("N", "Y", "Y", "N", "Y", "N",
-                       "Y", "Y", "Y", "N",
-                       "N", "Y",
-                       "N",
-                       "Y", "Y",
-                       "N", "Y", "N")
-
-# Programming language
-programming_lang <- c("Python", "Python", "R", "Python", "R", "Python",
-                     "Python", "Python", "R", "R",
-                     "R", "R",
-                     "Python",
-                     "Python", "Python",
-                     "C++", "Python", "R")
-
-# Create simulated performance data based on the paper's Figure 2
-set.seed(42)
-
-# Accuracy metrics
-accuracy_cols <- c("JSD\nseqFISH+", "RMSE\nseqFISH+", "JSD\nMERFISH", "RMSE\nMERFISH",
-                  "Corr\nST", "Corr\nVisium", "Corr\nSlide-seq", "Corr\nStereo-seq", "Overall")
-
-accuracy_data <- matrix(c(
-  0.5, 0.5, 0.6, 0.6, 0.4, 0.7, 0.7, 0.7, 0.6,
-  0.7, 0.7, 0.8, 0.8, 0.6, 0.8, 0.9, 0.9, 0.8,
-  0.9, 0.9, 0.9, 0.9, 0.7, 0.8, 0.8, 0.7, 0.85,
-  0.6, 0.6, 0.8, 0.8, 0.7, 0.8, 0.8, 0.8, 0.75,
-  0.7, 0.7, 0.9, 0.9, 0.8, 0.9, 0.9, 0.9, 0.85,
-  0.5, 0.5, 0.6, 0.6, 0.5, 0.7, 0.7, 0.7, 0.6,
-  0.9, 0.9, 0.9, 0.9, 0.8, 0.9, 0.9, 0.9, 0.9,
-  0.6, 0.6, 0.7, 0.7, 0.6, 0.7, 0.7, 0.7, 0.65,
-  0.8, 0.8, 0.8, 0.8, 0.3, 0.4, 0.4, 0.4, 0.6,
-  0.7, 0.7, 0.8, 0.8, 0.7, 0.8, 0.8, 0.8, 0.75,
-  0.4, 0.4, 0.4, 0.4, 0.4, 0.5, 0.5, 0.5, 0.45,
-  0.6, 0.6, 0.7, 0.7, 0.6, 0.7, 0.7, 0.7, 0.65,
-  0.7, 0.7, 0.9, 0.9, 0.7, 0.8, 0.9, 0.9, 0.85,
-  0.5, 0.5, 0.6, 0.6, 0.5, 0.6, 0.6, 0.6, 0.55,
-  0.4, 0.4, 0.5, 0.5, 0.4, 0.5, 0.5, 0.5, 0.45,
-  0.6, 0.6, 0.7, 0.7, 0.5, 0.6, 0.6, 0.6, 0.6,
-  0.4, 0.4, 0.3, 0.3, 0.3, 0.4, 0.4, 0.4, 0.35,
-  0.6, 0.6, 0.7, 0.7, 0.6, 0.7, 0.8, 0.8, 0.7
-), nrow = 18, byrow = TRUE)
-
-colnames(accuracy_data) <- accuracy_cols
-rownames(accuracy_data) <- methods
-
-# Robustness metrics
-robustness_cols <- c("Gene\nnum", "Spot\nnum", "Resolution", "Cell\ntypes",
-                    "Normali-\nzation", "Hyper-\nparameter", "Stability", "Overall")
-
-robustness_data <- matrix(c(
-  0.5, 0.6, 0.6, 0.6, 0.7, 0.7, 0.7, 0.6,
-  0.8, 0.8, 0.8, 0.9, 0.8, 0.8, 0.9, 0.85,
-  0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9,
-  0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8,
-  0.9, 0.9, 0.9, 0.9, 0.8, 0.9, 0.9, 0.9,
-  0.6, 0.5, 0.6, 0.6, 0.7, 0.7, 0.7, 0.6,
-  0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9,
-  0.7, 0.7, 0.7, 0.7, 0.7, 0.8, 0.8, 0.7,
-  0.8, 0.8, 0.8, 0.8, 0.7, 0.8, 0.8, 0.8,
-  0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8,
-  0.4, 0.4, 0.4, 0.5, 0.6, 0.4, 0.5, 0.45,
-  0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.6, 0.7,
-  0.9, 0.9, 0.9, 0.9, 0.8, 0.9, 0.9, 0.9,
-  0.6, 0.6, 0.6, 0.6, 0.7, 0.7, 0.7, 0.65,
-  0.5, 0.5, 0.5, 0.5, 0.6, 0.6, 0.6, 0.55,
-  0.6, 0.6, 0.6, 0.6, 0.7, 0.7, 0.7, 0.65,
-  0.3, 0.3, 0.3, 0.4, 0.5, 0.5, 0.5, 0.4,
-  0.7, 0.7, 0.7, 0.7, 0.8, 0.8, 0.8, 0.75
-), nrow = 18, byrow = TRUE)
-
-colnames(robustness_data) <- robustness_cols
-rownames(robustness_data) <- methods
-
-# Usability metrics
-usability_cols <- c("Compu-\ntational\ntime", "Code\nquality", "Instal-\nlation",
-                   "Document\nquality", "Compati-\nbility", "Example", "Overall")
-
-usability_data <- matrix(c(
-  0.6, 0.7, 0.7, 0.7, 0.8, 0.7, 0.7,
-  0.7, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9,
-  0.6, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9,
-  0.6, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8,
-  0.7, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8,
-  0.9, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7,
-  0.7, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9,
-  0.8, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7,
-  0.6, 0.6, 0.6, 0.6, 0.7, 0.6, 0.6,
-  0.7, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8,
-  0.7, 0.6, 0.6, 0.6, 0.7, 0.6, 0.65,
-  0.7, 0.6, 0.6, 0.6, 0.7, 0.6, 0.65,
-  0.9, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8,
-  0.6, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7,
-  0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6,
-  0.5, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6,
-  0.6, 0.5, 0.5, 0.5, 0.6, 0.5, 0.55,
-  0.7, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8
-), nrow = 18, byrow = TRUE)
-
-colnames(usability_data) <- usability_cols
-rownames(usability_data) <- methods
-
-# Overall scores
-overall_scores <- matrix(rowMeans(cbind(
-  accuracy_data[, "Overall"],
-  robustness_data[, "Overall"],
-  usability_data[, "Overall"]
-)), ncol = 1)
-colnames(overall_scores) <- "Overall"
-rownames(overall_scores) <- methods
-
-# Create cell_fun with alternating row backgrounds
-create_circle_heatmap_with_stripes <- function(data, col_fun, title, title_color, 
-                                                show_row_names = FALSE) {
-  Heatmap(
-    data,
-    name = title,
-    col = col_fun,
-    
-    # Draw alternating row backgrounds
-    layer_fun = function(j, i, x, y, width, height, fill) {
-      # Draw alternating row backgrounds first
-      n_rows <- nrow(data)
-      for(row_idx in 1:n_rows) {
-        if(row_idx %% 2 == 0) {
-          grid.rect(
-            x = 0.5,
-            y = 1 - (row_idx - 0.5) / n_rows,
-            width = 1,
-            height = 1 / n_rows,
-            gp = gpar(fill = "gray95", col = NA),
-            just = "center"
-          )
-        }
-      }
-    },
-    
-    rect_gp = gpar(type = "none"),
-    cell_fun = function(j, i, x, y, width, height, fill) {
-      v = data[i, j]
-      
-      if(!is.na(v)) {
-        # Draw circle with size proportional to value
-        grid.circle(x = x, y = y, 
-                   r = v * unit(2.2, "mm"),
-                   gp = gpar(fill = col_fun(v), col = NA))
-      }
-    },
-    
-    column_title = title,
-    column_title_gp = gpar(fill = title_color, col = "white", 
-                           fontsize = 10, fontface = "bold"),
-    column_names_rot = 45,
-    column_names_gp = gpar(fontsize = 6.5),
-    column_names_side = "top",
-    
-    show_row_names = show_row_names,
-    row_names_gp = gpar(fontsize = 8),
-    cluster_rows = FALSE,
-    cluster_columns = FALSE,
-    border = TRUE,
-    show_heatmap_legend = FALSE,
-    width = unit(ncol(data) * 0.7, "cm")
-  )
-}
-
-# Color functions matching Nature Communications style
-red_col_fun = colorRamp2(c(0, 0.5, 1), c("white", "#FF9999", "#CC0000"))
-blue_col_fun = colorRamp2(c(0, 0.5, 1), c("white", "#99CCFF", "#0066CC"))
-green_col_fun = colorRamp2(c(0, 0.5, 1), c("white", "#99FF99", "#009900"))
-gray_col_fun = colorRamp2(c(0, 0.5, 1), c("white", "gray60", "gray20"))
-
-# Create heatmaps
-ht_accuracy <- create_circle_heatmap_with_stripes(
-  accuracy_data, red_col_fun, "Accuracy", "#CC0000"
-)
-
-ht_robustness <- create_circle_heatmap_with_stripes(
-  robustness_data, blue_col_fun, "Robustness", "#0066CC"
-)
-
-ht_useability <- create_circle_heatmap_with_stripes(
-  usability_data, green_col_fun, "Useability", "#009900"
-)
-
-ht_overall <- create_circle_heatmap_with_stripes(
-  overall_scores, gray_col_fun, "Overall", "gray40"
-)
-
-# Create left annotations with alternating backgrounds
-anno_location <- rowAnnotation(
-  Location = location_required,
-  col = list(Location = c("Y" = "#FFD700", "N" = "gray85")),
-  show_annotation_name = TRUE,
-  annotation_name_side = "top",
-  annotation_name_gp = gpar(fontsize = 7),
-  width = unit(0.6, "cm"),
-  show_legend = FALSE,
-  
-  # Add alternating background
-  annotation_legend_param = list(
-    title_gp = gpar(fontsize = 8, fontface = "bold")
-  )
-)
-
-anno_programming <- rowAnnotation(
-  Programming = programming_lang,
-  col = list(Programming = c(
-    "Python" = "#5DADE2",
-    "R" = "#EC7063",
-    "C++" = "#52BE80"
-  )),
-  show_annotation_name = TRUE,
-  annotation_name_side = "top",
-  annotation_name_gp = gpar(fontsize = 7),
-  width = unit(1.2, "cm"),
-  show_legend = FALSE
-)
-
-# Method names with alternating background
-anno_names <- rowAnnotation(
-  foo = anno_text(
-    methods,
-    gp = gpar(fontsize = 8),
-    location = unit(0.5, "npc"),
-    just = "center"
-  ),
-  width = unit(2.2, "cm"),
-  show_annotation_name = FALSE
-)
-
-# Add section labels
-section_df <- data.frame(
-  section = method_categories,
-  row.names = methods
-)
-
-anno_section <- rowAnnotation(
-  df = section_df,
-  col = list(section = c(
-    "Probabilistic-based" = "#FFEBEE",
-    "NMF-based" = "#FFF3E0",
-    "Graph-based" = "#E8F5E9",
-    "DL-based" = "#E0F7FA",
-    "Optimal transport-based" = "#F3E5F5",
-    "Without scRNA-seq ref" = "#FFF9C4"
-  )),
-  show_legend = FALSE,
-  show_annotation_name = FALSE,
-  width = unit(0.3, "cm")
-)
-
-# Combine all components
-ht_list <- anno_section + anno_names + anno_location + 
-           anno_programming + ht_overall + ht_accuracy + 
-           ht_robustness + ht_useability
-
-# Draw the complete figure
-pdf("Figure2_method_comparison.pdf", width = 20, height = 11)
-
-draw(ht_list, 
-     padding = unit(c(2, 2, 2, 2), "mm"),
-     ht_gap = unit(2, "mm"))
-
-# Add section labels on the left
-decorate_annotation("section", {
-  # Probabilistic-based (rows 1-6)
-  grid.text("Probabilistic-based", x = unit(-1, "mm"), y = unit(1 - 3.5/18, "npc"),
-           gp = gpar(fontsize = 7, fontface = "bold"), just = "right", rot = 0)
-  
-  # NMF-based (rows 7-10)
-  grid.text("NMF-based", x = unit(-1, "mm"), y = unit(1 - 8.5/18, "npc"),
-           gp = gpar(fontsize = 7, fontface = "bold"), just = "right", rot = 0)
-  
-  # Graph-based (rows 11-12)
-  grid.text("Graph-based", x = unit(-1, "mm"), y = unit(1 - 11.5/18, "npc"),
-           gp = gpar(fontsize = 7, fontface = "bold"), just = "right", rot = 0)
-  
-  # DL-based (row 13)
-  grid.text("DL-based", x = unit(-1, "mm"), y = unit(1 - 13/18, "npc"),
-           gp = gpar(fontsize = 7, fontface = "bold"), just = "right", rot = 0)
-  
-  # Optimal transport-based (rows 14-15)
-  grid.text("Optimal transport-based", x = unit(-1, "mm"), y = unit(1 - 14.5/18, "npc"),
-           gp = gpar(fontsize = 7, fontface = "bold"), just = "right", rot = 0)
-  
-  # Without scRNA-seq ref (rows 16-18)
-  grid.text("Without scRNA-seq ref", x = unit(-1, "mm"), y = unit(1 - 17/18, "npc"),
-           gp = gpar(fontsize = 7, fontface = "bold"), just = "right", rot = 0)
-})
-
-dev.off()
-
-png("Figure2_method_comparison.png", width = 6000, height = 3300, res = 300)
-draw(ht_list, 
-     padding = unit(c(2, 2, 2, 2), "mm"),
-     ht_gap = unit(2, "mm"))
-
-# Add section labels
-decorate_annotation("section", {
-  grid.text("Probabilistic-based", x = unit(-1, "mm"), y = unit(1 - 3.5/18, "npc"),
-           gp = gpar(fontsize = 7, fontface = "bold"), just = "right", rot = 0)
-  grid.text("NMF-based", x = unit(-1, "mm"), y = unit(1 - 8.5/18, "npc"),
-           gp = gpar(fontsize = 7, fontface = "bold"), just = "right", rot = 0)
-  grid.text("Graph-based", x = unit(-1, "mm"), y = unit(1 - 11.5/18, "npc"),
-           gp = gpar(fontsize = 7, fontface = "bold"), just = "right", rot = 0)
-  grid.text("DL-based", x = unit(-1, "mm"), y = unit(1 - 13/18, "npc"),
-           gp = gpar(fontsize = 7, fontface = "bold"), just = "right", rot = 0)
-  grid.text("Optimal transport-based", x = unit(-1, "mm"), y = unit(1 - 14.5/18, "npc"),
-           gp = gpar(fontsize = 7, fontface = "bold"), just = "right", rot = 0)
-  grid.text("Without scRNA-seq ref", x = unit(-1, "mm"), y = unit(1 - 17/18, "npc"),
-           gp = gpar(fontsize = 7, fontface = "bold"), just = "right", rot = 0)
-})
-
-dev.off()
-
-cat("✓ Figure 2 generated successfully with alternating row colors!\n")
-cat("  - Figure2_method_comparison.pdf\n")
-cat("  - Figure2_method_comparison.png\n")
 ```
 
 # new
@@ -5393,6 +5020,336 @@ df_diff
 ```
 
 ```{r}
-which(dfold$IPW_VS2_se != df_comparison$IPW_VS2_se)
+which(dfold$IPW_VS1_se != df_comparison$IPW_VS1_se)
+```
+
+# newplot
+```{r}
+###############################################################################
+##  OVERALL VARIANCE REDUCTION ANALYSIS
+##  Extract raw variances, calculate mean/median, and create visualization
+###############################################################################
+
+library(tidyverse)
+library(patchwork)
+
+###############################################################################
+##  1. Extract Raw Variances from df_comparison -------------------------------
+###############################################################################
+
+# Define all methods and adjustment types
+methods = c("ANCOVA", "ANHECOVA", "Logistic G-Computation", "DML", "TMLE", "IPW")
+adjustment_types = c("", "_VS1", "_VS2")  # "" = All, _VS1 = Top-3, _VS2 = Baseline+
+
+# Extract unadjusted variance (squared SE)
+df_variance = df_comparison %>%
+  mutate(
+    unadjusted_variance = `Unadjust_se`^2,
+    outcome_group = case_when(
+      `Outcome Type` %in% c("continuous", "continuous proportion") ~ "continuous",
+      `Outcome Type` %in% c("binary", "composite binary") ~ "binary",
+      TRUE ~ "other"
+    )
+  ) %>%
+  filter(outcome_group %in% c("continuous", "binary"))
+
+# Extract all adjusted variances
+for (method in methods) {
+  for (adj_suffix in adjustment_types) {
+    # Construct column name for SE
+    se_col = paste0(method, adj_suffix, "_se")
+    
+    # Create variance column name
+    if (adj_suffix == "") {
+      var_col = paste0("variance_", gsub(" ", "_", method))
+    } else if (adj_suffix == "_VS1") {
+      var_col = paste0("variance_", gsub(" ", "_", method), "_Top-3")
+    } else if (adj_suffix == "_VS2") {
+      var_col = paste0("variance_", gsub(" ", "_", method), "_Baseline+")
+    }
+    
+    # Calculate variance (SE^2) if column exists
+    if (se_col %in% colnames(df_variance)) {
+      df_variance[[var_col]] = df_variance[[se_col]]^2
+    }
+  }
+}
+
+cat("\n========================================\n")
+cat("RAW VARIANCES EXTRACTED\n")
+cat("========================================\n\n")
+
+###############################################################################
+##  2. Prepare Long Format Data -----------------------------------------------
+###############################################################################
+
+# Create long format with all adjusted variances
+variance_long = df_variance %>%
+  select(Trial_No, Outcome, outcome_group, unadjusted_variance, 
+         starts_with("variance_")) %>%
+  pivot_longer(cols = starts_with("variance_"),
+               names_to = "method_type",
+               values_to = "adjusted_variance") %>%
+  filter(!is.na(unadjusted_variance), !is.na(adjusted_variance))
+
+cat("Total observations with both unadjusted and adjusted variance:", 
+    nrow(variance_long), "\n\n")
+
+###############################################################################
+##  3. Calculate Summary Statistics -------------------------------------------
+###############################################################################
+
+# Overall statistics for UNADJUSTED
+unadjusted_stats = df_variance %>%
+  filter(!is.na(unadjusted_variance)) %>%
+  summarise(
+    n = n(),
+    mean = mean(unadjusted_variance, na.rm = TRUE),
+    median = median(unadjusted_variance, na.rm = TRUE),
+    sd = sd(unadjusted_variance, na.rm = TRUE),
+    q25 = quantile(unadjusted_variance, 0.25, na.rm = TRUE),
+    q75 = quantile(unadjusted_variance, 0.75, na.rm = TRUE)
+  )
+
+# Overall statistics for ADJUSTED (across all methods and selections)
+adjusted_stats = variance_long %>%
+  summarise(
+    n = n(),
+    mean = mean(adjusted_variance, na.rm = TRUE),
+    median = median(adjusted_variance, na.rm = TRUE),
+    sd = sd(adjusted_variance, na.rm = TRUE),
+    q25 = quantile(adjusted_variance, 0.25, na.rm = TRUE),
+    q75 = quantile(adjusted_variance, 0.75, na.rm = TRUE)
+  )
+
+cat("========================================\n")
+cat("UNADJUSTED VARIANCE STATISTICS\n")
+cat("========================================\n")
+cat(sprintf("N: %d\n", unadjusted_stats$n))
+cat(sprintf("Mean: %.6f\n", unadjusted_stats$mean))
+cat(sprintf("Median: %.6f\n", unadjusted_stats$median))
+cat(sprintf("SD: %.6f\n", unadjusted_stats$sd))
+cat(sprintf("Q25: %.6f\n", unadjusted_stats$q25))
+cat(sprintf("Q75: %.6f\n\n", unadjusted_stats$q75))
+
+cat("========================================\n")
+cat("ADJUSTED VARIANCE STATISTICS\n")
+cat("(Across all methods and selections)\n")
+cat("========================================\n")
+cat(sprintf("N: %d\n", adjusted_stats$n))
+cat(sprintf("Mean: %.6f\n", adjusted_stats$mean))
+cat(sprintf("Median: %.6f\n", adjusted_stats$median))
+cat(sprintf("SD: %.6f\n", adjusted_stats$sd))
+cat(sprintf("Q25: %.6f\n", adjusted_stats$q25))
+cat(sprintf("Q75: %.6f\n\n", adjusted_stats$q75))
+
+###############################################################################
+##  4. Calculate Variance Reduction -------------------------------------------
+###############################################################################
+
+# Absolute reduction
+mean_reduction = unadjusted_stats$mean - adjusted_stats$mean
+median_reduction = unadjusted_stats$median - adjusted_stats$median
+
+# Proportional reduction
+mean_prop_reduction = mean_reduction / unadjusted_stats$mean
+median_prop_reduction = median_reduction / unadjusted_stats$median
+
+cat("========================================\n")
+cat("VARIANCE REDUCTION\n")
+cat("========================================\n")
+cat(sprintf("Mean reduction: %.6f (%.1f%%)\n", 
+            mean_reduction, mean_prop_reduction * 100))
+cat(sprintf("Median reduction: %.6f (%.1f%%)\n\n", 
+            median_reduction, median_prop_reduction * 100))
+
+###############################################################################
+##  5. Create Summary Table ----------------------------------------------------
+###############################################################################
+
+summary_table = data.frame(
+  Statistic = c("Mean", "Median", "SD", "Q25", "Q75", "N"),
+  Unadjusted = c(
+    unadjusted_stats$mean,
+    unadjusted_stats$median,
+    unadjusted_stats$sd,
+    unadjusted_stats$q25,
+    unadjusted_stats$q75,
+    unadjusted_stats$n
+  ),
+  Adjusted = c(
+    adjusted_stats$mean,
+    adjusted_stats$median,
+    adjusted_stats$sd,
+    adjusted_stats$q25,
+    adjusted_stats$q75,
+    adjusted_stats$n
+  )
+) %>%
+  mutate(
+    Difference = Unadjusted - Adjusted,
+    `Prop_Reduction_%` = (Difference / Unadjusted) * 100
+  )
+
+cat("========================================\n")
+cat("SUMMARY TABLE\n")
+cat("========================================\n\n")
+print(summary_table, digits = 6)
+
+###############################################################################
+##  6. Prepare Data for Boxplot -----------------------------------------------
+###############################################################################
+
+# Create a combined dataset for plotting
+plot_data = bind_rows(
+  df_variance %>%
+    select(unadjusted_variance) %>%
+    filter(!is.na(unadjusted_variance)) %>%
+    mutate(Type = "Unadjusted") %>%
+    rename(variance = unadjusted_variance),
+  
+  variance_long %>%
+    select(adjusted_variance) %>%
+    rename(variance = adjusted_variance) %>%
+    mutate(Type = "Adjusted")
+) %>%
+  mutate(Type = factor(Type, levels = c("Unadjusted", "Adjusted")))
+
+cat("\n========================================\n")
+cat("PLOT DATA PREPARED\n")
+cat("========================================\n")
+cat(sprintf("Unadjusted observations: %d\n", sum(plot_data$Type == "Unadjusted")))
+cat(sprintf("Adjusted observations: %d\n\n", sum(plot_data$Type == "Adjusted")))
+
+###############################################################################
+##  7. Create Boxplot ----------------------------------------------------------
+###############################################################################
+
+# Color scheme matching your preference
+bar_colors = c("Unadjusted" = "#4682B4", "Adjusted" = "#87CEEB")
+
+p_boxplot = ggplot(plot_data, aes(x = Type, y = variance, fill = Type)) +
+  geom_boxplot(alpha = 0.7, outlier.shape = NA, width = 0.6) +
+  scale_fill_manual(values = bar_colors) +
+  labs(
+    x = NULL,
+    y = "Variance",
+    title = "Variance Reduction: Unadjusted vs Adjusted"
+  ) +
+  theme_minimal(base_size = 18) +
+  theme(
+    legend.position = "none",
+    panel.grid.major.x = element_blank(),
+    panel.background = element_rect(fill = "white", colour = NA),
+    plot.background = element_rect(fill = "white", colour = NA),
+    axis.text = element_text(size = 16),
+    axis.title = element_text(size = 18),
+    plot.title = element_text(size = 20, face = "bold", hjust = 0.5)
+  ) +
+  coord_cartesian(ylim = c(0, quantile(plot_data$variance, 0.95)))
+
+# Add mean lines
+mean_data = plot_data %>%
+  group_by(Type) %>%
+  summarise(mean_var = mean(variance, na.rm = TRUE), .groups = "drop")
+
+p_boxplot = p_boxplot +
+  geom_segment(data = mean_data,
+               aes(x = as.numeric(Type) - 0.3, 
+                   xend = as.numeric(Type) + 0.3,
+                   y = mean_var, yend = mean_var),
+               color = "red", linewidth = 1, linetype = "dashed")
+
+# Save the plot
+ggsave("cleaned_data/Plot/variance_reduction_boxplot.png",
+       p_boxplot, width = 8, height = 8, dpi = 600, bg = "white")
+
+cat("✓ Boxplot saved: cleaned_data/Plot/variance_reduction_boxplot.png\n\n")
+
+###############################################################################
+##  8. Create Simple Bar Chart (Alternative Visualization) --------------------
+###############################################################################
+
+bar_data = data.frame(
+  Type = c("Unadjusted", "Adjusted"),
+  Mean_Variance = c(unadjusted_stats$mean, adjusted_stats$mean),
+  Median_Variance = c(unadjusted_stats$median, adjusted_stats$median)
+)
+
+p_bar_mean = ggplot(bar_data, aes(x = Type, y = Mean_Variance, fill = Type)) +
+  geom_bar(stat = "identity", alpha = 0.7, width = 0.6) +
+  scale_fill_manual(values = bar_colors) +
+  labs(
+    x = NULL,
+    y = "Mean Variance",
+    title = "Mean Variance: Unadjusted vs Adjusted"
+  ) +
+  theme_minimal(base_size = 18) +
+  theme(
+    legend.position = "none",
+    panel.grid.major.x = element_blank(),
+    panel.background = element_rect(fill = "white", colour = NA),
+    plot.background = element_rect(fill = "white", colour = NA),
+    axis.text = element_text(size = 16),
+    axis.title = element_text(size = 18),
+    plot.title = element_text(size = 20, face = "bold", hjust = 0.5)
+  )
+
+p_bar_median = ggplot(bar_data, aes(x = Type, y = Median_Variance, fill = Type)) +
+  geom_bar(stat = "identity", alpha = 0.7, width = 0.6) +
+  scale_fill_manual(values = bar_colors) +
+  labs(
+    x = NULL,
+    y = "Median Variance",
+    title = "Median Variance: Unadjusted vs Adjusted"
+  ) +
+  theme_minimal(base_size = 18) +
+  theme(
+    legend.position = "none",
+    panel.grid.major.x = element_blank(),
+    panel.background = element_rect(fill = "white", colour = NA),
+    plot.background = element_rect(fill = "white", colour = NA),
+    axis.text = element_text(size = 16),
+    axis.title = element_text(size = 18),
+    plot.title = element_text(size = 20, face = "bold", hjust = 0.5)
+  )
+
+# Save bar charts
+ggsave("cleaned_data/Plot/variance_mean_barchart.png",
+       p_bar_mean, width = 8, height = 8, dpi = 600, bg = "white")
+
+ggsave("cleaned_data/Plot/variance_median_barchart.png",
+       p_bar_median, width = 8, height = 8, dpi = 600, bg = "white")
+
+cat("✓ Bar chart (mean) saved: cleaned_data/Plot/variance_mean_barchart.png\n")
+cat("✓ Bar chart (median) saved: cleaned_data/Plot/variance_median_barchart.png\n\n")
+
+###############################################################################
+##  9. Display Plots -----------------------------------------------------------
+###############################################################################
+
+print(p_boxplot)
+print(p_bar_mean)
+print(p_bar_median)
+
+cat("\n========================================\n")
+cat("ANALYSIS COMPLETE\n")
+cat("========================================\n")
+cat("• Boxplot comparing unadjusted vs adjusted variance\n")
+cat("• Bar charts showing mean and median variance\n")
+cat("• Summary statistics and variance reduction metrics\n")
+cat("========================================\n\n")
+
+###############################################################################
+##  10. Export Summary Statistics to CSV --------------------------------------
+###############################################################################
+
+write.csv(summary_table, "cleaned_data/variance_reduction_summary.csv", row.names = FALSE)
+cat("✓ Summary table saved: cleaned_data/variance_reduction_summary.csv\n\n")
+```
+
+```{r}
+df21 %>% 
+  count(YS_undiagnosed_tb)
 ```
 
