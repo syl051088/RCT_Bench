@@ -4259,6 +4259,7 @@ df_new = df_new %>%
 
 # Box Plots
 ## Efficiency Gain
+### old
 ```{r}
 # First need to filter df_new to get primary and all outcomes datasets
 df_new_all_outcomes = df_new  # All outcomes
@@ -4716,6 +4717,780 @@ print(p_binary_baseline_primary)
 print(p_cont_all_primary)
 print(p_cont_top3_primary)
 print(p_cont_baseline_primary)
+```
+### new box
+```{r}
+# First need to filter df_new to get primary and all outcomes datasets
+df_new_all_outcomes = df_new  # All outcomes
+
+# Primary outcomes only (outcomes starting with YP_)
+df_new_primary = df_new %>%
+  filter(str_detect(Outcome, "^YP_"))
+
+# Function to prepare long data
+# UPDATED: Includes Covariate columns in selection
+prepare_long_data = function(data) {
+  data %>%
+    select(outcome_group, starts_with("precision_gain_"), Trial_No, Outcome,
+           N_Covariates, N_Covariates_VS1, N_Covariates_VS2) %>% 
+    pivot_longer(cols       = starts_with("precision_gain_"),
+                 names_to  = "method_raw",
+                 values_to = "pg") %>%
+    mutate(
+      # Keep track of the adjustment type
+      adjustment_type = case_when(
+        grepl("_Top-3$", method_raw) ~ "Top-3",
+        grepl("_Baseline\\+$", method_raw) ~ "Baseline+",
+        TRUE ~ "All"
+      ),
+      # Simplified method names
+      method = case_match(
+        method_raw,
+        # All methods
+        "precision_gain_ANCOVA"                       ~ "ANCOVA",
+        "precision_gain_ANHECOVA"                     ~ "ANHECOVA",
+        "precision_gain_G_Logistic"                   ~ "G-Logistic",
+        "precision_gain_DML"                          ~ "DML",
+        "precision_gain_TMLE"                         ~ "TMLE",
+        "precision_gain_IPW"                          ~ "IPW",
+        
+        # Top-3 methods
+        "precision_gain_ANCOVA_Top-3"                 ~ "ANCOVA",
+        "precision_gain_ANHECOVA_Top-3"               ~ "ANHECOVA",
+        "precision_gain_G_Logistic_Top-3"             ~ "G-Logistic",
+        "precision_gain_DML_Top-3"                    ~ "DML",
+        "precision_gain_TMLE_Top-3"                   ~ "TMLE",
+        "precision_gain_IPW_Top-3"                    ~ "IPW",
+        
+        # Baseline+ methods
+        "precision_gain_ANCOVA_Baseline+"             ~ "ANCOVA",
+        "precision_gain_ANHECOVA_Baseline+"           ~ "ANHECOVA",
+        "precision_gain_G_Logistic_Baseline+"         ~ "G-Logistic",
+        "precision_gain_DML_Baseline+"                ~ "DML",
+        "precision_gain_TMLE_Baseline+"               ~ "TMLE",
+        "precision_gain_IPW_Baseline+"                ~ "IPW"
+      )) %>%
+    filter(!is.na(method))  # Remove rows where method couldn't be matched
+}
+
+# Create long data for both datasets
+df_long_full_all = prepare_long_data(df_new_all_outcomes)
+df_long_full_primary = prepare_long_data(df_new_primary)
+
+###############################################################################
+##  1.  Build ONE comprehensive summary table for ALL plots ------------------
+##      Columns: Method | #NA | Error Rate | #Tukey | #Shown
+##      UPDATED: Error Rate considers only cases where N_Covariates != 0
+###############################################################################
+
+# Methods that appear on plots by outcome type
+.method_set = list(
+  binary     = c("ANCOVA", "ANHECOVA", "G-Logistic", "DML", "TMLE", "IPW"),
+  continuous = c("ANCOVA", "ANHECOVA",               "DML", "TMLE", "IPW")
+)
+
+# Compute Tukey bounds per METHOD within the provided panel slice
+compute_tukey_bounds = function(panel_df) {
+  panel_df %>%
+    filter(!is.na(pg)) %>%
+    group_by(method) %>%
+    summarise(
+      Q1    = quantile(pg, 0.25, na.rm = TRUE),
+      Q3    = quantile(pg, 0.75, na.rm = TRUE),
+      IQR   = Q3 - Q1,
+      lower = Q1 - 1.5 * IQR,
+      upper = Q3 + 1.5 * IQR,
+      .groups = "drop"
+    )
+}
+
+build_comprehensive_summary_table = function() {
+  outcome_types    = c("binary", "continuous")
+  adjustment_types = c("All", "Top-3", "Baseline+")
+  data_types       = c("all", "primary")
+  
+  all_rows = list()
+  
+  for (data_type in data_types) {
+    df_raw = if (data_type == "primary") df_long_full_primary else df_long_full_all
+    
+    for (outcome_type in outcome_types) {
+      shown_methods = .method_set[[outcome_type]]
+      
+      for (vs_type in adjustment_types) {
+        # ---------- RAW slice (restrict to methods that are actually shown on plots)
+        raw_slice = df_raw %>%
+          filter(outcome_group == outcome_type,
+                 adjustment_type == vs_type,
+                 method %in% shown_methods)
+        
+        # ---------- Calculate Error Rate (Where Covariates != 0)
+        # 1. Determine which covariate column applies to this adjustment type
+        # 2. Filter for cases where covariates exist (N != 0)
+        # 3. Calculate Error Rate = NA count / Total valid trials
+        
+        error_stats = raw_slice %>%
+          mutate(relevant_n_cov = case_when(
+            adjustment_type == "Top-3"     ~ N_Covariates_VS1,
+            adjustment_type == "Baseline+" ~ N_Covariates_VS2,
+            TRUE                           ~ N_Covariates # Default to "All"
+          )) %>%
+          filter(relevant_n_cov != 0) %>% # Exclude trials where no covariates existed
+          group_by(method) %>%
+          summarise(
+            `#NA` = sum(is.na(pg)),
+            n_valid_trials = n(),
+            `Error Rate` = `#NA` / n_valid_trials,
+            .groups = "drop"
+          ) %>%
+          select(method, `#NA`, `Error Rate`)
+        
+        # ---------- Outlier Stats (Standard logic on non-NA data)
+        non_na = raw_slice %>% filter(!is.na(pg))
+        
+        # Tukey outliers
+        tb = compute_tukey_bounds(raw_slice)
+        tukey_tbl = non_na %>%
+          inner_join(tb, by = "method") %>%
+          group_by(method) %>%
+          summarise(`#Tukey` = sum(pg < lower | pg > upper, na.rm = TRUE),
+                    .groups = "drop")
+        
+        # #Shown (all non-NA values)
+        shown_tbl = non_na %>%
+          group_by(method) %>%
+          summarise(`#Shown` = n(), .groups = "drop")
+        
+        # ---------- Combine and order
+        # Start with error_stats to ensure Error Rate is mapped correctly
+        combo = error_stats %>%
+          full_join(tukey_tbl,  by = "method") %>%
+          full_join(shown_tbl,  by = "method") %>%
+          mutate(across(c(`#NA`, `#Tukey`, `#Shown`), ~ replace_na(., 0L))) %>%
+          mutate(`Error Rate` = replace_na(`Error Rate`, 0)) %>%
+          filter(method %in% shown_methods) %>%
+          arrange(factor(method, levels = shown_methods)) %>%
+          mutate(Panel = paste(data_type, outcome_type, vs_type, sep = "_")) %>%
+          select(Method = method, `#NA`, `Error Rate`, `#Tukey`, `#Shown`, Panel)
+        
+        all_rows[[length(all_rows) + 1]] = combo
+      }
+    }
+  }
+  
+  bind_rows(all_rows)
+}
+
+###############################################################################
+##  2.  Color palette matching smooth plots ---------------------------------
+###############################################################################
+# Define color palette (IPW changed to purple to differentiate from ANCOVA)
+method_colors = c(
+  "ANCOVA"     = "#F8766D",    # Red
+  "ANHECOVA"   = "#B79F00",    # Gold/Yellow
+  "G-Logistic" = "#00BA38",    # Green
+  "DML"        = "#00BFC4",    # Cyan
+  "TMLE"       = "#619CFF",    # Blue
+  "IPW"        = "#C77CFF"     # Purple
+)
+
+###############################################################################
+##  3.  Plot function with colors and improved text size ---------------------
+###############################################################################
+make_plot = function(data, outcome_type) {
+  
+  # Transform variance ratio to proportional variance reduction (1 - original value)
+  # Use pg directly (no manual outlier removal)
+  data = data %>%
+    filter(!is.na(pg)) %>%
+    mutate(prop_var_reduction = 1 - pg)
+  
+  # Set factor levels based on outcome type
+  if (outcome_type == "binary") {
+    method_levels = c("ANCOVA", "ANHECOVA", "G-Logistic", "DML", "TMLE", "IPW")
+  } else {
+    method_levels = c("ANCOVA", "ANHECOVA", "DML", "TMLE", "IPW")  # no G-Logistic
+  }
+  
+  data = data %>%
+    mutate(method = factor(method, levels = method_levels))
+  
+  # Counts for labels
+  method_counts = data %>%
+    group_by(method) %>%
+    summarise(n = n(), .groups = "drop")
+  
+  # x-axis label positions
+  x_labels_df = data.frame(
+    method = method_levels[method_levels %in% unique(data$method)],
+    x_pos  = 1:length(method_levels[method_levels %in% unique(data$method)])
+  )
+  
+  x_labels_counts = x_labels_df %>%
+    left_join(method_counts, by = "method")
+  
+  p = ggplot(data, aes(method, prop_var_reduction, fill = method)) +
+    geom_boxplot(colour = "grey25", alpha = .50, width = 0.5, outlier.shape = NA) +
+    geom_hline(yintercept = 0, linetype = "dashed", colour = "grey40") +
+    scale_fill_manual(values = method_colors) +
+    labs(x = NULL, y = "Proportional Variance Reduction") +
+    coord_cartesian(ylim = c(-20, 20), clip = "off") +
+    theme_minimal(base_size = 18) +
+    theme(
+      axis.text.x   = element_blank(),
+      axis.ticks.x  = element_blank(),
+      axis.text.y   = element_text(size = 16),
+      axis.title.y  = element_text(size = 18),
+      panel.grid.minor = element_blank(),
+      panel.background = element_rect(fill = "white", colour = NA),
+      plot.background  = element_rect(fill = "white", colour = NA),
+      legend.position  = "none",
+      plot.margin      = margin(t = 5, r = 10, b = 60, l = 10)
+    ) +
+    geom_text(data = x_labels_counts, 
+              aes(x = x_pos, y = -1.15, label = method),
+              inherit.aes = FALSE, size = 5.5, lineheight = 0.85, hjust = 0.5) +
+    geom_text(data = x_labels_counts, 
+              aes(x = x_pos, y = -1.35, label = paste0("(", n, ")")),
+              inherit.aes = FALSE, size = 4.5, hjust = 0.5)
+  
+  return(p)
+}
+
+###############################################################################
+##  Publication quality settings ---------------------------------------------
+###############################################################################
+pub_width  = 10
+pub_height = 6.5
+pub_dpi    = 600  # 600 dpi for publication quality
+
+###############################################################################
+##  4.  Create output directory ----------------------------------------------
+###############################################################################
+output_dir = "cleaned_data/plot/exam plot"
+dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
+
+###############################################################################
+##  5.  Generate all plots (All outcomes) ------------------------------------
+###############################################################################
+
+# All methods - All outcomes
+df_binary_all_all = df_long_full_all %>% 
+  filter(outcome_group == "binary", adjustment_type == "All")
+
+p_binary_all_all = make_plot(df_binary_all_all, "binary")
+ggsave(file.path(output_dir, "precision_gain_binary_all_all.png"), 
+       p_binary_all_all, width = pub_width, height = pub_height, dpi = pub_dpi, bg = "white")
+
+# Top-3 methods - All outcomes
+df_binary_top3_all = df_long_full_all %>% 
+  filter(outcome_group == "binary", adjustment_type == "Top-3")
+
+p_binary_top3_all = make_plot(df_binary_top3_all, "binary")
+ggsave(file.path(output_dir, "precision_gain_binary_top3_all.png"), 
+       p_binary_top3_all, width = pub_width, height = pub_height, dpi = pub_dpi, bg = "white")
+
+# Baseline+ methods - All outcomes
+df_binary_baseline_all = df_long_full_all %>% 
+  filter(outcome_group == "binary", adjustment_type == "Baseline+")
+
+p_binary_baseline_all = make_plot(df_binary_baseline_all, "binary")
+ggsave(file.path(output_dir, "precision_gain_binary_baseline_all.png"), 
+       p_binary_baseline_all, width = pub_width, height = pub_height, dpi = pub_dpi, bg = "white")
+
+# Continuous plots - All outcomes
+df_continuous_all_all = df_long_full_all %>% 
+  filter(outcome_group == "continuous", adjustment_type == "All")
+
+p_cont_all_all = make_plot(df_continuous_all_all, "continuous")
+ggsave(file.path(output_dir, "precision_gain_continuous_all_all.png"), 
+       p_cont_all_all, width = pub_width, height = pub_height, dpi = pub_dpi, bg = "white")
+
+df_continuous_top3_all = df_long_full_all %>% 
+  filter(outcome_group == "continuous", adjustment_type == "Top-3")
+
+p_cont_top3_all = make_plot(df_continuous_top3_all, "continuous")
+ggsave(file.path(output_dir, "precision_gain_continuous_top3_all.png"), 
+       p_cont_top3_all, width = pub_width, height = pub_height, dpi = pub_dpi, bg = "white")
+
+df_continuous_baseline_all = df_long_full_all %>% 
+  filter(outcome_group == "continuous", adjustment_type == "Baseline+")
+
+p_cont_baseline_all = make_plot(df_continuous_baseline_all, "continuous")
+ggsave(file.path(output_dir, "precision_gain_continuous_baseline_all.png"), 
+       p_cont_baseline_all, width = pub_width, height = pub_height, dpi = pub_dpi, bg = "white")
+
+###############################################################################
+##  6.  Generate all plots (Primary outcomes only) ---------------------------
+###############################################################################
+
+# All methods - Primary outcomes
+df_binary_all_primary = df_long_full_primary %>% 
+  filter(outcome_group == "binary", adjustment_type == "All")
+
+p_binary_all_primary = make_plot(df_binary_all_primary, "binary")
+ggsave(file.path(output_dir, "precision_gain_binary_all_primary.png"), 
+       p_binary_all_primary, width = pub_width, height = pub_height, dpi = pub_dpi, bg = "white")
+
+# Top-3 methods - Primary outcomes
+df_binary_top3_primary = df_long_full_primary %>% 
+  filter(outcome_group == "binary", adjustment_type == "Top-3")
+
+p_binary_top3_primary = make_plot(df_binary_top3_primary, "binary")
+ggsave(file.path(output_dir, "precision_gain_binary_top3_primary.png"), 
+       p_binary_top3_primary, width = pub_width, height = pub_height, dpi = pub_dpi, bg = "white")
+
+# Baseline+ methods - Primary outcomes
+df_binary_baseline_primary = df_long_full_primary %>% 
+  filter(outcome_group == "binary", adjustment_type == "Baseline+")
+
+p_binary_baseline_primary = make_plot(df_binary_baseline_primary, "binary")
+ggsave(file.path(output_dir, "precision_gain_binary_baseline_primary.png"), 
+       p_binary_baseline_primary, width = pub_width, height = pub_height, dpi = pub_dpi, bg = "white")
+
+# Continuous plots - Primary outcomes
+df_continuous_all_primary = df_long_full_primary %>% 
+  filter(outcome_group == "continuous", adjustment_type == "All")
+
+p_cont_all_primary = make_plot(df_continuous_all_primary, "continuous")
+ggsave(file.path(output_dir, "precision_gain_continuous_all_primary.png"), 
+       p_cont_all_primary, width = pub_width, height = pub_height, dpi = pub_dpi, bg = "white")
+
+df_continuous_top3_primary = df_long_full_primary %>% 
+  filter(outcome_group == "continuous", adjustment_type == "Top-3")
+
+p_cont_top3_primary = make_plot(df_continuous_top3_primary, "continuous")
+ggsave(file.path(output_dir, "precision_gain_continuous_top3_primary.png"), 
+       p_cont_top3_primary, width = pub_width, height = pub_height, dpi = pub_dpi, bg = "white")
+
+df_continuous_baseline_primary = df_long_full_primary %>% 
+  filter(outcome_group == "continuous", adjustment_type == "Baseline+")
+
+p_cont_baseline_primary = make_plot(df_continuous_baseline_primary, "continuous")
+ggsave(file.path(output_dir, "precision_gain_continuous_baseline_primary.png"), 
+       p_cont_baseline_primary, width = pub_width, height = pub_height, dpi = pub_dpi, bg = "white")
+
+###############################################################################
+##  7.  Build and print the comprehensive table (no CSV writing) -------------
+###############################################################################
+comprehensive_table = build_comprehensive_summary_table()
+
+cat("\n========================================\n")
+cat("Comprehensive Table with ERROR RATE\n")
+cat("Error Rate defined as: #NA / Total Rows (inc. NA)\n")
+cat("No manual outlier removal applied\n")
+cat("========================================\n\n")
+
+# Formatting Error Rate as percentage for easier reading
+print(comprehensive_table %>% 
+        mutate(`Error Rate` = scales::percent(`Error Rate`, accuracy = 0.1)))
+
+###############################################################################
+##  8.  Calculate OVERALL ERROR RATE (All Outcomes Only) ---------------------
+###############################################################################
+
+cat("\n========================================\n")
+cat("OVERALL ERROR RATE (All Outcomes Only)\n")
+cat("========================================\n\n")
+
+# Filter for "all" outcomes only (exclude primary)
+all_outcomes_table = comprehensive_table %>%
+  filter(grepl("^all_", Panel))
+
+# Calculate overall error rate across all methods and panels
+overall_error_rate = all_outcomes_table %>%
+  summarise(
+    total_NA = sum(`#NA`),
+    total_NA_plus_shown = sum(`#NA`) + sum(`#Shown`),
+    overall_error_rate = total_NA / total_NA_plus_shown
+  )
+
+cat(sprintf("Total #NA across all methods/panels: %d\n", overall_error_rate$total_NA))
+cat(sprintf("Total cases (NA + Shown): %d\n", overall_error_rate$total_NA_plus_shown))
+cat(sprintf("Overall Error Rate: %.3f (%s)\n\n", 
+            overall_error_rate$overall_error_rate,
+            scales::percent(overall_error_rate$overall_error_rate, accuracy = 0.1)))
+
+# Also show breakdown by outcome type and adjustment type
+cat("Breakdown by Outcome Type and Adjustment Type:\n")
+cat("-----------------------------------------------\n\n")
+
+breakdown_table = all_outcomes_table %>%
+  mutate(
+    outcome_type = sub("^all_([^_]+)_.*", "\\1", Panel),
+    adjustment_type = sub("^all_[^_]+_(.*)", "\\1", Panel)
+  ) %>%
+  group_by(outcome_type, adjustment_type) %>%
+  summarise(
+    total_NA = sum(`#NA`),
+    total_cases = sum(`#NA`) + sum(`#Shown`),
+    error_rate = total_NA / total_cases,
+    .groups = "drop"
+  ) %>%
+  mutate(error_rate_pct = scales::percent(error_rate, accuracy = 0.1))
+
+print(breakdown_table)
+
+cat("\n========================================\n")
+cat("All plots saved to:", output_dir, "\n")
+cat("All plots saved at publication quality (600 dpi, white background)\n")
+cat("Boxplots use outlier.shape=NA to hide Tukey outliers\n")
+cat("No manual outlier removal applied\n")
+cat("========================================\n\n")
+
+# Display all 12 plots in console
+cat("All Outcomes Plots:\n")
+print(p_binary_all_all)
+print(p_binary_top3_all)
+print(p_binary_baseline_all)
+print(p_cont_all_all)
+print(p_cont_top3_all)
+print(p_cont_baseline_all)
+
+cat("\nPrimary Outcomes Plots:\n")
+print(p_binary_all_primary)
+print(p_binary_top3_primary)
+print(p_binary_baseline_primary)
+print(p_cont_all_primary)
+print(p_cont_top3_primary)
+print(p_cont_baseline_primary)
+```
+### Individual SL
+```{r}
+###############################################################################
+##  BOXPLOTS FOR INDIVIDUAL ML METHODS - PVR ANALYSIS ------------------------
+##  Generates both manual outlier removed and unremoved plots
+###############################################################################
+
+# Individual SL methods (All covariates - base versions only, no VS1 or VS2)
+individual_sl_methods = c("SL_glm", "SL_glmnet", "SL_rpart", "SL_gam", "SL_randomForest", 
+                          "SL_nnet", "SL_svm", "SL_xgboost", "SL_bartMachine")
+
+# Manual outlier threshold for precision gain (same as main analysis)
+pg_manual_threshold = 5
+
+###############################################################################
+##  Function to prepare long data for individual ML methods ------------------
+###############################################################################
+prepare_ml_long_data = function(data, outcome_type) {
+  
+  # Filter by outcome type
+  if (outcome_type == "continuous") {
+    data_filtered = data %>%
+      filter(`Outcome Type` %in% c("continuous", "continuous proportion"))
+  } else if (outcome_type == "binary") {
+    data_filtered = data %>%
+      filter(`Outcome Type` %in% c("binary", "composite binary"))
+  }
+  
+  # Initialize list to store data for each method
+  all_method_data = list()
+  
+  # Loop through each individual SL method
+  for (method in individual_sl_methods) {
+    # Get the precision gain column name for this method (base version only)
+    pg_col = paste0("How much precision gain can ", method, "_TMLE provide?")
+    
+    # Check if column exists
+    if (pg_col %in% colnames(data_filtered)) {
+      # Extract precision gain values and create dataframe
+      method_data = data.frame(
+        method = method,
+        pg = data_filtered[[pg_col]],
+        pvr = 1 - data_filtered[[pg_col]],  # Proportional Variance Reduction
+        stringsAsFactors = FALSE
+      )
+      
+      all_method_data[[length(all_method_data) + 1]] = method_data
+    }
+  }
+  
+  # Combine all methods into one dataframe
+  if (length(all_method_data) > 0) {
+    result = bind_rows(all_method_data)
+    return(result)
+  } else {
+    return(data.frame())
+  }
+}
+
+###############################################################################
+##  Color palette for individual ML methods ----------------------------------
+###############################################################################
+ml_method_colors = c(
+  "SL_glm"           = "#F8766D",    # Red
+  "SL_glmnet"        = "#B79F00",    # Gold
+  "SL_rpart"         = "#00BA38",    # Green
+  "SL_gam"           = "#00BFC4",    # Cyan
+  "SL_randomForest"  = "#619CFF",    # Blue
+  "SL_nnet"          = "#C77CFF",    # Purple
+  "SL_svm"           = "#F564E3",    # Magenta
+  "SL_xgboost"       = "#00C19F",    # Teal
+  "SL_bartMachine"   = "#FF6E42"     # Orange-red
+)
+
+###############################################################################
+##  Plot function for individual ML methods ----------------------------------
+###############################################################################
+make_ml_plot = function(data, outcome_type, remove_outliers = FALSE) {
+  
+  # Filter out NA values
+  data = data %>% filter(!is.na(pvr))
+  
+  # Apply manual outlier removal if requested
+  if (remove_outliers) {
+    data = data %>% filter(pg < pg_manual_threshold)
+  }
+  
+  # Set factor levels to match the order in individual_sl_methods
+  data = data %>%
+    mutate(method = factor(method, levels = individual_sl_methods))
+  
+  # Counts for labels
+  method_counts = data %>%
+    group_by(method) %>%
+    summarise(n = n(), .groups = "drop")
+  
+  # x-axis label positions
+  available_methods = individual_sl_methods[individual_sl_methods %in% unique(data$method)]
+  x_labels_df = data.frame(
+    method = available_methods,
+    x_pos  = 1:length(available_methods)
+  )
+  
+  x_labels_counts = x_labels_df %>%
+    left_join(method_counts, by = "method")
+  
+  # Clean method names for display (remove "SL_" prefix)
+  x_labels_counts = x_labels_counts %>%
+    mutate(display_name = gsub("^SL_", "", method))
+  
+  # Create plot
+  p = ggplot(data, aes(method, pvr, fill = method)) +
+    geom_boxplot(colour = "grey25", alpha = .50, width = 0.5, outlier.shape = NA) +
+    geom_hline(yintercept = 0, linetype = "dashed", colour = "grey40") +
+    scale_fill_manual(values = ml_method_colors) +
+    labs(x = NULL, y = "Proportional Variance Reduction") +
+    coord_cartesian(ylim = c(-2, 2), clip = "off") +
+    theme_minimal(base_size = 18) +
+    theme(
+      axis.text.x   = element_blank(),
+      axis.ticks.x  = element_blank(),
+      axis.text.y   = element_text(size = 16),
+      axis.title.y  = element_text(size = 18),
+      panel.grid.minor = element_blank(),
+      panel.background = element_rect(fill = "white", colour = NA),
+      plot.background  = element_rect(fill = "white", colour = NA),
+      legend.position  = "none",
+      plot.margin      = margin(t = 5, r = 10, b = 60, l = 10)
+    ) +
+    geom_text(data = x_labels_counts, 
+              aes(x = x_pos, y = -1.15, label = display_name),
+              inherit.aes = FALSE, size = 5.5, lineheight = 0.85, hjust = 0.5) +
+    geom_text(data = x_labels_counts, 
+              aes(x = x_pos, y = -1.35, label = paste0("(", n, ")")),
+              inherit.aes = FALSE, size = 4.5, hjust = 0.5)
+  
+  return(p)
+}
+
+###############################################################################
+##  Publication quality settings ---------------------------------------------
+###############################################################################
+pub_width  = 12   # Slightly wider to accommodate 9 methods
+pub_height = 6.5
+pub_dpi    = 600
+
+###############################################################################
+##  Create output directory --------------------------------------------------
+###############################################################################
+output_dir = "cleaned_data/plot/exam plot"
+dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
+
+###############################################################################
+##  Prepare data for both outcome types --------------------------------------
+###############################################################################
+cat("\n========================================\n")
+cat("Preparing data for individual ML methods\n")
+cat("========================================\n\n")
+
+# Prepare long data for binary and continuous outcomes
+df_ml_binary = prepare_ml_long_data(df_comparison, "binary")
+df_ml_continuous = prepare_ml_long_data(df_comparison, "continuous")
+
+cat("Binary outcomes: ", nrow(df_ml_binary), " total observations\n")
+cat("Continuous outcomes: ", nrow(df_ml_continuous), " total observations\n\n")
+
+###############################################################################
+##  Generate Binary Outcome Plots --------------------------------------------
+###############################################################################
+cat("Generating binary outcome plots...\n")
+
+# Binary - Without manual outlier removal
+p_binary_unremoved = make_ml_plot(df_ml_binary, "binary", remove_outliers = FALSE)
+ggsave(file.path(output_dir, "ml_individual_binary_unremoved.png"), 
+       p_binary_unremoved, width = pub_width, height = pub_height, dpi = pub_dpi, bg = "white")
+
+# Binary - With manual outlier removal
+p_binary_removed = make_ml_plot(df_ml_binary, "binary", remove_outliers = TRUE)
+ggsave(file.path(output_dir, "ml_individual_binary_removed.png"), 
+       p_binary_removed, width = pub_width, height = pub_height, dpi = pub_dpi, bg = "white")
+
+###############################################################################
+##  Generate Continuous Outcome Plots ----------------------------------------
+###############################################################################
+cat("Generating continuous outcome plots...\n")
+
+# Continuous - Without manual outlier removal
+p_continuous_unremoved = make_ml_plot(df_ml_continuous, "continuous", remove_outliers = FALSE)
+ggsave(file.path(output_dir, "ml_individual_continuous_unremoved.png"), 
+       p_continuous_unremoved, width = pub_width, height = pub_height, dpi = pub_dpi, bg = "white")
+
+# Continuous - With manual outlier removal
+p_continuous_removed = make_ml_plot(df_ml_continuous, "continuous", remove_outliers = TRUE)
+ggsave(file.path(output_dir, "ml_individual_continuous_removed.png"), 
+       p_continuous_removed, width = pub_width, height = pub_height, dpi = pub_dpi, bg = "white")
+
+###############################################################################
+##  Summary Statistics -------------------------------------------------------
+###############################################################################
+cat("\n========================================\n")
+cat("SUMMARY STATISTICS\n")
+cat("========================================\n\n")
+
+# Function to calculate summary stats
+calculate_summary_stats = function(data, outcome_type, remove_outliers = FALSE) {
+  
+  # Filter out NA values
+  data_clean = data %>% filter(!is.na(pvr))
+  
+  if (remove_outliers) {
+    data_clean = data_clean %>% filter(pg < pg_manual_threshold)
+  }
+  
+  stats = data_clean %>%
+    group_by(method) %>%
+    summarise(
+      n = n(),
+      n_na = sum(is.na(pvr)),
+      mean_pvr = mean(pvr, na.rm = TRUE),
+      median_pvr = median(pvr, na.rm = TRUE),
+      sd_pvr = sd(pvr, na.rm = TRUE),
+      q25 = quantile(pvr, 0.25, na.rm = TRUE),
+      q75 = quantile(pvr, 0.75, na.rm = TRUE),
+      .groups = "drop"
+    ) %>%
+    mutate(across(c(mean_pvr, median_pvr, sd_pvr, q25, q75), ~ round(., 4)))
+  
+  return(stats)
+}
+
+# Binary outcomes
+cat("BINARY OUTCOMES\n")
+cat("----------------------------------------\n")
+cat("Without manual outlier removal:\n\n")
+binary_stats_unremoved = calculate_summary_stats(df_ml_binary, "binary", remove_outliers = FALSE)
+print(binary_stats_unremoved)
+
+cat("\n\nWith manual outlier removal (pg >= 5):\n\n")
+binary_stats_removed = calculate_summary_stats(df_ml_binary, "binary", remove_outliers = TRUE)
+print(binary_stats_removed)
+
+# Continuous outcomes
+cat("\n\n========================================\n")
+cat("CONTINUOUS OUTCOMES\n")
+cat("----------------------------------------\n")
+cat("Without manual outlier removal:\n\n")
+continuous_stats_unremoved = calculate_summary_stats(df_ml_continuous, "continuous", remove_outliers = FALSE)
+print(continuous_stats_unremoved)
+
+cat("\n\nWith manual outlier removal (pg >= 5):\n\n")
+continuous_stats_removed = calculate_summary_stats(df_ml_continuous, "continuous", remove_outliers = TRUE)
+print(continuous_stats_removed)
+
+###############################################################################
+##  Count outliers removed ---------------------------------------------------
+###############################################################################
+cat("\n\n========================================\n")
+cat("OUTLIER REMOVAL IMPACT\n")
+cat("========================================\n\n")
+
+# Binary
+cat("BINARY OUTCOMES:\n")
+binary_before = df_ml_binary %>% filter(!is.na(pg)) %>% nrow()
+binary_after = df_ml_binary %>% filter(!is.na(pg), pg < pg_manual_threshold) %>% nrow()
+binary_removed_count = binary_before - binary_after
+
+cat(sprintf("Total observations (non-NA): %d\n", binary_before))
+cat(sprintf("After removing pg >= 5: %d\n", binary_after))
+cat(sprintf("Number removed: %d (%.1f%%)\n\n", 
+            binary_removed_count, 
+            100 * binary_removed_count / binary_before))
+
+# By method for binary
+binary_outlier_counts = df_ml_binary %>%
+  filter(!is.na(pg)) %>%
+  group_by(method) %>%
+  summarise(
+    total = n(),
+    outliers = sum(pg >= pg_manual_threshold),
+    pct_outliers = 100 * outliers / total,
+    .groups = "drop"
+  ) %>%
+  arrange(desc(outliers))
+
+print(binary_outlier_counts)
+
+# Continuous
+cat("\n\nCONTINUOUS OUTCOMES:\n")
+continuous_before = df_ml_continuous %>% filter(!is.na(pg)) %>% nrow()
+continuous_after = df_ml_continuous %>% filter(!is.na(pg), pg < pg_manual_threshold) %>% nrow()
+continuous_removed_count = continuous_before - continuous_after
+
+cat(sprintf("Total observations (non-NA): %d\n", continuous_before))
+cat(sprintf("After removing pg >= 5: %d\n", continuous_after))
+cat(sprintf("Number removed: %d (%.1f%%)\n\n", 
+            continuous_removed_count, 
+            100 * continuous_removed_count / continuous_before))
+
+# By method for continuous
+continuous_outlier_counts = df_ml_continuous %>%
+  filter(!is.na(pg)) %>%
+  group_by(method) %>%
+  summarise(
+    total = n(),
+    outliers = sum(pg >= pg_manual_threshold),
+    pct_outliers = 100 * outliers / total,
+    .groups = "drop"
+  ) %>%
+  arrange(desc(outliers))
+
+print(continuous_outlier_counts)
+
+###############################################################################
+##  Display plots ------------------------------------------------------------
+###############################################################################
+cat("\n========================================\n")
+cat("All plots saved to:", output_dir, "\n")
+cat("Publication quality: 600 dpi, white background\n")
+cat("========================================\n\n")
+
+cat("Binary Outcome Plots:\n")
+print(p_binary_unremoved)
+print(p_binary_removed)
+
+cat("\nContinuous Outcome Plots:\n")
+print(p_continuous_unremoved)
+print(p_continuous_removed)
+
+cat("\n========================================\n")
+cat("PLOT FILES GENERATED:\n")
+cat("========================================\n")
+cat("1. ml_individual_binary_unremoved.png\n")
+cat("2. ml_individual_binary_removed.png\n")
+cat("3. ml_individual_continuous_unremoved.png\n")
+cat("4. ml_individual_continuous_removed.png\n")
+cat("========================================\n\n")
 ```
 
 ## Scaled Diff
