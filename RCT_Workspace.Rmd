@@ -4746,12 +4746,13 @@ which(dfold$IPW_VS1_se != df_comparison$IPW_VS1_se)
 ```
 
 # PSW ipw
+
 ```{r}
 analyze_rct_ipw = function(df,
                            selection = FALSE,
                            variable_selection_type = 1,   # 1: correlation, 2: manual
                            manual_covariates = NULL,
-                           weight_method = "ATE",         # PSW keywords: "ATE","ATT","ATC","MW","OVERLAP","TRAPEZOIDAL"
+                           weight_method = "IPW",         # PSweight keywords: "IPW","treated","overlap","matching","entropy"
                            n_select = 3,
                            outcome_cols = NULL,
                            covariate_col = NULL,
@@ -4759,7 +4760,7 @@ analyze_rct_ipw = function(df,
                            seed = 123) {
   suppressPackageStartupMessages({
     require(dplyr)
-    require(PSW)
+    require(PSweight)
     require(DescTools)
   })
 
@@ -4838,14 +4839,9 @@ analyze_rct_ipw = function(df,
       }
     }
 
-    # Force numeric outcome AND covariates for Gaussian family
+    # Force numeric outcome; we’ll fit Gaussian for all outcomes
     df_complete_num = df_complete
     df_complete_num[[outcome]] = as.numeric(df_complete_num[[outcome]])
-    
-    # CRITICAL: Convert all covariates to numeric (including factors)
-    for (cov in valid_covariates) {
-      df_complete_num[[cov]] = as.numeric(df_complete_num[[cov]])
-    }
 
     # Optional variable selection
     if (selection && length(valid_covariates) > 0) {
@@ -4883,65 +4879,54 @@ analyze_rct_ipw = function(df,
     for (j in seq_along(treatment_levels)) {
       trt = treatment_levels[j]
       df_pair = df_complete_num %>% dplyr::filter(!!rlang::sym(treatment_col) %in% c(control_level, trt))
-      
-      # PSW requires treatment coded as 0/1 (0=control, 1=treated)
       df_pair$Z = as.numeric(df_pair[[treatment_col]] == trt)
 
-      # Build propensity score formula
       ps.formula = if (length(valid_covariates) > 0) {
-        paste("Z ~", paste(valid_covariates, collapse = " + "))
+        as.formula(paste("Z ~", paste(valid_covariates, collapse = " + ")))
       } else {
-        "Z ~ 1"
+        as.formula("Z ~ 1")
       }
 
-      # ---- PSW block ----
+      # ---- PSweight block (Gaussian for all outcomes) ----
       ipw = tryCatch({
-        # Clean data for PSW - keep only necessary columns
+        # PSweight is sensitive to list/data.frame cols; sanitize to base data.frame with atomic columns
         keep_cols = c("Z", outcome, valid_covariates)
         clean_df = as.data.frame(df_pair[, keep_cols, drop = FALSE])
-        
-        # Verify all columns are atomic (numeric or factor)
         ok = vapply(clean_df, function(x) is.atomic(x) || is.factor(x), logical(1))
-        
         if (!all(ok)) {
           bad = names(clean_df)[!ok]
-          cat("Dropping non-atomic columns for PSW:", paste(bad, collapse = ", "), "\n")
+          cat("Dropping non-atomic columns for PSweight:", paste(bad, collapse = ", "), "\n")
           clean_df = clean_df[, ok, drop = FALSE]
           valid_covariates2 = intersect(valid_covariates, names(clean_df))
           ps.formula = if (length(valid_covariates2) > 0) {
-            paste("Z ~", paste(valid_covariates2, collapse = " + "))
-          } else "Z ~ 1"
-        } else {
-          valid_covariates2 = valid_covariates
+            as.formula(paste("Z ~", paste(valid_covariates2, collapse = " + ")))
+          } else as.formula("Z ~ 1")
         }
 
-        # Ensure ALL columns are numeric (treatment, outcome, and covariates)
+        # Ensure numeric
         clean_df$Z = as.numeric(clean_df$Z)
         clean_df[[outcome]] = as.numeric(clean_df[[outcome]])
-        
-        # Convert all covariates to numeric (critical for PSW)
-        for (cov in valid_covariates2) {
-          clean_df[[cov]] = as.numeric(clean_df[[cov]])
-        }
 
-        # Fit PSW model
-        psw_fit = psw.wt(
+        # Fit PSweight and get DIF summary
+        psw_fit = PSweight(
+          ps.formula = ps.formula,
+          yname = outcome,
           data = clean_df,
-          form.ps = ps.formula,
-          weight = weight_method,
-          out.var = outcome,
+          weight = weight_method,    # must be PSweight keyword
+          augmentation = FALSE,
+          bootstrap = FALSE,
           family = "gaussian"
         )
+        psw_sum = summary(psw_fit, type = "DIF")
 
-        est = psw_fit$est.wt
-        se  = psw_fit$std.wt
-        
+        est = as.numeric(psw_sum$estimates[1, "Estimate"])
+        se  = as.numeric(psw_sum$estimates[1, "Std.Error"])
         list(est = est, se = se, success = TRUE)
       }, error = function(e) {
-        cat("PSW Error for outcome", outcome, "treatment", trt, ":", e$message, "\n")
+        cat("IPW Error for outcome", outcome, "treatment", trt, ":", e$message, "\n")
         list(est = NA_real_, se = NA_real_, success = FALSE)
       })
-      # ---- end PSW block ----
+      # ---- end PSweight block ----
 
       res_row = tibble(
         Outcome = outcome,
@@ -4969,6 +4954,7 @@ analyze_rct_ipw = function(df,
   return(final_results)
 }
 ```
+
 
 # run ipw with PSW
 ```{r}
