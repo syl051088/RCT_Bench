@@ -5017,6 +5017,8 @@ df_psw %>%
 ```
 
 ```{r}
-df_psw$IPW_est
+df_comparison %>% 
+  group_by(Trial_No) %>% 
+  summarise(max(N_Covariates))
 ```
 
