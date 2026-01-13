@@ -5446,14 +5446,14 @@ apply_selective_outlier_removal = function(data) {
                        pg))
 }
 
-# Apply selective outlier removal
+# Apply selective outlier removal (for plotting only)
 df_long_selective_all = apply_selective_outlier_removal(df_long_full_all)
 df_long_selective_primary = apply_selective_outlier_removal(df_long_full_primary)
 
 ###############################################################################
 ##  1.  Build ONE comprehensive summary table for ALL plots ------------------
 ##      Columns: Method | #NA | Error Rate | #Tukey | #Shown
-##      UPDATED: Error Rate considers only cases where N_Covariates != 0
+##      FIXED: Error Rate calculated on ORIGINAL raw data (not selective data)
 ###############################################################################
 
 # Methods that appear on plots by outcome type
@@ -5485,24 +5485,30 @@ build_comprehensive_summary_table = function() {
   all_rows = list()
   
   for (data_type in data_types) {
-    df_raw = if (data_type == "primary") df_long_selective_primary else df_long_selective_all
+    # FIXED: Use ORIGINAL raw data for error rate calculation
+    df_raw_original = if (data_type == "primary") df_long_full_primary else df_long_full_all
+    
+    # Use selective data for plotting statistics (#Tukey, #Shown)
+    df_raw_selective = if (data_type == "primary") df_long_selective_primary else df_long_selective_all
     
     for (outcome_type in outcome_types) {
       shown_methods = .method_set[[outcome_type]]
       
       for (vs_type in adjustment_types) {
-        # ---------- RAW slice (restrict to methods that are actually shown on plots)
-        raw_slice = df_raw %>%
+        # ---------- RAW slice from ORIGINAL data (for error rate)
+        raw_slice_original = df_raw_original %>%
           filter(outcome_group == outcome_type,
                  adjustment_type == vs_type,
                  method %in% shown_methods)
         
-        # ---------- Calculate Error Rate (Where Covariates != 0)
-        # 1. Determine which covariate column applies to this adjustment type
-        # 2. Filter for cases where covariates exist (N != 0)
-        # 3. Calculate Error Rate = NA count / Total valid trials
+        # ---------- RAW slice from SELECTIVE data (for Tukey and Shown)
+        raw_slice_selective = df_raw_selective %>%
+          filter(outcome_group == outcome_type,
+                 adjustment_type == vs_type,
+                 method %in% shown_methods)
         
-        error_stats = raw_slice %>%
+        # ---------- Calculate Error Rate on ORIGINAL data (Where Covariates != 0)
+        error_stats = raw_slice_original %>%
           mutate(relevant_n_cov = case_when(
             adjustment_type == "Top-3"     ~ N_Covariates_VS1,
             adjustment_type == "Baseline+" ~ N_Covariates_VS2,
@@ -5518,24 +5524,23 @@ build_comprehensive_summary_table = function() {
           ) %>%
           select(method, `#NA`, `Error Rate`)
         
-        # ---------- Outlier Stats (Standard logic on non-NA data)
-        non_na = raw_slice %>% filter(!is.na(pg))
+        # ---------- Outlier Stats on SELECTIVE data (non-NA data)
+        non_na = raw_slice_selective %>% filter(!is.na(pg))
         
-        # Tukey outliers
-        tb = compute_tukey_bounds(raw_slice)
+        # Tukey outliers (computed on selective data)
+        tb = compute_tukey_bounds(raw_slice_selective)
         tukey_tbl = non_na %>%
           inner_join(tb, by = "method") %>%
           group_by(method) %>%
           summarise(`#Tukey` = sum(pg < lower | pg > upper, na.rm = TRUE),
                     .groups = "drop")
         
-        # #Shown (all non-NA values)
+        # #Shown (all non-NA values in selective data)
         shown_tbl = non_na %>%
           group_by(method) %>%
           summarise(`#Shown` = n(), .groups = "drop")
         
         # ---------- Combine and order
-        # Start with error_stats to ensure Error Rate is mapped correctly
         combo = error_stats %>%
           full_join(tukey_tbl,  by = "method") %>%
           full_join(shown_tbl,  by = "method") %>%
@@ -5749,8 +5754,8 @@ comprehensive_table = build_comprehensive_summary_table()
 
 cat("\n========================================\n")
 cat("Comprehensive Table with ERROR RATE\n")
-cat("Error Rate defined as: #NA / Total Rows (inc. NA)\n")
-cat("SELECTIVE outlier removal: ONLY ANHECOVA All (pg >= 5 removed)\n")
+cat("Error Rate calculated on ORIGINAL raw data (not selective data)\n")
+cat("SELECTIVE outlier removal: ONLY ANHECOVA All (pg >= 5 removed) for PLOTTING\n")
 cat("All other methods show full data\n")
 cat("========================================\n\n")
 
@@ -5830,7 +5835,8 @@ cat("\n========================================\n")
 cat("All plots saved to:", output_dir, "\n")
 cat("All plots saved at publication quality (600 dpi, white background)\n")
 cat("Boxplots use outlier.shape=NA to hide Tukey outliers\n")
-cat("SELECTIVE outlier removal: ONLY ANHECOVA All (pg >= 5)\n")
+cat("SELECTIVE outlier removal: ONLY ANHECOVA All (pg >= 5) for PLOTTING\n")
+cat("Error rates calculated on ORIGINAL raw data for all methods\n")
 cat("========================================\n\n")
 
 # Display all 12 plots in console
