@@ -5022,3 +5022,175 @@ df_comparison %>%
   summarise(max(N_Covariates))
 ```
 
+# primary eyeball
+```{r}
+###############################################################################
+##  DIAGNOSTIC: Precision Gain for Main Methods Only -------------------------
+###############################################################################
+
+cat("\n========================================\n")
+cat("PRIMARY OUTCOMES: Main Methods Only (Binary and Continuous)\n")
+cat("========================================\n\n")
+
+# Define the main methods we care about
+main_methods_all = c("precision_gain_ANCOVA", "precision_gain_ANHECOVA", 
+                     "precision_gain_DML", "precision_gain_TMLE", 
+                     "precision_gain_IPW", "precision_gain_G_Logistic")
+
+main_methods_top3 = c("precision_gain_ANCOVA_Top-3", "precision_gain_ANHECOVA_Top-3",
+                      "precision_gain_DML_Top-3", "precision_gain_TMLE_Top-3",
+                      "precision_gain_IPW_Top-3", "precision_gain_G_Logistic_Top-3")
+
+main_methods_baseline = c("precision_gain_ANCOVA_Baseline+", "precision_gain_ANHECOVA_Baseline+",
+                          "precision_gain_DML_Baseline+", "precision_gain_TMLE_Baseline+",
+                          "precision_gain_IPW_Baseline+", "precision_gain_G_Logistic_Baseline+")
+
+all_main_methods = c(main_methods_all, main_methods_top3, main_methods_baseline)
+
+# Create inspection dataframe with only main methods
+df_primary_for_inspection = df_new_primary %>%
+  filter(outcome_group %in% c("binary", "continuous")) %>%
+  select(
+    # Metadata columns
+    Trial_No, Sample_Size, 
+    N_Covariates, N_Covariates_VS1, N_Covariates_VS2,
+    Selected_Covariates_VS1, Selected_Covariates_VS2,
+    Treatment, Control, Contrast,
+    Outcome, `Outcome Type`, outcome_group,
+    # Only the main precision_gain columns
+    all_of(all_main_methods)
+  )
+
+cat(sprintf("Total rows (binary + continuous): %d\n\n", nrow(df_primary_for_inspection)))
+
+# Breakdown by outcome_group
+cat("Breakdown by outcome_group:\n")
+outcome_breakdown = df_primary_for_inspection %>%
+  group_by(outcome_group) %>%
+  summarise(n = n(), .groups = "drop")
+print(outcome_breakdown)
+
+cat("\n\nFirst 20 rows:\n")
+cat("========================================\n")
+print(df_primary_for_inspection %>% head(20))
+
+###############################################################################
+##  Calculate Error Rates Directly from df_primary_for_inspection -----------
+###############################################################################
+
+cat("\n\n========================================\n")
+cat("ERROR RATE CALCULATION - All Adjustment\n")
+cat("========================================\n\n")
+
+# All adjustment - using same logic as build_comprehensive_summary_table
+error_rate_all = df_primary_for_inspection %>%
+  filter(N_Covariates != 0) %>%  # Only where covariates exist
+  summarise(
+    n_valid_trials = n(),
+    across(all_of(main_methods_all), 
+           ~sum(is.na(.)), 
+           .names = "NA_{.col}")
+  ) %>%
+  pivot_longer(
+    cols = starts_with("NA_"),
+    names_to = "Method",
+    values_to = "NA_Count"
+  ) %>%
+  mutate(
+    Method = str_replace(Method, "^NA_precision_gain_", ""),
+    Error_Rate = NA_Count / n_valid_trials,
+    Error_Rate_Pct = scales::percent(Error_Rate, accuracy = 0.1)
+  ) %>%
+  select(Method, NA_Count, n_valid_trials, Error_Rate, Error_Rate_Pct)
+
+print(error_rate_all)
+
+cat("\n\n========================================\n")
+cat("ERROR RATE CALCULATION - Top-3 Adjustment\n")
+cat("========================================\n\n")
+
+error_rate_top3 = df_primary_for_inspection %>%
+  filter(N_Covariates_VS1 != 0) %>%  # Only where VS1 covariates exist
+  summarise(
+    n_valid_trials = n(),
+    across(all_of(main_methods_top3), 
+           ~sum(is.na(.)), 
+           .names = "NA_{.col}")
+  ) %>%
+  pivot_longer(
+    cols = starts_with("NA_"),
+    names_to = "Method",
+    values_to = "NA_Count"
+  ) %>%
+  mutate(
+    Method = str_replace(Method, "^NA_precision_gain_", ""),
+    Method = str_replace(Method, "_Top-3$", ""),
+    Error_Rate = NA_Count / n_valid_trials,
+    Error_Rate_Pct = scales::percent(Error_Rate, accuracy = 0.1)
+  ) %>%
+  select(Method, NA_Count, n_valid_trials, Error_Rate, Error_Rate_Pct)
+
+print(error_rate_top3)
+
+cat("\n\n========================================\n")
+cat("ERROR RATE CALCULATION - Baseline+ Adjustment\n")
+cat("========================================\n\n")
+
+error_rate_baseline = df_primary_for_inspection %>%
+  filter(N_Covariates_VS2 != 0) %>%  # Only where VS2 covariates exist
+  summarise(
+    n_valid_trials = n(),
+    across(all_of(main_methods_baseline), 
+           ~sum(is.na(.)), 
+           .names = "NA_{.col}")
+  ) %>%
+  pivot_longer(
+    cols = starts_with("NA_"),
+    names_to = "Method",
+    values_to = "NA_Count"
+  ) %>%
+  mutate(
+    Method = str_replace(Method, "^NA_precision_gain_", ""),
+    Method = str_replace(Method, "_Baseline\\+$", ""),
+    Error_Rate = NA_Count / n_valid_trials,
+    Error_Rate_Pct = scales::percent(Error_Rate, accuracy = 0.1)
+  ) %>%
+  select(Method, NA_Count, n_valid_trials, Error_Rate, Error_Rate_Pct)
+
+print(error_rate_baseline)
+
+###############################################################################
+##  BY OUTCOME TYPE (Continuous vs Binary) -----------------------------------
+###############################################################################
+
+cat("\n\n========================================\n")
+cat("ERROR RATE BY OUTCOME TYPE - All Adjustment\n")
+cat("========================================\n\n")
+
+error_rate_by_outcome_all = df_primary_for_inspection %>%
+  filter(N_Covariates != 0) %>%
+  group_by(outcome_group) %>%
+  summarise(
+    n_valid_trials = n(),
+    across(all_of(main_methods_all), 
+           ~sum(is.na(.)), 
+           .names = "NA_{.col}"),
+    .groups = "drop"
+  ) %>%
+  pivot_longer(
+    cols = starts_with("NA_"),
+    names_to = "Method",
+    values_to = "NA_Count"
+  ) %>%
+  mutate(
+    Method = str_replace(Method, "^NA_precision_gain_", ""),
+    Error_Rate = NA_Count / n_valid_trials,
+    Error_Rate_Pct = scales::percent(Error_Rate, accuracy = 0.1)
+  ) %>%
+  select(outcome_group, Method, NA_Count, n_valid_trials, Error_Rate, Error_Rate_Pct)
+
+print(error_rate_by_outcome_all)
+
+cat("\n========================================\n\n")
+```
+
