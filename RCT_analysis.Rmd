@@ -8597,6 +8597,68 @@ cat("\n=== Randomization Scheme Summary ===\n")
 print(randomization_counts %>% select(-label))
 ```
 
+# Outcome Type Pie Chart
+```{r}
+# =============================================================================
+# Count and prepare data for Outcome Group (Binary vs Continuous)
+# =============================================================================
+
+outcome_group_counts = df_new %>%
+  mutate(
+    outcome_group_bc = case_when(
+      outcome_group == "binary"     ~ "Binary",
+      outcome_group == "continuous" ~ "Continuous",
+      TRUE ~ NA_character_
+    )
+  ) %>%
+  filter(!is.na(outcome_group_bc)) %>%
+  count(outcome_group_bc) %>%
+  arrange(desc(n)) %>%
+  mutate(
+    percentage = n / sum(n) * 100,
+    label = paste0(outcome_group_bc, "\n(", n, ", ", round(percentage, 1), "%)")
+  )
+
+# Color palette (consistent with your style)
+outcome_group_colors = c(
+  "Binary"     = "#FF7F00",  # light orange
+  "Continuous" = "#4DAF4A"   # light red / salmon
+)
+
+# =============================================================================
+# Plot outcome group pie chart
+# =============================================================================
+
+p_outcome_group = ggplot(outcome_group_counts,
+                         aes(x = "", y = n, fill = outcome_group_bc)) +
+  geom_bar(stat = "identity", width = 1, color = "white", linewidth = 0.5) +
+  coord_polar("y", start = 0) +
+  scale_fill_manual(values = outcome_group_colors) +
+  theme_void() +
+  theme(
+    legend.title = element_text(size = 20, face = "bold"),
+    legend.text  = element_text(size = 18),
+    legend.position = "right"
+  ) +
+  labs(fill = "Outcome Type") +
+  geom_text(aes(label = n),
+            position = position_stack(vjust = 0.5),
+            color = "white", size = 4, fontface = "bold")
+
+# Display and save
+print(p_outcome_group)
+
+ggsave("cleaned_data/Plot/outcome_group_binary_vs_continuous_pie.png",
+       p_outcome_group,
+       width = 8, height = 5, dpi = 600, bg = "white")
+
+# =============================================================================
+# Print summary table
+# =============================================================================
+cat("\n=== Outcome Type Summary (Binary vs Continuous) ===\n")
+print(outcome_group_counts %>% select(-label))
+
+```
 
 
 # Processing Flowchart
