@@ -5375,516 +5375,516 @@ print(p_cont_baseline_primary)
 ```
 ### No manul outlier removed
 ```{r}
-# First need to filter df_new to get primary and all outcomes datasets
-df_new_all_outcomes = df_new  # All outcomes
-
-# Primary outcomes only (outcomes starting with YP_)
-df_new_primary = df_new %>%
-  filter(str_detect(Outcome, "^YP_"))
-
-# Function to prepare long data
-# UPDATED: Includes Covariate columns in selection
-prepare_long_data = function(data) {
-  data %>%
-    select(outcome_group, starts_with("precision_gain_"), Trial_No, Outcome,
-           N_Covariates, N_Covariates_VS1, N_Covariates_VS2) %>% 
-    pivot_longer(cols       = starts_with("precision_gain_"),
-                 names_to  = "method_raw",
-                 values_to = "pg") %>%
-    mutate(
-      # Keep track of the adjustment type
-      adjustment_type = case_when(
-        grepl("_Top-3$", method_raw) ~ "Top-3",
-        grepl("_Baseline\\+$", method_raw) ~ "Baseline+",
-        TRUE ~ "All"
-      ),
-      # Simplified method names
-      method = case_match(
-        method_raw,
-        # All methods
-        "precision_gain_ANCOVA"                       ~ "ANCOVA",
-        "precision_gain_ANHECOVA"                     ~ "ANHECOVA",
-        "precision_gain_G_Logistic"                   ~ "G-Logistic",
-        "precision_gain_DML"                          ~ "DML",
-        "precision_gain_TMLE"                         ~ "TMLE",
-        "precision_gain_IPW"                          ~ "IPW",
-        
-        # Top-3 methods
-        "precision_gain_ANCOVA_Top-3"                 ~ "ANCOVA",
-        "precision_gain_ANHECOVA_Top-3"               ~ "ANHECOVA",
-        "precision_gain_G_Logistic_Top-3"             ~ "G-Logistic",
-        "precision_gain_DML_Top-3"                    ~ "DML",
-        "precision_gain_TMLE_Top-3"                   ~ "TMLE",
-        "precision_gain_IPW_Top-3"                    ~ "IPW",
-        
-        # Baseline+ methods
-        "precision_gain_ANCOVA_Baseline+"             ~ "ANCOVA",
-        "precision_gain_ANHECOVA_Baseline+"           ~ "ANHECOVA",
-        "precision_gain_G_Logistic_Baseline+"         ~ "G-Logistic",
-        "precision_gain_DML_Baseline+"                ~ "DML",
-        "precision_gain_TMLE_Baseline+"               ~ "TMLE",
-        "precision_gain_IPW_Baseline+"                ~ "IPW"
-      )) %>%
-    filter(!is.na(method))  # Remove rows where method couldn't be matched
-}
-
-# Create long data for both datasets
-df_long_full_all = prepare_long_data(df_new_all_outcomes)
-df_long_full_primary = prepare_long_data(df_new_primary)
-
-# Manual outlier threshold for precision gain
-pg_manual_threshold = 5
-
-###############################################################################
-##  SELECTIVE OUTLIER REMOVAL FUNCTION ---------------------------------------
-##  Removes outliers for:
-##  1. ANHECOVA with adjustment_type == "All" (all outcomes)
-##  2. IPW with adjustment_type == "All" + outcome_group == "continuous" (primary only)
-###############################################################################
-apply_selective_outlier_removal = function(data, is_primary = FALSE) {
-  if (is_primary) {
-    # For primary outcomes: remove ANHECOVA All AND IPW continuous All outliers
+  # First need to filter df_new to get primary and all outcomes datasets
+  df_new_all_outcomes = df_new  # All outcomes
+  
+  # Primary outcomes only (outcomes starting with YP_)
+  df_new_primary = df_new %>%
+    filter(str_detect(Outcome, "^YP_"))
+  
+  # Function to prepare long data
+  # UPDATED: Includes Covariate columns in selection
+  prepare_long_data = function(data) {
     data %>%
-      mutate(pg = case_when(
-        method == "ANHECOVA" & adjustment_type == "All" & pg >= pg_manual_threshold ~ NA_real_,
-        method == "IPW" & adjustment_type == "All" & outcome_group == "continuous" & pg >= pg_manual_threshold ~ NA_real_,
-        TRUE ~ pg
-      ))
-  } else {
-    # For all outcomes: only remove ANHECOVA All outliers
-    data %>%
-      mutate(pg = ifelse(method == "ANHECOVA" & adjustment_type == "All" & pg >= pg_manual_threshold, 
-                         NA, 
-                         pg))
+      select(outcome_group, starts_with("precision_gain_"), Trial_No, Outcome,
+             N_Covariates, N_Covariates_VS1, N_Covariates_VS2) %>% 
+      pivot_longer(cols       = starts_with("precision_gain_"),
+                   names_to  = "method_raw",
+                   values_to = "pg") %>%
+      mutate(
+        # Keep track of the adjustment type
+        adjustment_type = case_when(
+          grepl("_Top-3$", method_raw) ~ "Top-3",
+          grepl("_Baseline\\+$", method_raw) ~ "Baseline+",
+          TRUE ~ "All"
+        ),
+        # Simplified method names
+        method = case_match(
+          method_raw,
+          # All methods
+          "precision_gain_ANCOVA"                       ~ "ANCOVA",
+          "precision_gain_ANHECOVA"                     ~ "ANHECOVA",
+          "precision_gain_G_Logistic"                   ~ "G-Logistic",
+          "precision_gain_DML"                          ~ "DML",
+          "precision_gain_TMLE"                         ~ "TMLE",
+          "precision_gain_IPW"                          ~ "IPW",
+          
+          # Top-3 methods
+          "precision_gain_ANCOVA_Top-3"                 ~ "ANCOVA",
+          "precision_gain_ANHECOVA_Top-3"               ~ "ANHECOVA",
+          "precision_gain_G_Logistic_Top-3"             ~ "G-Logistic",
+          "precision_gain_DML_Top-3"                    ~ "DML",
+          "precision_gain_TMLE_Top-3"                   ~ "TMLE",
+          "precision_gain_IPW_Top-3"                    ~ "IPW",
+          
+          # Baseline+ methods
+          "precision_gain_ANCOVA_Baseline+"             ~ "ANCOVA",
+          "precision_gain_ANHECOVA_Baseline+"           ~ "ANHECOVA",
+          "precision_gain_G_Logistic_Baseline+"         ~ "G-Logistic",
+          "precision_gain_DML_Baseline+"                ~ "DML",
+          "precision_gain_TMLE_Baseline+"               ~ "TMLE",
+          "precision_gain_IPW_Baseline+"                ~ "IPW"
+        )) %>%
+      filter(!is.na(method))  # Remove rows where method couldn't be matched
   }
-}
-
-# Apply selective outlier removal (for plotting only)
-df_long_selective_all = apply_selective_outlier_removal(df_long_full_all, is_primary = FALSE)
-df_long_selective_primary = apply_selective_outlier_removal(df_long_full_primary, is_primary = TRUE)
-
-###############################################################################
-##  1.  Build ONE comprehensive summary table for ALL plots ------------------
-##      Columns: Method | #NA | Error Rate | #Tukey | #Shown
-##      FIXED: Error Rate calculated on ORIGINAL raw data (not selective data)
-###############################################################################
-
-# Methods that appear on plots by outcome type
-.method_set = list(
-  binary     = c("ANCOVA", "ANHECOVA", "G-Logistic", "DML", "TMLE", "IPW"),
-  continuous = c("ANCOVA", "ANHECOVA",               "DML", "TMLE", "IPW")
-)
-
-# Compute Tukey bounds per METHOD within the provided panel slice
-compute_tukey_bounds = function(panel_df) {
-  panel_df %>%
-    filter(!is.na(pg)) %>%
-    group_by(method) %>%
-    summarise(
-      Q1    = quantile(pg, 0.25, na.rm = TRUE),
-      Q3    = quantile(pg, 0.75, na.rm = TRUE),
-      IQR   = Q3 - Q1,
-      lower = Q1 - 1.5 * IQR,
-      upper = Q3 + 1.5 * IQR,
-      .groups = "drop"
-    )
-}
-
-build_comprehensive_summary_table = function() {
-  outcome_types    = c("binary", "continuous")
-  adjustment_types = c("All", "Top-3", "Baseline+")
-  data_types       = c("all", "primary")
   
-  all_rows = list()
+  # Create long data for both datasets
+  df_long_full_all = prepare_long_data(df_new_all_outcomes)
+  df_long_full_primary = prepare_long_data(df_new_primary)
   
-  for (data_type in data_types) {
-    # FIXED: Use ORIGINAL raw data for error rate calculation
-    df_raw_original = if (data_type == "primary") df_long_full_primary else df_long_full_all
-    
-    # Use selective data for plotting statistics (#Tukey, #Shown)
-    df_raw_selective = if (data_type == "primary") df_long_selective_primary else df_long_selective_all
-    
-    for (outcome_type in outcome_types) {
-      shown_methods = .method_set[[outcome_type]]
-      
-      for (vs_type in adjustment_types) {
-        # ---------- RAW slice from ORIGINAL data (for error rate)
-        raw_slice_original = df_raw_original %>%
-          filter(outcome_group == outcome_type,
-                 adjustment_type == vs_type,
-                 method %in% shown_methods)
-        
-        # ---------- RAW slice from SELECTIVE data (for Tukey and Shown)
-        raw_slice_selective = df_raw_selective %>%
-          filter(outcome_group == outcome_type,
-                 adjustment_type == vs_type,
-                 method %in% shown_methods)
-        
-        # ---------- Calculate Error Rate on ORIGINAL data (Where Covariates != 0)
-        error_stats = raw_slice_original %>%
-          mutate(relevant_n_cov = case_when(
-            adjustment_type == "Top-3"     ~ N_Covariates_VS1,
-            adjustment_type == "Baseline+" ~ N_Covariates_VS2,
-            TRUE                           ~ N_Covariates # Default to "All"
-          )) %>%
-          filter(relevant_n_cov != 0) %>% # Exclude trials where no covariates existed
-          group_by(method) %>%
-          summarise(
-            `#NA` = sum(is.na(pg)),
-            n_valid_trials = n(),
-            `Error Rate` = `#NA` / n_valid_trials,
-            .groups = "drop"
-          ) %>%
-          select(method, `#NA`, `Error Rate`)
-        
-        # ---------- Outlier Stats on SELECTIVE data (non-NA data)
-        non_na = raw_slice_selective %>% filter(!is.na(pg))
-        
-        # Tukey outliers (computed on selective data)
-        tb = compute_tukey_bounds(raw_slice_selective)
-        tukey_tbl = non_na %>%
-          inner_join(tb, by = "method") %>%
-          group_by(method) %>%
-          summarise(`#Tukey` = sum(pg < lower | pg > upper, na.rm = TRUE),
-                    .groups = "drop")
-        
-        # #Shown (all non-NA values in selective data)
-        shown_tbl = non_na %>%
-          group_by(method) %>%
-          summarise(`#Shown` = n(), .groups = "drop")
-        
-        # ---------- Combine and order
-        combo = error_stats %>%
-          full_join(tukey_tbl,  by = "method") %>%
-          full_join(shown_tbl,  by = "method") %>%
-          mutate(across(c(`#NA`, `#Tukey`, `#Shown`), ~ replace_na(., 0L))) %>%
-          mutate(`Error Rate` = replace_na(`Error Rate`, 0)) %>%
-          filter(method %in% shown_methods) %>%
-          arrange(factor(method, levels = shown_methods)) %>%
-          mutate(Panel = paste(data_type, outcome_type, vs_type, sep = "_")) %>%
-          select(Method = method, `#NA`, `Error Rate`, `#Tukey`, `#Shown`, Panel)
-        
-        all_rows[[length(all_rows) + 1]] = combo
-      }
+  # Manual outlier threshold for precision gain
+  pg_manual_threshold = 5
+  
+  ###############################################################################
+  ##  SELECTIVE OUTLIER REMOVAL FUNCTION ---------------------------------------
+  ##  Removes outliers for:
+  ##  1. ANHECOVA with adjustment_type == "All" (all outcomes)
+  ##  2. IPW with adjustment_type == "All" + outcome_group == "continuous" (primary only)
+  ###############################################################################
+  apply_selective_outlier_removal = function(data, is_primary = FALSE) {
+    if (is_primary) {
+      # For primary outcomes: remove ANHECOVA All AND IPW continuous All outliers
+      data %>%
+        mutate(pg = case_when(
+          method == "ANHECOVA" & adjustment_type == "All" & pg >= pg_manual_threshold ~ NA_real_,
+          method == "IPW" & adjustment_type == "All" & outcome_group == "continuous" & pg >= pg_manual_threshold ~ NA_real_,
+          TRUE ~ pg
+        ))
+    } else {
+      # For all outcomes: only remove ANHECOVA All outliers
+      data %>%
+        mutate(pg = ifelse(method == "ANHECOVA" & adjustment_type == "All" & pg >= pg_manual_threshold, 
+                           NA, 
+                           pg))
     }
   }
   
-  bind_rows(all_rows)
-}
-
-###############################################################################
-##  2.  Color palette matching smooth plots ---------------------------------
-###############################################################################
-# Define color palette (IPW changed to purple to differentiate from ANCOVA)
-method_colors = c(
-  "ANCOVA"     = "#F8766D",    # Red
-  "ANHECOVA"   = "#B79F00",    # Gold/Yellow
-  "G-Logistic" = "#00BA38",    # Green
-  "DML"        = "#00BFC4",    # Cyan
-  "TMLE"       = "#619CFF",    # Blue
-  "IPW"        = "#C77CFF"     # Purple
-)
-
-###############################################################################
-##  3.  Plot function with colors and improved text size ---------------------
-###############################################################################
-make_plot = function(data, outcome_type) {
+  # Apply selective outlier removal (for plotting only)
+  df_long_selective_all = apply_selective_outlier_removal(df_long_full_all, is_primary = FALSE)
+  df_long_selective_primary = apply_selective_outlier_removal(df_long_full_primary, is_primary = TRUE)
   
-  # Transform variance ratio to proportional variance reduction (1 - original value)
-  data = data %>%
-    filter(!is.na(pg)) %>%
-    mutate(prop_var_reduction = 1 - pg)
+  ###############################################################################
+  ##  1.  Build ONE comprehensive summary table for ALL plots ------------------
+  ##      Columns: Method | #NA | Error Rate | #Tukey | #Shown
+  ##      FIXED: Error Rate calculated on ORIGINAL raw data (not selective data)
+  ###############################################################################
   
-  # Set factor levels based on outcome type
-  if (outcome_type == "binary") {
-    method_levels = c("ANCOVA", "ANHECOVA", "G-Logistic", "DML", "TMLE", "IPW")
-  } else {
-    method_levels = c("ANCOVA", "ANHECOVA", "DML", "TMLE", "IPW")  # no G-Logistic
+  # Methods that appear on plots by outcome type
+  .method_set = list(
+    binary     = c("ANCOVA", "ANHECOVA", "G-Logistic", "DML", "TMLE", "IPW"),
+    continuous = c("ANCOVA", "ANHECOVA",               "DML", "TMLE", "IPW")
+  )
+  
+  # Compute Tukey bounds per METHOD within the provided panel slice
+  compute_tukey_bounds = function(panel_df) {
+    panel_df %>%
+      filter(!is.na(pg)) %>%
+      group_by(method) %>%
+      summarise(
+        Q1    = quantile(pg, 0.25, na.rm = TRUE),
+        Q3    = quantile(pg, 0.75, na.rm = TRUE),
+        IQR   = Q3 - Q1,
+        lower = Q1 - 1.5 * IQR,
+        upper = Q3 + 1.5 * IQR,
+        .groups = "drop"
+      )
   }
   
-  data = data %>%
-    mutate(method = factor(method, levels = method_levels))
+  build_comprehensive_summary_table = function() {
+    outcome_types    = c("binary", "continuous")
+    adjustment_types = c("All", "Top-3", "Baseline+")
+    data_types       = c("all", "primary")
+    
+    all_rows = list()
+    
+    for (data_type in data_types) {
+      # FIXED: Use ORIGINAL raw data for error rate calculation
+      df_raw_original = if (data_type == "primary") df_long_full_primary else df_long_full_all
+      
+      # Use selective data for plotting statistics (#Tukey, #Shown)
+      df_raw_selective = if (data_type == "primary") df_long_selective_primary else df_long_selective_all
+      
+      for (outcome_type in outcome_types) {
+        shown_methods = .method_set[[outcome_type]]
+        
+        for (vs_type in adjustment_types) {
+          # ---------- RAW slice from ORIGINAL data (for error rate)
+          raw_slice_original = df_raw_original %>%
+            filter(outcome_group == outcome_type,
+                   adjustment_type == vs_type,
+                   method %in% shown_methods)
+          
+          # ---------- RAW slice from SELECTIVE data (for Tukey and Shown)
+          raw_slice_selective = df_raw_selective %>%
+            filter(outcome_group == outcome_type,
+                   adjustment_type == vs_type,
+                   method %in% shown_methods)
+          
+          # ---------- Calculate Error Rate on ORIGINAL data (Where Covariates != 0)
+          error_stats = raw_slice_original %>%
+            mutate(relevant_n_cov = case_when(
+              adjustment_type == "Top-3"     ~ N_Covariates_VS1,
+              adjustment_type == "Baseline+" ~ N_Covariates_VS2,
+              TRUE                           ~ N_Covariates # Default to "All"
+            )) %>%
+            filter(relevant_n_cov != 0) %>% # Exclude trials where no covariates existed
+            group_by(method) %>%
+            summarise(
+              `#NA` = sum(is.na(pg)),
+              n_valid_trials = n(),
+              `Error Rate` = `#NA` / n_valid_trials,
+              .groups = "drop"
+            ) %>%
+            select(method, `#NA`, `Error Rate`)
+          
+          # ---------- Outlier Stats on SELECTIVE data (non-NA data)
+          non_na = raw_slice_selective %>% filter(!is.na(pg))
+          
+          # Tukey outliers (computed on selective data)
+          tb = compute_tukey_bounds(raw_slice_selective)
+          tukey_tbl = non_na %>%
+            inner_join(tb, by = "method") %>%
+            group_by(method) %>%
+            summarise(`#Tukey` = sum(pg < lower | pg > upper, na.rm = TRUE),
+                      .groups = "drop")
+          
+          # #Shown (all non-NA values in selective data)
+          shown_tbl = non_na %>%
+            group_by(method) %>%
+            summarise(`#Shown` = n(), .groups = "drop")
+          
+          # ---------- Combine and order
+          combo = error_stats %>%
+            full_join(tukey_tbl,  by = "method") %>%
+            full_join(shown_tbl,  by = "method") %>%
+            mutate(across(c(`#NA`, `#Tukey`, `#Shown`), ~ replace_na(., 0L))) %>%
+            mutate(`Error Rate` = replace_na(`Error Rate`, 0)) %>%
+            filter(method %in% shown_methods) %>%
+            arrange(factor(method, levels = shown_methods)) %>%
+            mutate(Panel = paste(data_type, outcome_type, vs_type, sep = "_")) %>%
+            select(Method = method, `#NA`, `Error Rate`, `#Tukey`, `#Shown`, Panel)
+          
+          all_rows[[length(all_rows) + 1]] = combo
+        }
+      }
+    }
+    
+    bind_rows(all_rows)
+  }
   
-  # Counts for labels
-  method_counts = data %>%
-    group_by(method) %>%
-    summarise(n = n(), .groups = "drop")
-  
-  # x-axis label positions
-  x_labels_df = data.frame(
-    method = method_levels[method_levels %in% unique(data$method)],
-    x_pos  = 1:length(method_levels[method_levels %in% unique(data$method)])
+  ###############################################################################
+  ##  2.  Color palette matching smooth plots ---------------------------------
+  ###############################################################################
+  # Define color palette (IPW changed to purple to differentiate from ANCOVA)
+  method_colors = c(
+    "ANCOVA"     = "#F8766D",    # Red
+    "ANHECOVA"   = "#B79F00",    # Gold/Yellow
+    "G-Logistic" = "#00BA38",    # Green
+    "DML"        = "#00BFC4",    # Cyan
+    "TMLE"       = "#619CFF",    # Blue
+    "IPW"        = "#C77CFF"     # Purple
   )
   
-  x_labels_counts = x_labels_df %>%
-    left_join(method_counts, by = "method")
+  ###############################################################################
+  ##  3.  Plot function with colors and improved text size ---------------------
+  ###############################################################################
+  make_plot = function(data, outcome_type) {
+    
+    # Transform variance ratio to proportional variance reduction (1 - original value)
+    data = data %>%
+      filter(!is.na(pg)) %>%
+      mutate(prop_var_reduction = 1 - pg)
+    
+    # Set factor levels based on outcome type
+    if (outcome_type == "binary") {
+      method_levels = c("ANCOVA", "ANHECOVA", "G-Logistic", "DML", "TMLE", "IPW")
+    } else {
+      method_levels = c("ANCOVA", "ANHECOVA", "DML", "TMLE", "IPW")  # no G-Logistic
+    }
+    
+    data = data %>%
+      mutate(method = factor(method, levels = method_levels))
+    
+    # Counts for labels
+    method_counts = data %>%
+      group_by(method) %>%
+      summarise(n = n(), .groups = "drop")
+    
+    # x-axis label positions
+    x_labels_df = data.frame(
+      method = method_levels[method_levels %in% unique(data$method)],
+      x_pos  = 1:length(method_levels[method_levels %in% unique(data$method)])
+    )
+    
+    x_labels_counts = x_labels_df %>%
+      left_join(method_counts, by = "method")
+    
+    p = ggplot(data, aes(method, prop_var_reduction, fill = method)) +
+      geom_boxplot(colour = "grey25", alpha = .50, width = 0.5, outlier.shape = NA) +
+      geom_hline(yintercept = 0, linetype = "dashed", colour = "grey40") +
+      scale_fill_manual(values = method_colors) +
+      labs(x = NULL, y = "Proportional Variance Reduction") +
+      coord_cartesian(ylim = c(-1, 1), clip = "off") +
+      theme_minimal(base_size = 18) +
+      theme(
+        axis.text.x   = element_blank(),
+        axis.ticks.x  = element_blank(),
+        axis.text.y   = element_text(size = 16),
+        axis.title.y  = element_text(size = 18),
+        panel.grid.minor = element_blank(),
+        panel.background = element_rect(fill = "white", colour = NA),
+        plot.background  = element_rect(fill = "white", colour = NA),
+        legend.position  = "none",
+        plot.margin      = margin(t = 5, r = 10, b = 60, l = 10)
+      ) +
+      geom_text(data = x_labels_counts, 
+                aes(x = x_pos, y = -1.15, label = method),
+                inherit.aes = FALSE, size = 5.5, lineheight = 0.85, hjust = 0.5) +
+      geom_text(data = x_labels_counts, 
+                aes(x = x_pos, y = -1.35, label = paste0("(", n, ")")),
+                inherit.aes = FALSE, size = 4.5, hjust = 0.5)
+    
+    return(p)
+  }
   
-  p = ggplot(data, aes(method, prop_var_reduction, fill = method)) +
-    geom_boxplot(colour = "grey25", alpha = .50, width = 0.5, outlier.shape = NA) +
-    geom_hline(yintercept = 0, linetype = "dashed", colour = "grey40") +
-    scale_fill_manual(values = method_colors) +
-    labs(x = NULL, y = "Proportional Variance Reduction") +
-    coord_cartesian(ylim = c(-1, 1), clip = "off") +
-    theme_minimal(base_size = 18) +
-    theme(
-      axis.text.x   = element_blank(),
-      axis.ticks.x  = element_blank(),
-      axis.text.y   = element_text(size = 16),
-      axis.title.y  = element_text(size = 18),
-      panel.grid.minor = element_blank(),
-      panel.background = element_rect(fill = "white", colour = NA),
-      plot.background  = element_rect(fill = "white", colour = NA),
-      legend.position  = "none",
-      plot.margin      = margin(t = 5, r = 10, b = 60, l = 10)
-    ) +
-    geom_text(data = x_labels_counts, 
-              aes(x = x_pos, y = -1.15, label = method),
-              inherit.aes = FALSE, size = 5.5, lineheight = 0.85, hjust = 0.5) +
-    geom_text(data = x_labels_counts, 
-              aes(x = x_pos, y = -1.35, label = paste0("(", n, ")")),
-              inherit.aes = FALSE, size = 4.5, hjust = 0.5)
+  ###############################################################################
+  ##  Publication quality settings ---------------------------------------------
+  ###############################################################################
+  pub_width  = 10
+  pub_height = 6.5
+  pub_dpi    = 600  # 600 dpi for publication quality
   
-  return(p)
-}
-
-###############################################################################
-##  Publication quality settings ---------------------------------------------
-###############################################################################
-pub_width  = 10
-pub_height = 6.5
-pub_dpi    = 600  # 600 dpi for publication quality
-
-###############################################################################
-##  4.  Create output directory ----------------------------------------------
-###############################################################################
-output_dir = "cleaned_data/plot/exam plot"
-dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
-
-###############################################################################
-##  5.  Generate all plots (All outcomes) ------------------------------------
-###############################################################################
-
-# All methods - All outcomes
-df_binary_all_all = df_long_selective_all %>% 
-  filter(outcome_group == "binary", adjustment_type == "All")
-
-p_binary_all_all = make_plot(df_binary_all_all, "binary")
-ggsave(file.path(output_dir, "precision_gain_binary_all_all_selective.png"), 
-       p_binary_all_all, width = pub_width, height = pub_height, dpi = pub_dpi, bg = "white")
-
-# Top-3 methods - All outcomes
-df_binary_top3_all = df_long_selective_all %>% 
-  filter(outcome_group == "binary", adjustment_type == "Top-3")
-
-p_binary_top3_all = make_plot(df_binary_top3_all, "binary")
-ggsave(file.path(output_dir, "precision_gain_binary_top3_all_selective.png"), 
-       p_binary_top3_all, width = pub_width, height = pub_height, dpi = pub_dpi, bg = "white")
-
-# Baseline+ methods - All outcomes
-df_binary_baseline_all = df_long_selective_all %>% 
-  filter(outcome_group == "binary", adjustment_type == "Baseline+")
-
-p_binary_baseline_all = make_plot(df_binary_baseline_all, "binary")
-ggsave(file.path(output_dir, "precision_gain_binary_baseline_all_selective.png"), 
-       p_binary_baseline_all, width = pub_width, height = pub_height, dpi = pub_dpi, bg = "white")
-
-# Continuous plots - All outcomes
-df_continuous_all_all = df_long_selective_all %>% 
-  filter(outcome_group == "continuous", adjustment_type == "All")
-
-p_cont_all_all = make_plot(df_continuous_all_all, "continuous")
-ggsave(file.path(output_dir, "precision_gain_continuous_all_all_selective.png"), 
-       p_cont_all_all, width = pub_width, height = pub_height, dpi = pub_dpi, bg = "white")
-
-df_continuous_top3_all = df_long_selective_all %>% 
-  filter(outcome_group == "continuous", adjustment_type == "Top-3")
-
-p_cont_top3_all = make_plot(df_continuous_top3_all, "continuous")
-ggsave(file.path(output_dir, "precision_gain_continuous_top3_all_selective.png"), 
-       p_cont_top3_all, width = pub_width, height = pub_height, dpi = pub_dpi, bg = "white")
-
-df_continuous_baseline_all = df_long_selective_all %>% 
-  filter(outcome_group == "continuous", adjustment_type == "Baseline+")
-
-p_cont_baseline_all = make_plot(df_continuous_baseline_all, "continuous")
-ggsave(file.path(output_dir, "precision_gain_continuous_baseline_all_selective.png"), 
-       p_cont_baseline_all, width = pub_width, height = pub_height, dpi = pub_dpi, bg = "white")
-
-###############################################################################
-##  6.  Generate all plots (Primary outcomes only) ---------------------------
-###############################################################################
-
-# All methods - Primary outcomes
-df_binary_all_primary = df_long_selective_primary %>% 
-  filter(outcome_group == "binary", adjustment_type == "All")
-
-p_binary_all_primary = make_plot(df_binary_all_primary, "binary")
-ggsave(file.path(output_dir, "precision_gain_binary_all_primary_selective.png"), 
-       p_binary_all_primary, width = pub_width, height = pub_height, dpi = pub_dpi, bg = "white")
-
-# Top-3 methods - Primary outcomes
-df_binary_top3_primary = df_long_selective_primary %>% 
-  filter(outcome_group == "binary", adjustment_type == "Top-3")
-
-p_binary_top3_primary = make_plot(df_binary_top3_primary, "binary")
-ggsave(file.path(output_dir, "precision_gain_binary_top3_primary_selective.png"), 
-       p_binary_top3_primary, width = pub_width, height = pub_height, dpi = pub_dpi, bg = "white")
-
-# Baseline+ methods - Primary outcomes
-df_binary_baseline_primary = df_long_selective_primary %>% 
-  filter(outcome_group == "binary", adjustment_type == "Baseline+")
-
-p_binary_baseline_primary = make_plot(df_binary_baseline_primary, "binary")
-ggsave(file.path(output_dir, "precision_gain_binary_baseline_primary_selective.png"), 
-       p_binary_baseline_primary, width = pub_width, height = pub_height, dpi = pub_dpi, bg = "white")
-
-# Continuous plots - Primary outcomes
-df_continuous_all_primary = df_long_selective_primary %>% 
-  filter(outcome_group == "continuous", adjustment_type == "All")
-
-p_cont_all_primary = make_plot(df_continuous_all_primary, "continuous")
-ggsave(file.path(output_dir, "precision_gain_continuous_all_primary_selective.png"), 
-       p_cont_all_primary, width = pub_width, height = pub_height, dpi = pub_dpi, bg = "white")
-
-df_continuous_top3_primary = df_long_selective_primary %>% 
-  filter(outcome_group == "continuous", adjustment_type == "Top-3")
-
-p_cont_top3_primary = make_plot(df_continuous_top3_primary, "continuous")
-ggsave(file.path(output_dir, "precision_gain_continuous_top3_primary_selective.png"), 
-       p_cont_top3_primary, width = pub_width, height = pub_height, dpi = pub_dpi, bg = "white")
-
-df_continuous_baseline_primary = df_long_selective_primary %>% 
-  filter(outcome_group == "continuous", adjustment_type == "Baseline+")
-
-p_cont_baseline_primary = make_plot(df_continuous_baseline_primary, "continuous")
-ggsave(file.path(output_dir, "precision_gain_continuous_baseline_primary_selective.png"), 
-       p_cont_baseline_primary, width = pub_width, height = pub_height, dpi = pub_dpi, bg = "white")
-
-###############################################################################
-##  7.  Build and print the comprehensive table (no CSV writing) -------------
-###############################################################################
-comprehensive_table = build_comprehensive_summary_table()
-
-cat("\n========================================\n")
-cat("Comprehensive Table with ERROR RATE\n")
-cat("Error Rate calculated on ORIGINAL raw data (not selective data)\n")
-cat("SELECTIVE outlier removal for PLOTTING:\n")
-cat("  - All outcomes: ANHECOVA All (pg >= 5)\n")
-cat("  - Primary outcomes: ANHECOVA All (pg >= 5) + IPW continuous All (pg >= 5)\n")
-cat("All other methods show full data\n")
-cat("========================================\n\n")
-
-# Formatting Error Rate as percentage for easier reading
-print(comprehensive_table %>% 
-        mutate(`Error Rate` = scales::percent(`Error Rate`, accuracy = 0.1)))
-
-###############################################################################
-##  8.  Calculate OVERALL ERROR RATE (All Outcomes Only) ---------------------
-###############################################################################
-
-cat("\n========================================\n")
-cat("OVERALL ERROR RATE (All Outcomes Only)\n")
-cat("========================================\n\n")
-
-# Filter for "all" outcomes only (exclude primary)
-all_outcomes_table = comprehensive_table %>%
-  filter(grepl("^all_", Panel))
-
-# Calculate overall error rate across all methods and panels
-overall_error_rate = all_outcomes_table %>%
-  summarise(
-    total_NA = sum(`#NA`),
-    total_NA_plus_shown = sum(`#NA`) + sum(`#Shown`),
-    overall_error_rate = total_NA / total_NA_plus_shown
-  )
-
-cat(sprintf("Total #NA across all methods/panels: %d\n", overall_error_rate$total_NA))
-cat(sprintf("Total cases (NA + Shown): %d\n", overall_error_rate$total_NA_plus_shown))
-cat(sprintf("Overall Error Rate: %.3f (%s)\n\n", 
-            overall_error_rate$overall_error_rate,
-            scales::percent(overall_error_rate$overall_error_rate, accuracy = 0.1)))
-
-# Also show breakdown by outcome type and adjustment type
-cat("Breakdown by Outcome Type and Adjustment Type:\n")
-cat("-----------------------------------------------\n\n")
-
-breakdown_table = all_outcomes_table %>%
-  mutate(
-    outcome_type = sub("^all_([^_]+)_.*", "\\1", Panel),
-    adjustment_type = sub("^all_[^_]+_(.*)", "\\1", Panel)
-  ) %>%
-  group_by(outcome_type, adjustment_type) %>%
-  summarise(
-    total_NA = sum(`#NA`),
-    total_cases = sum(`#NA`) + sum(`#Shown`),
-    error_rate = total_NA / total_cases,
-    .groups = "drop"
-  ) %>%
-  mutate(error_rate_pct = scales::percent(error_rate, accuracy = 0.1))
-
-print(breakdown_table)
-
-###############################################################################
-##  9.  Count removed outliers ---------------------------------------------
-###############################################################################
-cat("\n========================================\n")
-cat("OUTLIER REMOVAL IMPACT\n")
-cat("========================================\n\n")
-
-# Count outliers removed for ANHECOVA All across both outcome types (all outcomes)
-cat("ALL OUTCOMES - ANHECOVA All outliers removed:\n")
-anhecova_all_outliers = df_long_full_all %>%
-  filter(method == "ANHECOVA", adjustment_type == "All", !is.na(pg)) %>%
-  mutate(is_outlier = pg >= pg_manual_threshold) %>%
-  group_by(outcome_group) %>%
-  summarise(
-    total = n(),
-    outliers_removed = sum(is_outlier),
-    pct_removed = 100 * outliers_removed / total,
-    .groups = "drop"
-  )
-
-print(anhecova_all_outliers)
-
-# Count outliers removed for IPW continuous All (primary outcomes only)
-cat("\nPRIMARY OUTCOMES - IPW continuous All outliers removed:\n")
-ipw_cont_primary_outliers = df_long_full_primary %>%
-  filter(method == "IPW", adjustment_type == "All", outcome_group == "continuous", !is.na(pg)) %>%
-  mutate(is_outlier = pg >= pg_manual_threshold) %>%
-  summarise(
-    total = n(),
-    outliers_removed = sum(is_outlier),
-    pct_removed = 100 * outliers_removed / total
-  )
-
-print(ipw_cont_primary_outliers)
-
-cat("\n========================================\n")
-cat("All plots saved to:", output_dir, "\n")
-cat("All plots saved at publication quality (600 dpi, white background)\n")
-cat("Boxplots use outlier.shape=NA to hide Tukey outliers\n")
-cat("SELECTIVE outlier removal for PLOTTING:\n")
-cat("  - All outcomes: ANHECOVA All (pg >= 5)\n")
-cat("  - Primary outcomes: ANHECOVA All (pg >= 5) + IPW continuous All (pg >= 5)\n")
-cat("Error rates calculated on ORIGINAL raw data for all methods\n")
-cat("========================================\n\n")
-
-# Display all 12 plots in console
-cat("All Outcomes Plots:\n")
-print(p_binary_all_all)
-print(p_binary_top3_all)
-print(p_binary_baseline_all)
-print(p_cont_all_all)
-print(p_cont_top3_all)
-print(p_cont_baseline_all)
-
-cat("\nPrimary Outcomes Plots:\n")
-print(p_binary_all_primary)
-print(p_binary_top3_primary)
-print(p_binary_baseline_primary)
-print(p_cont_all_primary)
-print(p_cont_top3_primary)
-print(p_cont_baseline_primary)
+  ###############################################################################
+  ##  4.  Create output directory ----------------------------------------------
+  ###############################################################################
+  output_dir = "cleaned_data/plot/exam plot"
+  dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
+  
+  ###############################################################################
+  ##  5.  Generate all plots (All outcomes) ------------------------------------
+  ###############################################################################
+  
+  # All methods - All outcomes
+  df_binary_all_all = df_long_selective_all %>% 
+    filter(outcome_group == "binary", adjustment_type == "All")
+  
+  p_binary_all_all = make_plot(df_binary_all_all, "binary")
+  ggsave(file.path(output_dir, "precision_gain_binary_all_all_selective.png"), 
+         p_binary_all_all, width = pub_width, height = pub_height, dpi = pub_dpi, bg = "white")
+  
+  # Top-3 methods - All outcomes
+  df_binary_top3_all = df_long_selective_all %>% 
+    filter(outcome_group == "binary", adjustment_type == "Top-3")
+  
+  p_binary_top3_all = make_plot(df_binary_top3_all, "binary")
+  ggsave(file.path(output_dir, "precision_gain_binary_top3_all_selective.png"), 
+         p_binary_top3_all, width = pub_width, height = pub_height, dpi = pub_dpi, bg = "white")
+  
+  # Baseline+ methods - All outcomes
+  df_binary_baseline_all = df_long_selective_all %>% 
+    filter(outcome_group == "binary", adjustment_type == "Baseline+")
+  
+  p_binary_baseline_all = make_plot(df_binary_baseline_all, "binary")
+  ggsave(file.path(output_dir, "precision_gain_binary_baseline_all_selective.png"), 
+         p_binary_baseline_all, width = pub_width, height = pub_height, dpi = pub_dpi, bg = "white")
+  
+  # Continuous plots - All outcomes
+  df_continuous_all_all = df_long_selective_all %>% 
+    filter(outcome_group == "continuous", adjustment_type == "All")
+  
+  p_cont_all_all = make_plot(df_continuous_all_all, "continuous")
+  ggsave(file.path(output_dir, "precision_gain_continuous_all_all_selective.png"), 
+         p_cont_all_all, width = pub_width, height = pub_height, dpi = pub_dpi, bg = "white")
+  
+  df_continuous_top3_all = df_long_selective_all %>% 
+    filter(outcome_group == "continuous", adjustment_type == "Top-3")
+  
+  p_cont_top3_all = make_plot(df_continuous_top3_all, "continuous")
+  ggsave(file.path(output_dir, "precision_gain_continuous_top3_all_selective.png"), 
+         p_cont_top3_all, width = pub_width, height = pub_height, dpi = pub_dpi, bg = "white")
+  
+  df_continuous_baseline_all = df_long_selective_all %>% 
+    filter(outcome_group == "continuous", adjustment_type == "Baseline+")
+  
+  p_cont_baseline_all = make_plot(df_continuous_baseline_all, "continuous")
+  ggsave(file.path(output_dir, "precision_gain_continuous_baseline_all_selective.png"), 
+         p_cont_baseline_all, width = pub_width, height = pub_height, dpi = pub_dpi, bg = "white")
+  
+  ###############################################################################
+  ##  6.  Generate all plots (Primary outcomes only) ---------------------------
+  ###############################################################################
+  
+  # All methods - Primary outcomes
+  df_binary_all_primary = df_long_selective_primary %>% 
+    filter(outcome_group == "binary", adjustment_type == "All")
+  
+  p_binary_all_primary = make_plot(df_binary_all_primary, "binary")
+  ggsave(file.path(output_dir, "precision_gain_binary_all_primary_selective.png"), 
+         p_binary_all_primary, width = pub_width, height = pub_height, dpi = pub_dpi, bg = "white")
+  
+  # Top-3 methods - Primary outcomes
+  df_binary_top3_primary = df_long_selective_primary %>% 
+    filter(outcome_group == "binary", adjustment_type == "Top-3")
+  
+  p_binary_top3_primary = make_plot(df_binary_top3_primary, "binary")
+  ggsave(file.path(output_dir, "precision_gain_binary_top3_primary_selective.png"), 
+         p_binary_top3_primary, width = pub_width, height = pub_height, dpi = pub_dpi, bg = "white")
+  
+  # Baseline+ methods - Primary outcomes
+  df_binary_baseline_primary = df_long_selective_primary %>% 
+    filter(outcome_group == "binary", adjustment_type == "Baseline+")
+  
+  p_binary_baseline_primary = make_plot(df_binary_baseline_primary, "binary")
+  ggsave(file.path(output_dir, "precision_gain_binary_baseline_primary_selective.png"), 
+         p_binary_baseline_primary, width = pub_width, height = pub_height, dpi = pub_dpi, bg = "white")
+  
+  # Continuous plots - Primary outcomes
+  df_continuous_all_primary = df_long_selective_primary %>% 
+    filter(outcome_group == "continuous", adjustment_type == "All")
+  
+  p_cont_all_primary = make_plot(df_continuous_all_primary, "continuous")
+  ggsave(file.path(output_dir, "precision_gain_continuous_all_primary_selective.png"), 
+         p_cont_all_primary, width = pub_width, height = pub_height, dpi = pub_dpi, bg = "white")
+  
+  df_continuous_top3_primary = df_long_selective_primary %>% 
+    filter(outcome_group == "continuous", adjustment_type == "Top-3")
+  
+  p_cont_top3_primary = make_plot(df_continuous_top3_primary, "continuous")
+  ggsave(file.path(output_dir, "precision_gain_continuous_top3_primary_selective.png"), 
+         p_cont_top3_primary, width = pub_width, height = pub_height, dpi = pub_dpi, bg = "white")
+  
+  df_continuous_baseline_primary = df_long_selective_primary %>% 
+    filter(outcome_group == "continuous", adjustment_type == "Baseline+")
+  
+  p_cont_baseline_primary = make_plot(df_continuous_baseline_primary, "continuous")
+  ggsave(file.path(output_dir, "precision_gain_continuous_baseline_primary_selective.png"), 
+         p_cont_baseline_primary, width = pub_width, height = pub_height, dpi = pub_dpi, bg = "white")
+  
+  ###############################################################################
+  ##  7.  Build and print the comprehensive table (no CSV writing) -------------
+  ###############################################################################
+  comprehensive_table = build_comprehensive_summary_table()
+  
+  cat("\n========================================\n")
+  cat("Comprehensive Table with ERROR RATE\n")
+  cat("Error Rate calculated on ORIGINAL raw data (not selective data)\n")
+  cat("SELECTIVE outlier removal for PLOTTING:\n")
+  cat("  - All outcomes: ANHECOVA All (pg >= 5)\n")
+  cat("  - Primary outcomes: ANHECOVA All (pg >= 5) + IPW continuous All (pg >= 5)\n")
+  cat("All other methods show full data\n")
+  cat("========================================\n\n")
+  
+  # Formatting Error Rate as percentage for easier reading
+  print(comprehensive_table %>% 
+          mutate(`Error Rate` = scales::percent(`Error Rate`, accuracy = 0.1)))
+  
+  ###############################################################################
+  ##  8.  Calculate OVERALL ERROR RATE (All Outcomes Only) ---------------------
+  ###############################################################################
+  
+  cat("\n========================================\n")
+  cat("OVERALL ERROR RATE (All Outcomes Only)\n")
+  cat("========================================\n\n")
+  
+  # Filter for "all" outcomes only (exclude primary)
+  all_outcomes_table = comprehensive_table %>%
+    filter(grepl("^all_", Panel))
+  
+  # Calculate overall error rate across all methods and panels
+  overall_error_rate = all_outcomes_table %>%
+    summarise(
+      total_NA = sum(`#NA`),
+      total_NA_plus_shown = sum(`#NA`) + sum(`#Shown`),
+      overall_error_rate = total_NA / total_NA_plus_shown
+    )
+  
+  cat(sprintf("Total #NA across all methods/panels: %d\n", overall_error_rate$total_NA))
+  cat(sprintf("Total cases (NA + Shown): %d\n", overall_error_rate$total_NA_plus_shown))
+  cat(sprintf("Overall Error Rate: %.3f (%s)\n\n", 
+              overall_error_rate$overall_error_rate,
+              scales::percent(overall_error_rate$overall_error_rate, accuracy = 0.1)))
+  
+  # Also show breakdown by outcome type and adjustment type
+  cat("Breakdown by Outcome Type and Adjustment Type:\n")
+  cat("-----------------------------------------------\n\n")
+  
+  breakdown_table = all_outcomes_table %>%
+    mutate(
+      outcome_type = sub("^all_([^_]+)_.*", "\\1", Panel),
+      adjustment_type = sub("^all_[^_]+_(.*)", "\\1", Panel)
+    ) %>%
+    group_by(outcome_type, adjustment_type) %>%
+    summarise(
+      total_NA = sum(`#NA`),
+      total_cases = sum(`#NA`) + sum(`#Shown`),
+      error_rate = total_NA / total_cases,
+      .groups = "drop"
+    ) %>%
+    mutate(error_rate_pct = scales::percent(error_rate, accuracy = 0.1))
+  
+  print(breakdown_table)
+  
+  ###############################################################################
+  ##  9.  Count removed outliers ---------------------------------------------
+  ###############################################################################
+  cat("\n========================================\n")
+  cat("OUTLIER REMOVAL IMPACT\n")
+  cat("========================================\n\n")
+  
+  # Count outliers removed for ANHECOVA All across both outcome types (all outcomes)
+  cat("ALL OUTCOMES - ANHECOVA All outliers removed:\n")
+  anhecova_all_outliers = df_long_full_all %>%
+    filter(method == "ANHECOVA", adjustment_type == "All", !is.na(pg)) %>%
+    mutate(is_outlier = pg >= pg_manual_threshold) %>%
+    group_by(outcome_group) %>%
+    summarise(
+      total = n(),
+      outliers_removed = sum(is_outlier),
+      pct_removed = 100 * outliers_removed / total,
+      .groups = "drop"
+    )
+  
+  print(anhecova_all_outliers)
+  
+  # Count outliers removed for IPW continuous All (primary outcomes only)
+  cat("\nPRIMARY OUTCOMES - IPW continuous All outliers removed:\n")
+  ipw_cont_primary_outliers = df_long_full_primary %>%
+    filter(method == "IPW", adjustment_type == "All", outcome_group == "continuous", !is.na(pg)) %>%
+    mutate(is_outlier = pg >= pg_manual_threshold) %>%
+    summarise(
+      total = n(),
+      outliers_removed = sum(is_outlier),
+      pct_removed = 100 * outliers_removed / total
+    )
+  
+  print(ipw_cont_primary_outliers)
+  
+  cat("\n========================================\n")
+  cat("All plots saved to:", output_dir, "\n")
+  cat("All plots saved at publication quality (600 dpi, white background)\n")
+  cat("Boxplots use outlier.shape=NA to hide Tukey outliers\n")
+  cat("SELECTIVE outlier removal for PLOTTING:\n")
+  cat("  - All outcomes: ANHECOVA All (pg >= 5)\n")
+  cat("  - Primary outcomes: ANHECOVA All (pg >= 5) + IPW continuous All (pg >= 5)\n")
+  cat("Error rates calculated on ORIGINAL raw data for all methods\n")
+  cat("========================================\n\n")
+  
+  # Display all 12 plots in console
+  cat("All Outcomes Plots:\n")
+  print(p_binary_all_all)
+  print(p_binary_top3_all)
+  print(p_binary_baseline_all)
+  print(p_cont_all_all)
+  print(p_cont_top3_all)
+  print(p_cont_baseline_all)
+  
+  cat("\nPrimary Outcomes Plots:\n")
+  print(p_binary_all_primary)
+  print(p_binary_top3_primary)
+  print(p_binary_baseline_primary)
+  print(p_cont_all_primary)
+  print(p_cont_top3_primary)
+  print(p_cont_baseline_primary)
 ```
 ### Individual SL
 ```{r}
@@ -6225,6 +6225,7 @@ cat("========================================\n\n")
 ```
 
 ## Scaled Diff
+### Manul outlier removed
 ```{r}
 ###############################################################################
 ##  DIFFERENCE VIOLIN PLOTS (OUTLIERS REMOVED FOR PLOTS + BIG SUMMARY TABLE)
@@ -6591,6 +6592,332 @@ print(p_diff_cont_top3_primary)
 print(p_diff_cont_baseline_primary)
 
 ```
+### No manul outlier removed
+```{r}
+###############################################################################
+##  DIFFERENCE PLOTS (SELECTIVE MANUAL OUTLIER REMOVAL)
+##  Removes outliers for: ANHECOVA with outcome_group == "continuous" & adjustment_type == "All"
+###############################################################################
+
+###############################################################################
+##  0.  Long data for differences (already created in previous chunk) --------
+###############################################################################
+# df_long_diff_full_all and df_long_diff_full_primary already exist
+
+# Manual "extreme" outlier threshold for differences
+diff_manual_threshold = 8
+
+###############################################################################
+##  SELECTIVE OUTLIER REMOVAL FUNCTION FOR DIFFERENCES ----------------------
+##  Removes outliers ONLY for:
+##  ANHECOVA with adjustment_type == "All" & outcome_group == "continuous"
+###############################################################################
+apply_selective_diff_outlier_removal = function(data) {
+  data %>%
+    mutate(diff = ifelse(
+      method == "ANHECOVA" & adjustment_type == "All" & outcome_group == "continuous" & abs(diff) > diff_manual_threshold,
+      NA_real_,
+      diff
+    ))
+}
+
+# Apply selective outlier removal
+df_long_diff_selective_all = apply_selective_diff_outlier_removal(df_long_diff_full_all)
+df_long_diff_selective_primary = apply_selective_diff_outlier_removal(df_long_diff_full_primary)
+
+###############################################################################
+##  1.  Build comprehensive summary table (SELECTIVE outlier removal) --------
+##      Columns: Method | #NA | #Outlier(Manual) | #Tukey | #Shown | Panel
+##      Error Rate calculated on ORIGINAL raw data (not selective data)
+###############################################################################
+
+build_comprehensive_diff_table_selective = function() {
+  outcome_types    = c("binary", "continuous")
+  adjustment_types = c("All", "Top-3", "Baseline+")
+  data_types       = c("all", "primary")
+  
+  all_rows = list()
+  
+  for (data_type in data_types) {
+    # ORIGINAL data for #NA calculation
+    df_raw_original = if (data_type == "primary") df_long_diff_full_primary else df_long_diff_full_all
+    
+    # SELECTIVE data for plotting statistics
+    df_raw_selective = if (data_type == "primary") df_long_diff_selective_primary else df_long_diff_selective_all
+    
+    for (outcome_type in outcome_types) {
+      method_levels = .diff_method_set[[outcome_type]]
+      
+      for (vs_type in adjustment_types) {
+        # ---------- RAW slice from ORIGINAL data (for #NA)
+        raw_slice_original = df_raw_original %>%
+          filter(outcome_group == outcome_type,
+                 adjustment_type == vs_type,
+                 method %in% method_levels)
+        
+        # ---------- RAW slice from SELECTIVE data (for Tukey and Shown)
+        raw_slice_selective = df_raw_selective %>%
+          filter(outcome_group == outcome_type,
+                 adjustment_type == vs_type,
+                 method %in% method_levels)
+        
+        # #NA from ORIGINAL data
+        nas = raw_slice_original %>%
+          group_by(method) %>%
+          summarise(`#NA` = sum(is.na(diff)), .groups = "drop")
+        
+        # Non-NA from ORIGINAL data for manual outlier counting
+        non_na_original = raw_slice_original %>% filter(!is.na(diff))
+        
+        # Manual outliers (|diff| > threshold) from ORIGINAL data
+        manual_tbl = non_na_original %>%
+          group_by(method) %>%
+          summarise(`#Outlier(Manual)` = sum(abs(diff) > diff_manual_threshold, na.rm = TRUE),
+                    .groups = "drop")
+        
+        # Non-NA from SELECTIVE data
+        non_na_selective = raw_slice_selective %>% filter(!is.na(diff))
+        
+        # Tukey outliers (computed on selective data)
+        tb = compute_tukey_bounds(raw_slice_selective)
+        tukey_tbl = non_na_selective %>%
+          inner_join(tb, by = "method") %>%
+          group_by(method) %>%
+          summarise(`#Tukey` = sum(diff < lower | diff > upper, na.rm = TRUE),
+                    .groups = "drop")
+        
+        # #Shown (all non-NA values in selective data)
+        shown_tbl = non_na_selective %>%
+          group_by(method) %>%
+          summarise(`#Shown` = n(), .groups = "drop")
+        
+        # Combine
+        combo = nas %>%
+          full_join(manual_tbl, by = "method") %>%
+          full_join(tukey_tbl,  by = "method") %>%
+          full_join(shown_tbl,  by = "method") %>%
+          mutate(across(c(`#NA`, `#Outlier(Manual)`, `#Tukey`, `#Shown`), ~ replace_na(., 0L))) %>%
+          filter(method %in% method_levels) %>%
+          arrange(factor(method, levels = method_levels)) %>%
+          mutate(Panel = paste(data_type, outcome_type, vs_type, sep = "_")) %>%
+          select(Method = method, `#NA`, `#Outlier(Manual)`, `#Tukey`, `#Shown`, Panel)
+        
+        all_rows[[length(all_rows) + 1]] = combo
+      }
+    }
+  }
+  
+  bind_rows(all_rows)
+}
+
+###############################################################################
+##  2.  Plot function for differences (uses SELECTIVE data) ------------------
+###############################################################################
+make_diff_plot_selective = function(panel_df, outcome_type) {
+  
+  # Set factor levels based on outcome type
+  if (outcome_type == "binary") {
+    method_levels = c("ANCOVA", "ANHECOVA", "G-Logistic", "DML", "TMLE", "IPW")
+  } else {
+    method_levels = c("ANCOVA", "ANHECOVA", "DML", "TMLE", "IPW")  # no G-Logistic
+  }
+  
+  # Filter to non-NA only (selective outlier removal already applied)
+  data = panel_df %>%
+    filter(!is.na(diff)) %>%
+    mutate(method = factor(method, levels = method_levels))
+  
+  # Counts for labels
+  method_counts = data %>%
+    group_by(method) %>%
+    summarise(n = n(), .groups = "drop")
+  
+  # x-axis label positions
+  x_labels_df = data.frame(
+    method = method_levels[method_levels %in% unique(data$method)],
+    x_pos   = 1:length(method_levels[method_levels %in% unique(data$method)])
+  )
+  
+  x_labels_counts = x_labels_df %>%
+    left_join(method_counts, by = "method")
+  
+  p = ggplot(data, aes(method, diff, fill = method)) +
+    geom_boxplot(colour = "grey25", alpha = .50, width = 0.5, outlier.shape = NA) +
+    geom_hline(yintercept = 0, linetype = "dashed", colour = "grey40") +
+    scale_fill_manual(values = method_colors) +
+    labs(x = NULL, y = "Difference from Unadjusted Estimate") +
+    coord_cartesian(ylim = c(-3, 3), clip = "off") +
+    scale_y_continuous(breaks = c(-3, -1.5, 0, 1.5, 3)) +
+    theme_minimal(base_size = 18) +
+    theme(
+      axis.text.x   = element_blank(),
+      axis.ticks.x  = element_blank(),
+      axis.text.y   = element_text(size = 16),
+      axis.title.y  = element_text(size = 18),
+      panel.grid.minor = element_blank(),
+      panel.background = element_rect(fill = "white", colour = NA),
+      plot.background  = element_rect(fill = "white", colour = NA),
+      legend.position  = "none",
+      plot.margin      = margin(t = 5, r = 10, b = 60, l = 10)
+    ) +
+    geom_text(data = x_labels_counts, 
+              aes(x = x_pos, y = -3.45, label = method),
+              inherit.aes = FALSE, size = 5.5, lineheight = 0.85, hjust = 0.5) +
+    geom_text(data = x_labels_counts, 
+              aes(x = x_pos, y = -4.05, label = paste0("(", n, ")")),
+              inherit.aes = FALSE, size = 4.5, hjust = 0.5)
+  
+  return(p)
+}
+
+###############################################################################
+##  3.  Create output directory ----------------------------------------------
+###############################################################################
+output_dir_selective = "cleaned_data/plot/exam plot"
+dir.create(output_dir_selective, recursive = TRUE, showWarnings = FALSE)
+
+###############################################################################
+##  4.  Generate all difference plots (SELECTIVE outlier removal) ------------
+###############################################################################
+
+# Helper to get panel slice from selective data
+get_selective_panel = function(data_source, outcome_type, vs_type) {
+  method_levels = .diff_method_set[[outcome_type]]
+  data_source %>%
+    filter(outcome_group == outcome_type,
+           adjustment_type == vs_type,
+           method %in% method_levels)
+}
+
+## ---- All outcomes (selective outlier removal)
+# Binary
+panel_bin_all = get_selective_panel(df_long_diff_selective_all, "binary", "All")
+p_diff_binary_all_all_selective = make_diff_plot_selective(panel_bin_all, "binary")
+ggsave(file.path(output_dir_selective, "difference_binary_all_all_selective.png"),
+       p_diff_binary_all_all_selective, width = pub_width, height = pub_height, dpi = pub_dpi, bg = "white")
+
+panel_bin_top3 = get_selective_panel(df_long_diff_selective_all, "binary", "Top-3")
+p_diff_binary_top3_all_selective = make_diff_plot_selective(panel_bin_top3, "binary")
+ggsave(file.path(output_dir_selective, "difference_binary_top3_all_selective.png"),
+       p_diff_binary_top3_all_selective, width = pub_width, height = pub_height, dpi = pub_dpi, bg = "white")
+
+panel_bin_base = get_selective_panel(df_long_diff_selective_all, "binary", "Baseline+")
+p_diff_binary_baseline_all_selective = make_diff_plot_selective(panel_bin_base, "binary")
+ggsave(file.path(output_dir_selective, "difference_binary_baseline_all_selective.png"),
+       p_diff_binary_baseline_all_selective, width = pub_width, height = pub_height, dpi = pub_dpi, bg = "white")
+
+# Continuous
+panel_con_all = get_selective_panel(df_long_diff_selective_all, "continuous", "All")
+p_diff_cont_all_all_selective = make_diff_plot_selective(panel_con_all, "continuous")
+ggsave(file.path(output_dir_selective, "difference_continuous_all_all_selective.png"),
+       p_diff_cont_all_all_selective, width = pub_width, height = pub_height, dpi = pub_dpi, bg = "white")
+
+panel_con_top3 = get_selective_panel(df_long_diff_selective_all, "continuous", "Top-3")
+p_diff_cont_top3_all_selective = make_diff_plot_selective(panel_con_top3, "continuous")
+ggsave(file.path(output_dir_selective, "difference_continuous_top3_all_selective.png"),
+       p_diff_cont_top3_all_selective, width = pub_width, height = pub_height, dpi = pub_dpi, bg = "white")
+
+panel_con_base = get_selective_panel(df_long_diff_selective_all, "continuous", "Baseline+")
+p_diff_cont_baseline_all_selective = make_diff_plot_selective(panel_con_base, "continuous")
+ggsave(file.path(output_dir_selective, "difference_continuous_baseline_all_selective.png"),
+       p_diff_cont_baseline_all_selective, width = pub_width, height = pub_height, dpi = pub_dpi, bg = "white")
+
+## ---- Primary outcomes (selective outlier removal)
+# Binary
+panel_bin_all_p = get_selective_panel(df_long_diff_selective_primary, "binary", "All")
+p_diff_binary_all_primary_selective = make_diff_plot_selective(panel_bin_all_p, "binary")
+ggsave(file.path(output_dir_selective, "difference_binary_all_primary_selective.png"),
+       p_diff_binary_all_primary_selective, width = pub_width, height = pub_height, dpi = pub_dpi, bg = "white")
+
+panel_bin_top3_p = get_selective_panel(df_long_diff_selective_primary, "binary", "Top-3")
+p_diff_binary_top3_primary_selective = make_diff_plot_selective(panel_bin_top3_p, "binary")
+ggsave(file.path(output_dir_selective, "difference_binary_top3_primary_selective.png"),
+       p_diff_binary_top3_primary_selective, width = pub_width, height = pub_height, dpi = pub_dpi, bg = "white")
+
+panel_bin_base_p = get_selective_panel(df_long_diff_selective_primary, "binary", "Baseline+")
+p_diff_binary_baseline_primary_selective = make_diff_plot_selective(panel_bin_base_p, "binary")
+ggsave(file.path(output_dir_selective, "difference_binary_baseline_primary_selective.png"),
+       p_diff_binary_baseline_primary_selective, width = pub_width, height = pub_height, dpi = pub_dpi, bg = "white")
+
+# Continuous
+panel_con_all_p = get_selective_panel(df_long_diff_selective_primary, "continuous", "All")
+p_diff_cont_all_primary_selective = make_diff_plot_selective(panel_con_all_p, "continuous")
+ggsave(file.path(output_dir_selective, "difference_continuous_all_primary_selective.png"),
+       p_diff_cont_all_primary_selective, width = pub_width, height = pub_height, dpi = pub_dpi, bg = "white")
+
+panel_con_top3_p = get_selective_panel(df_long_diff_selective_primary, "continuous", "Top-3")
+p_diff_cont_top3_primary_selective = make_diff_plot_selective(panel_con_top3_p, "continuous")
+ggsave(file.path(output_dir_selective, "difference_continuous_top3_primary_selective.png"),
+       p_diff_cont_top3_primary_selective, width = pub_width, height = pub_height, dpi = pub_dpi, bg = "white")
+
+panel_con_base_p = get_selective_panel(df_long_diff_selective_primary, "continuous", "Baseline+")
+p_diff_cont_baseline_primary_selective = make_diff_plot_selective(panel_con_base_p, "continuous")
+ggsave(file.path(output_dir_selective, "difference_continuous_baseline_primary_selective.png"),
+       p_diff_cont_baseline_primary_selective, width = pub_width, height = pub_height, dpi = pub_dpi, bg = "white")
+
+###############################################################################
+##  5.  Build comprehensive table (SELECTIVE outlier removal) ----------------
+###############################################################################
+comprehensive_diff_table_selective = build_comprehensive_diff_table_selective()
+
+cat("\n========================================\n")
+cat("Comprehensive DIFFERENCE table (SELECTIVE Manual Outlier Removal)\n")
+cat("SELECTIVE outlier removal for PLOTTING:\n")
+cat("  - ANHECOVA continuous All (|diff| > 8)\n")
+cat("  - All other methods show full data\n")
+cat("#NA calculated on ORIGINAL raw data\n")
+cat(paste0("Manual threshold: |diff| > ", diff_manual_threshold, "\n"))
+cat("========================================\n\n")
+print(comprehensive_diff_table_selective)
+
+###############################################################################
+##  6.  Count removed outliers -----------------------------------------------
+###############################################################################
+cat("\n========================================\n")
+cat("OUTLIER REMOVAL IMPACT\n")
+cat("========================================\n\n")
+
+# Count outliers removed for ANHECOVA continuous All
+cat("ANHECOVA continuous All outliers removed:\n")
+anhecova_cont_all_outliers = df_long_diff_full_all %>%
+  filter(method == "ANHECOVA", adjustment_type == "All", outcome_group == "continuous", !is.na(diff)) %>%
+  mutate(is_outlier = abs(diff) > diff_manual_threshold) %>%
+  summarise(
+    total = n(),
+    outliers_removed = sum(is_outlier),
+    pct_removed = 100 * outliers_removed / total
+  )
+
+print(anhecova_cont_all_outliers)
+
+cat("\n========================================\n")
+cat("All plots saved to:", output_dir_selective, "\n")
+cat("All plots saved at publication quality (600 dpi, white background)\n")
+cat("Boxplots use outlier.shape=NA to hide Tukey outliers\n")
+cat("SELECTIVE outlier removal for PLOTTING:\n")
+cat("  - ANHECOVA continuous All (|diff| > 8)\n")
+cat("  - All other methods show full data\n")
+cat("#NA calculated on ORIGINAL raw data for all methods\n")
+cat("========================================\n\n")
+
+# Display all 12 plots in console
+cat("All Outcomes - Difference Plots (Selective Removal):\n")
+print(p_diff_binary_all_all_selective)
+print(p_diff_binary_top3_all_selective)
+print(p_diff_binary_baseline_all_selective)
+print(p_diff_cont_all_all_selective)
+print(p_diff_cont_top3_all_selective)
+print(p_diff_cont_baseline_all_selective)
+
+cat("\nPrimary Outcomes - Difference Plots (Selective Removal):\n")
+print(p_diff_binary_all_primary_selective)
+print(p_diff_binary_top3_primary_selective)
+print(p_diff_binary_baseline_primary_selective)
+print(p_diff_cont_all_primary_selective)
+print(p_diff_cont_top3_primary_selective)
+print(p_diff_cont_baseline_primary_selective)
+```
+
 # PVR Summary
 ```{r}
 ###############################################################################
@@ -7384,7 +7711,7 @@ make_plot_smooth_log = function(data, outcome_type, show_legend = FALSE) {
   }
   
   p = ggplot(data, aes(x = log10(Sample_Size), y = prop_var_reduction, color = method)) +
-    geom_smooth(method = "loess", span = 0.75, se = FALSE, linewidth = 1.2) +
+    geom_smooth(method = "loess", span = 1, se = FALSE, linewidth = 1.2) +
     geom_hline(yintercept = 0, linetype = "dashed", colour = "grey40") +
     scale_color_manual(values = method_colors) +
     labs(x = "Log10(Sample Size)", y = "Proportional Variance Reduction", color = "Method") +
