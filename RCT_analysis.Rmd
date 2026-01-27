@@ -9247,7 +9247,7 @@ individual_sl_methods = c("SL_glm", "SL_glmnet", "SL_rpart", "SL_gam", "SL_rando
                           "SL_nnet", "SL_svm", "SL_xgboost", "SL_bartMachine")
 
 # Manual outlier threshold
-pg_manual_threshold = 5
+pg_manual_threshold = 2
 
 # Methods that get outlier removal for continuous outcomes
 continuous_outlier_methods = c("SL_glm", "SL_gam", "SL_xgboost")

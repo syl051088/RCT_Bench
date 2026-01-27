@@ -5201,3 +5201,25 @@ df_meta %>%
   sum()
 ```
 
+```{r}
+# Check for outliers in the full continuous data
+df_ml_continuous_all_full %>%
+  filter(method %in% c("SL_glm", "SL_gam", "SL_xgboost"), !is.na(pg)) %>%
+  group_by(method) %>%
+  summarise(
+    total = n(),
+    outliers_pg_gte_5 = sum(pg >= 5),
+    max_pg = max(pg, na.rm = TRUE)
+  )
+
+# Before outlier removal
+df_ml_continuous_all_full %>%
+  filter(method %in% c("SL_glm", "SL_gam", "SL_xgboost"), !is.na(pvr)) %>%
+  count(method)
+
+# After outlier removal
+df_ml_continuous_all %>%
+  filter(method %in% c("SL_glm", "SL_gam", "SL_xgboost"), !is.na(pvr)) %>%
+  count(method)
+```
+
