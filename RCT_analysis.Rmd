@@ -7700,6 +7700,7 @@ cat("Sample size range:", min(df_long_size_cleaned_all$Sample_Size),
 
 # Function for smoothed plot (log10 sample size) - USING LOESS
 # Modified to accept show_legend parameter
+# DML and TMLE use dashed lines
 make_plot_smooth_log = function(data, outcome_type, show_legend = FALSE) {
   if (outcome_type == "binary") {
     method_levels = c("ANCOVA", "ANHECOVA", "G-Logistic", "DML", "TMLE", "IPW")
@@ -7710,11 +7711,24 @@ make_plot_smooth_log = function(data, outcome_type, show_legend = FALSE) {
     data = data %>% mutate(method = factor(method, levels = method_levels))
   }
   
-  p = ggplot(data, aes(x = log10(Sample_Size), y = prop_var_reduction, color = method)) +
+  # Create linetype mapping: solid for ANCOVA, ANHECOVA, G-Logistic, IPW; dashed for DML, TMLE
+  linetype_mapping = c(
+    "ANCOVA" = "solid",
+    "ANHECOVA" = "solid",
+    "G-Logistic" = "solid",
+    "DML" = "dashed",
+    "TMLE" = "dashed",
+    "IPW" = "solid"
+  )
+  
+  p = ggplot(data, aes(x = log10(Sample_Size), y = prop_var_reduction, 
+                       color = method, linetype = method)) +
     geom_smooth(method = "loess", span = 1, se = FALSE, linewidth = 1.2) +
     geom_hline(yintercept = 0, linetype = "dashed", colour = "grey40") +
     scale_color_manual(values = method_colors) +
-    labs(x = "Log10(Sample Size)", y = "Proportional Variance Reduction", color = "Method") +
+    scale_linetype_manual(values = linetype_mapping) +
+    labs(x = "Log10(Sample Size)", y = "Proportional Variance Reduction", 
+         color = "Method", linetype = "Method") +
     coord_cartesian(ylim = c(-1, 1)) +
     theme_minimal(base_size = 22) +
     theme(panel.grid.minor = element_blank(),
@@ -7774,8 +7788,9 @@ generate_single_plot = function(data_source, outcome_type, vs_type, version, plo
     return(NULL)
   }
   
-  # LEGEND ONLY FOR TOP-LEFT PLOT: continuous + all (for both all and primary)
-  show_legend = (outcome_type == "continuous" && vs_type == "all")
+  # LEGEND FOR BOTH BINARY ALL AND CONTINUOUS ALL (top-left plots for each outcome type)
+  show_legend = ((outcome_type == "binary" && vs_type == "all") || 
+                 (outcome_type == "continuous" && vs_type == "all"))
   
   # Create appropriate plot based on version
   p = if (version == "smooth_log") {
@@ -8929,7 +8944,6 @@ print(randomization_counts %>% select(-label))
 # =============================================================================
 # Count and prepare data for Outcome Group (Binary vs Continuous)
 # =============================================================================
-
 outcome_group_counts = df_new %>%
   mutate(
     outcome_group_bc = case_when(
@@ -8948,14 +8962,13 @@ outcome_group_counts = df_new %>%
 
 # Color palette (consistent with your style)
 outcome_group_colors = c(
-  "Binary"     = "#FF7F00",  # light orange
-  "Continuous" = "#4DAF4A"   # light red / salmon
+  "Binary"     = "#4DAF4A",
+  "Continuous" = "#377EB8"
 )
 
 # =============================================================================
 # Plot outcome group pie chart
 # =============================================================================
-
 p_outcome_group = ggplot(outcome_group_counts,
                          aes(x = "", y = n, fill = outcome_group_bc)) +
   geom_bar(stat = "identity", width = 1, color = "white", linewidth = 0.5) +
@@ -8972,19 +8985,24 @@ p_outcome_group = ggplot(outcome_group_counts,
             position = position_stack(vjust = 0.5),
             color = "white", size = 4, fontface = "bold")
 
-# Display and save
+# Display
 print(p_outcome_group)
 
+# Save PNG version
 ggsave("cleaned_data/Plot/outcome_group_binary_vs_continuous_pie.png",
        p_outcome_group,
        width = 8, height = 5, dpi = 600, bg = "white")
+
+# Save PDF version
+ggsave("cleaned_data/Plot/outcome_group_binary_vs_continuous_pie.pdf",
+       p_outcome_group,
+       width = 8, height = 5, bg = "white")
 
 # =============================================================================
 # Print summary table
 # =============================================================================
 cat("\n=== Outcome Type Summary (Binary vs Continuous) ===\n")
 print(outcome_group_counts %>% select(-label))
-
 ```
 
 
