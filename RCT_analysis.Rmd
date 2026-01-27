@@ -9100,6 +9100,7 @@ cat('Flowchart saved to cleaned_data/Plot/data_curation_flowchart.png\n')
 
 # Error Rate
 ## TMLE
+### Summary Statistics
 ```{r}
 ###############################################################################
 ##  ERROR RATE AND MEAN/MEDIAN VARIANCE REDUCTION FOR INDIVIDUAL SL METHODS --
@@ -9230,6 +9231,371 @@ print(continuous_all_sl_stats[, c("method", "error_rate", "n_total", "n_valid", 
 cat("\n\nTABLE 2: VARIANCE REDUCTION STATISTICS\n")
 cat("----------------------------------------\n\n")
 print(continuous_all_sl_stats[, c("method", "mean", "sd", "median")])
+```
+### Boxplot
+```{r}
+###############################################################################
+##  BOXPLOTS FOR INDIVIDUAL ML METHODS - PVR ANALYSIS ------------------------
+##  Mimics main analysis structure with All Outcomes and Primary Outcomes
+##  SELECTIVE outlier removal for continuous outcomes only:
+##    - SL_glm, SL_gam, SL_xgboost: pg >= 5 removed
+##  Individual SL methods only use "All covariates" (no Top-3 or Baseline+)
+###############################################################################
+
+# Individual SL methods (All covariates - base versions only, no VS1 or VS2)
+individual_sl_methods = c("SL_glm", "SL_glmnet", "SL_rpart", "SL_gam", "SL_randomForest", 
+                          "SL_nnet", "SL_svm", "SL_xgboost", "SL_bartMachine")
+
+# Manual outlier threshold
+pg_manual_threshold = 5
+
+# Methods that get outlier removal for continuous outcomes
+continuous_outlier_methods = c("SL_glm", "SL_gam", "SL_xgboost")
+
+###############################################################################
+##  Function to prepare long data for individual ML methods ------------------
+###############################################################################
+prepare_ml_long_data = function(data, outcome_type) {
+  
+  # Filter by outcome type
+  if (outcome_type == "continuous") {
+    data_filtered = data %>%
+      filter(`Outcome Type` %in% c("continuous", "continuous proportion"))
+  } else if (outcome_type == "binary") {
+    data_filtered = data %>%
+      filter(`Outcome Type` %in% c("binary", "composite binary"))
+  }
+  
+  # Initialize list to store data for each method
+  all_method_data = list()
+  
+  # Loop through each individual SL method
+  for (method in individual_sl_methods) {
+    # Get the precision gain column name for this method (base version only)
+    pg_col = paste0("How much precision gain can ", method, "_TMLE provide?")
+    
+    # Check if column exists
+    if (pg_col %in% colnames(data_filtered)) {
+      # Extract precision gain values and create dataframe
+      method_data = data.frame(
+        method = method,
+        pg = data_filtered[[pg_col]],
+        pvr = 1 - data_filtered[[pg_col]],  # Proportional Variance Reduction
+        stringsAsFactors = FALSE
+      )
+      
+      all_method_data[[length(all_method_data) + 1]] = method_data
+    }
+  }
+  
+  # Combine all methods into one dataframe
+  if (length(all_method_data) > 0) {
+    result = bind_rows(all_method_data)
+    return(result)
+  } else {
+    return(data.frame())
+  }
+}
+
+###############################################################################
+##  SELECTIVE OUTLIER REMOVAL FUNCTION ---------------------------------------
+##  Removes outliers for SL_glm, SL_gam, SL_xgboost in continuous outcomes
+###############################################################################
+apply_selective_outlier_removal_ml = function(data, outcome_type) {
+  if (outcome_type == "continuous") {
+    # For continuous outcomes: remove outliers for specific methods
+    data %>%
+      mutate(pg = case_when(
+        method %in% continuous_outlier_methods & pg >= pg_manual_threshold ~ NA_real_,
+        TRUE ~ pg
+      )) %>%
+      mutate(pvr = 1 - pg)  # Recalculate PVR after outlier removal
+  } else {
+    # For binary outcomes: no outlier removal
+    data
+  }
+}
+
+###############################################################################
+##  Color palette for individual ML methods ----------------------------------
+###############################################################################
+ml_method_colors = c(
+  "SL_glm"           = "#F8766D",    # Red
+  "SL_glmnet"        = "#B79F00",    # Gold
+  "SL_rpart"         = "#00BA38",    # Green
+  "SL_gam"           = "#00BFC4",    # Cyan
+  "SL_randomForest"  = "#619CFF",    # Blue
+  "SL_nnet"          = "#C77CFF",    # Purple
+  "SL_svm"           = "#F564E3",    # Magenta
+  "SL_xgboost"       = "#00C19F",    # Teal
+  "SL_bartMachine"   = "#FF6E42"     # Orange-red
+)
+
+###############################################################################
+##  Plot function for individual ML methods ----------------------------------
+###############################################################################
+make_ml_plot = function(data, outcome_type) {
+  
+  # Filter out NA values
+  data = data %>% filter(!is.na(pvr))
+  
+  # Set factor levels to match the order in individual_sl_methods
+  data = data %>%
+    mutate(method = factor(method, levels = individual_sl_methods))
+  
+  # Counts for labels
+  method_counts = data %>%
+    group_by(method) %>%
+    summarise(n = n(), .groups = "drop")
+  
+  # x-axis label positions
+  available_methods = individual_sl_methods[individual_sl_methods %in% unique(data$method)]
+  x_labels_df = data.frame(
+    method = available_methods,
+    x_pos  = 1:length(available_methods)
+  )
+  
+  x_labels_counts = x_labels_df %>%
+    left_join(method_counts, by = "method")
+  
+  # Clean method names for display (remove "SL_" prefix)
+  x_labels_counts = x_labels_counts %>%
+    mutate(display_name = gsub("^SL_", "", method))
+  
+  # Create plot
+  p = ggplot(data, aes(method, pvr, fill = method)) +
+    geom_boxplot(colour = "grey25", alpha = .50, width = 0.5, outlier.shape = NA) +
+    geom_hline(yintercept = 0, linetype = "dashed", colour = "grey40") +
+    scale_fill_manual(values = ml_method_colors) +
+    labs(x = NULL, y = "Proportional Variance Reduction") +
+    coord_cartesian(ylim = c(-1, 1), clip = "off") +
+    theme_minimal(base_size = 18) +
+    theme(
+      axis.text.x   = element_blank(),
+      axis.ticks.x  = element_blank(),
+      axis.text.y   = element_text(size = 16),
+      axis.title.y  = element_text(size = 18),
+      panel.grid.minor = element_blank(),
+      panel.background = element_rect(fill = "white", colour = NA),
+      plot.background  = element_rect(fill = "white", colour = NA),
+      legend.position  = "none",
+      plot.margin      = margin(t = 5, r = 10, b = 60, l = 10)
+    ) +
+    geom_text(data = x_labels_counts, 
+              aes(x = x_pos, y = -1.15, label = display_name),
+              inherit.aes = FALSE, size = 5.5, lineheight = 0.85, hjust = 0.5) +
+    geom_text(data = x_labels_counts, 
+              aes(x = x_pos, y = -1.35, label = paste0("(", n, ")")),
+              inherit.aes = FALSE, size = 4.5, hjust = 0.5)
+  
+  return(p)
+}
+
+###############################################################################
+##  Publication quality settings ---------------------------------------------
+###############################################################################
+pub_width  = 12   # Slightly wider to accommodate 9 methods
+pub_height = 6.5
+pub_dpi    = 600
+
+###############################################################################
+##  Create output directory --------------------------------------------------
+###############################################################################
+output_dir = "cleaned_data/plot/exam plot"
+dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
+
+###############################################################################
+##  Prepare data for ALL OUTCOMES --------------------------------------------
+###############################################################################
+cat("\n========================================\n")
+cat("Preparing data for individual ML methods\n")
+cat("ALL OUTCOMES (full dataset)\n")
+cat("========================================\n\n")
+
+# Prepare long data for binary and continuous outcomes - ALL OUTCOMES
+df_ml_binary_all_full = prepare_ml_long_data(df_comparison, "binary")
+df_ml_continuous_all_full = prepare_ml_long_data(df_comparison, "continuous")
+
+# Apply selective outlier removal
+df_ml_binary_all = apply_selective_outlier_removal_ml(df_ml_binary_all_full, "binary")
+df_ml_continuous_all = apply_selective_outlier_removal_ml(df_ml_continuous_all_full, "continuous")
+
+cat("Binary outcomes (all): ", nrow(df_ml_binary_all), " total observations\n")
+cat("Continuous outcomes (all): ", nrow(df_ml_continuous_all), " total observations\n\n")
+
+###############################################################################
+##  Prepare data for PRIMARY OUTCOMES ----------------------------------------
+###############################################################################
+cat("Preparing data for PRIMARY OUTCOMES\n")
+cat("========================================\n\n")
+
+# Filter df_comparison for primary outcomes (YP_ prefix)
+df_comparison_primary = df_comparison %>%
+  filter(str_detect(Outcome, "^YP_"))
+
+# Prepare long data for binary and continuous outcomes - PRIMARY OUTCOMES
+df_ml_binary_primary_full = prepare_ml_long_data(df_comparison_primary, "binary")
+df_ml_continuous_primary_full = prepare_ml_long_data(df_comparison_primary, "continuous")
+
+# Apply selective outlier removal
+df_ml_binary_primary = apply_selective_outlier_removal_ml(df_ml_binary_primary_full, "binary")
+df_ml_continuous_primary = apply_selective_outlier_removal_ml(df_ml_continuous_primary_full, "continuous")
+
+cat("Binary outcomes (primary): ", nrow(df_ml_binary_primary), " total observations\n")
+cat("Continuous outcomes (primary): ", nrow(df_ml_continuous_primary), " total observations\n\n")
+
+###############################################################################
+##  Generate ALL OUTCOMES Plots ----------------------------------------------
+###############################################################################
+cat("Generating ALL OUTCOMES plots...\n")
+
+# Binary - All outcomes
+p_binary_all = make_ml_plot(df_ml_binary_all, "binary")
+ggsave(file.path(output_dir, "ml_individual_binary_all.png"), 
+       p_binary_all, width = pub_width, height = pub_height, dpi = pub_dpi, bg = "white")
+
+# Continuous - All outcomes
+p_continuous_all = make_ml_plot(df_ml_continuous_all, "continuous")
+ggsave(file.path(output_dir, "ml_individual_continuous_all.png"), 
+       p_continuous_all, width = pub_width, height = pub_height, dpi = pub_dpi, bg = "white")
+
+###############################################################################
+##  Generate PRIMARY OUTCOMES Plots ------------------------------------------
+###############################################################################
+cat("Generating PRIMARY OUTCOMES plots...\n")
+
+# Binary - Primary outcomes
+p_binary_primary = make_ml_plot(df_ml_binary_primary, "binary")
+ggsave(file.path(output_dir, "ml_individual_binary_primary.png"), 
+       p_binary_primary, width = pub_width, height = pub_height, dpi = pub_dpi, bg = "white")
+
+# Continuous - Primary outcomes
+p_continuous_primary = make_ml_plot(df_ml_continuous_primary, "continuous")
+ggsave(file.path(output_dir, "ml_individual_continuous_primary.png"), 
+       p_continuous_primary, width = pub_width, height = pub_height, dpi = pub_dpi, bg = "white")
+
+###############################################################################
+##  Summary Statistics -------------------------------------------------------
+###############################################################################
+cat("\n========================================\n")
+cat("SUMMARY STATISTICS\n")
+cat("========================================\n\n")
+
+# Function to calculate summary stats
+calculate_summary_stats = function(data, data_label) {
+  
+  # Filter out NA values
+  data_clean = data %>% filter(!is.na(pvr))
+  
+  stats = data_clean %>%
+    group_by(method) %>%
+    summarise(
+      n = n(),
+      mean_pvr = mean(pvr, na.rm = TRUE),
+      median_pvr = median(pvr, na.rm = TRUE),
+      sd_pvr = sd(pvr, na.rm = TRUE),
+      q25 = quantile(pvr, 0.25, na.rm = TRUE),
+      q75 = quantile(pvr, 0.75, na.rm = TRUE),
+      .groups = "drop"
+    ) %>%
+    mutate(across(c(mean_pvr, median_pvr, sd_pvr, q25, q75), ~ round(., 4)))
+  
+  return(stats)
+}
+
+# Binary outcomes - All
+cat("BINARY OUTCOMES - ALL OUTCOMES\n")
+cat("----------------------------------------\n\n")
+binary_stats_all = calculate_summary_stats(df_ml_binary_all, "all")
+print(binary_stats_all)
+
+# Binary outcomes - Primary
+cat("\n\nBINARY OUTCOMES - PRIMARY OUTCOMES\n")
+cat("----------------------------------------\n\n")
+binary_stats_primary = calculate_summary_stats(df_ml_binary_primary, "primary")
+print(binary_stats_primary)
+
+# Continuous outcomes - All
+cat("\n\n========================================\n")
+cat("CONTINUOUS OUTCOMES - ALL OUTCOMES\n")
+cat("----------------------------------------\n\n")
+continuous_stats_all = calculate_summary_stats(df_ml_continuous_all, "all")
+print(continuous_stats_all)
+
+# Continuous outcomes - Primary
+cat("\n\nCONTINUOUS OUTCOMES - PRIMARY OUTCOMES\n")
+cat("----------------------------------------\n\n")
+continuous_stats_primary = calculate_summary_stats(df_ml_continuous_primary, "primary")
+print(continuous_stats_primary)
+
+###############################################################################
+##  Count outliers removed ---------------------------------------------------
+###############################################################################
+cat("\n\n========================================\n")
+cat("OUTLIER REMOVAL IMPACT\n")
+cat("========================================\n\n")
+
+cat("CONTINUOUS OUTCOMES - ALL OUTCOMES:\n")
+cat("Outliers removed for: SL_glm, SL_gam, SL_xgboost (pg >= 5)\n\n")
+
+continuous_all_outlier_counts = df_ml_continuous_all_full %>%
+  filter(!is.na(pg), method %in% continuous_outlier_methods) %>%
+  group_by(method) %>%
+  summarise(
+    total = n(),
+    outliers = sum(pg >= pg_manual_threshold),
+    pct_outliers = 100 * outliers / total,
+    .groups = "drop"
+  ) %>%
+  arrange(desc(outliers))
+
+print(continuous_all_outlier_counts)
+
+cat("\n\nCONTINUOUS OUTCOMES - PRIMARY OUTCOMES:\n")
+cat("Outliers removed for: SL_glm, SL_gam, SL_xgboost (pg >= 5)\n\n")
+
+continuous_primary_outlier_counts = df_ml_continuous_primary_full %>%
+  filter(!is.na(pg), method %in% continuous_outlier_methods) %>%
+  group_by(method) %>%
+  summarise(
+    total = n(),
+    outliers = sum(pg >= pg_manual_threshold),
+    pct_outliers = 100 * outliers / total,
+    .groups = "drop"
+  ) %>%
+  arrange(desc(outliers))
+
+print(continuous_primary_outlier_counts)
+
+###############################################################################
+##  Display plots ------------------------------------------------------------
+###############################################################################
+cat("\n========================================\n")
+cat("All plots saved to:", output_dir, "\n")
+cat("Publication quality: 600 dpi, white background\n")
+cat("SELECTIVE outlier removal for CONTINUOUS outcomes:\n")
+cat("  - SL_glm, SL_gam, SL_xgboost: pg >= 5 removed\n")
+cat("  - All other methods: full data shown\n")
+cat("Binary outcomes: NO outlier removal\n")
+cat("Individual SL methods use All covariates only\n")
+cat("========================================\n\n")
+
+cat("ALL OUTCOMES Plots:\n")
+print(p_binary_all)
+print(p_continuous_all)
+
+cat("\nPRIMARY OUTCOMES Plots:\n")
+print(p_binary_primary)
+print(p_continuous_primary)
+
+cat("\n========================================\n")
+cat("PLOT FILES GENERATED:\n")
+cat("========================================\n")
+cat("1. ml_individual_binary_all.png\n")
+cat("2. ml_individual_continuous_all.png\n")
+cat("3. ml_individual_binary_primary.png\n")
+cat("4. ml_individual_continuous_primary.png\n")
+cat("========================================\n\n")
 ```
 
 ## AIPW
