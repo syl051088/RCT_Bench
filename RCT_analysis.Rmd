@@ -7254,7 +7254,7 @@ cat(sprintf("Time elapsed: %.2f seconds\n", as.numeric(end_time - start_time, un
 cat("========================================\n\n")
 
 ###############################################################################
-##  Save all Version 1 plots (Smoothed Log10 Scale) with clear labels
+##  Save all Version 1 plots (Smoothed Log10 Scale) with clear labels         
 ###############################################################################
 cat("\n", strrep("=", 70), "\n")
 cat("SAVING VERSION 1: SMOOTHED (Log10 Scale) - ALL 12 PLOTS\n")
@@ -8123,7 +8123,7 @@ cat("========================================\n\n")
 # Manual outlier threshold for precision gain (same as main analysis)
 pg_manual_threshold = 5
 
-prepare_tmle_long_data = function(df_old, df_new, outcome_type) {
+prepare_tmle_long_data = function(df_old, df_new, outcome_type, vs_method = "All") {
   
   # Filter by outcome type
   if (outcome_type == "continuous") {
@@ -8138,31 +8138,30 @@ prepare_tmle_long_data = function(df_old, df_new, outcome_type) {
       filter(`Outcome Type` %in% c("binary", "composite binary"))
   }
   
-  # Extract TMLE precision gain (base version - All covariates)
-  # Both dataframes have the same column name structure
-  # df_comparison: TMLE without propensity score
-  # df_newcomp: TMLE with propensity score
-  pg_col = "How much precision gain can TMLE provide?"
+  # Select the correct precision gain column based on VS method
+  pg_col = switch(vs_method,
+    "All"       = "How much precision gain can TMLE provide?",
+    "Top3"      = "How much precision gain can TMLE_VS1 provide?",
+    "Baseline+" = "How much precision gain can TMLE_VS2 provide?"
+  )
   
   # Create dataframe for TMLE without PS
   tmle_without_ps = data.frame(
     method = "TMLE without PS",
-    pg = df_old_filtered[[pg_col]],
-    pvr = 1 - df_old_filtered[[pg_col]],
+    pg     = df_old_filtered[[pg_col]],
+    pvr    = 1 - df_old_filtered[[pg_col]],
     stringsAsFactors = FALSE
   )
   
   # Create dataframe for TMLE with PS
   tmle_with_ps = data.frame(
     method = "TMLE with PS",
-    pg = df_new_filtered[[pg_col]],
-    pvr = 1 - df_new_filtered[[pg_col]],
+    pg     = df_new_filtered[[pg_col]],
+    pvr    = 1 - df_new_filtered[[pg_col]],
     stringsAsFactors = FALSE
   )
   
-  # Combine both
   result = bind_rows(tmle_without_ps, tmle_with_ps)
-  
   return(result)
 }
 
@@ -8170,66 +8169,72 @@ prepare_tmle_long_data = function(df_old, df_new, outcome_type) {
 ##  Color palette for TMLE comparison ----------------------------------------
 ###############################################################################
 tmle_colors = c(
-  "TMLE without PS" = "#619CFF",    # Blue
-  "TMLE with PS"    = "#F8766D"     # Red
+  "TMLE without PS" = "#619CFF",
+  "TMLE with PS"    = "#F8766D"
+)
+
+###############################################################################
+##  VS method display labels -------------------------------------------------
+###############################################################################
+vs_labels = c(
+  "All"       = "All Covariates",
+  "Top3"      = "Top-3 Correlation",
+  "Baseline+" = "Baseline+"
 )
 
 ###############################################################################
 ##  Plot function for TMLE comparison ----------------------------------------
 ###############################################################################
-make_tmle_plot = function(data, outcome_type) {
+make_tmle_plot = function(data, outcome_type, vs_method) {
   
-  # Filter out NA values only (no outlier removal)
   data = data %>% filter(!is.na(pvr))
   
-  # Set factor levels
   data = data %>%
     mutate(method = factor(method, levels = c("TMLE without PS", "TMLE with PS")))
   
-  # Counts for labels
   method_counts = data %>%
     group_by(method) %>%
     summarise(n = n(), .groups = "drop")
   
-  # x-axis label positions
   x_labels_df = data.frame(
     method = c("TMLE without PS", "TMLE with PS"),
     x_pos  = 1:2
   )
   
   x_labels_counts = x_labels_df %>%
-    left_join(method_counts, by = "method")
-  
-  # Create display names
-  x_labels_counts = x_labels_counts %>%
+    left_join(method_counts, by = "method") %>%
     mutate(display_name = case_when(
       method == "TMLE without PS" ~ "TMLE\nwithout PS",
-      method == "TMLE with PS" ~ "TMLE\nwith PS"
+      method == "TMLE with PS"    ~ "TMLE\nwith PS"
     ))
   
-  # Create plot with y-axis from -1 to 1
+  # Subtitle showing VS method
+  plot_subtitle = paste0("Variable Selection: ", vs_labels[vs_method])
+  
   p = ggplot(data, aes(method, pvr, fill = method)) +
     geom_boxplot(colour = "grey25", alpha = .50, width = 0.5, outlier.shape = NA) +
     geom_hline(yintercept = 0, linetype = "dashed", colour = "grey40") +
     scale_fill_manual(values = tmle_colors) +
-    labs(x = NULL, y = "Proportional Variance Reduction") +
+    labs(x = NULL, y = "Proportional Variance Reduction",
+         subtitle = plot_subtitle) +
     coord_cartesian(ylim = c(-1, 1), clip = "off") +
     theme_minimal(base_size = 18) +
     theme(
-      axis.text.x   = element_blank(),
-      axis.ticks.x  = element_blank(),
-      axis.text.y   = element_text(size = 16),
-      axis.title.y  = element_text(size = 18),
+      axis.text.x      = element_blank(),
+      axis.ticks.x     = element_blank(),
+      axis.text.y      = element_text(size = 16),
+      axis.title.y     = element_text(size = 18),
+      plot.subtitle    = element_text(size = 14, colour = "grey30", hjust = 0.5),
       panel.grid.minor = element_blank(),
       panel.background = element_rect(fill = "white", colour = NA),
       plot.background  = element_rect(fill = "white", colour = NA),
       legend.position  = "none",
       plot.margin      = margin(t = 5, r = 10, b = 60, l = 10)
     ) +
-    geom_text(data = x_labels_counts, 
+    geom_text(data = x_labels_counts,
               aes(x = x_pos, y = -1.15, label = display_name),
               inherit.aes = FALSE, size = 5.5, lineheight = 0.85, hjust = 0.5) +
-    geom_text(data = x_labels_counts, 
+    geom_text(data = x_labels_counts,
               aes(x = x_pos, y = -1.35, label = paste0("(", n, ")")),
               inherit.aes = FALSE, size = 4.5, hjust = 0.5)
   
@@ -8239,7 +8244,7 @@ make_tmle_plot = function(data, outcome_type) {
 ###############################################################################
 ##  Publication quality settings ---------------------------------------------
 ###############################################################################
-pub_width  = 8    # Narrower since only 2 methods
+pub_width  = 8
 pub_height = 6.5
 pub_dpi    = 600
 
@@ -8250,103 +8255,88 @@ output_dir = "cleaned_data/plot/exam plot"
 dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
 
 ###############################################################################
-##  Prepare data for both outcome types --------------------------------------
+##  Loop over all VS methods -------------------------------------------------
 ###############################################################################
-cat("\n========================================\n")
-cat("Preparing data for TMLE comparison\n")
-cat("========================================\n\n")
+vs_methods = c("All", "Top3", "Baseline+")
 
-# Prepare long data for binary and continuous outcomes
-df_tmle_binary = prepare_tmle_long_data(df_comparison, df_newcomp, "binary")
-df_tmle_continuous = prepare_tmle_long_data(df_comparison, df_newcomp, "continuous")
+# Storage for summary stats
+all_stats = list()
 
-cat("Binary outcomes: ", nrow(df_tmle_binary), " total observations\n")
-cat("Continuous outcomes: ", nrow(df_tmle_continuous), " total observations\n\n")
-
-###############################################################################
-##  Generate Binary Outcome Plots --------------------------------------------
-###############################################################################
-cat("Generating binary outcome plots...\n")
-
-# Binary - No outlier removal
-p_binary = make_tmle_plot(df_tmle_binary, "binary")
-ggsave(file.path(output_dir, "tmle_comparison_binary.png"), 
-       p_binary, width = pub_width, height = pub_height, dpi = pub_dpi, bg = "white")
-
-###############################################################################
-##  Generate Continuous Outcome Plots ----------------------------------------
-###############################################################################
-cat("Generating continuous outcome plots...\n")
-
-# Continuous - No outlier removal
-p_continuous = make_tmle_plot(df_tmle_continuous, "continuous")
-ggsave(file.path(output_dir, "tmle_comparison_continuous.png"), 
-       p_continuous, width = pub_width, height = pub_height, dpi = pub_dpi, bg = "white")
-
-###############################################################################
-##  Summary Statistics -------------------------------------------------------
-###############################################################################
-cat("\n========================================\n")
-cat("SUMMARY STATISTICS\n")
-cat("========================================\n\n")
-
-# Function to calculate summary stats
-calculate_summary_stats = function(data, outcome_type) {
+for (vs in vs_methods) {
   
-  # Filter out NA values
-  data_clean = data %>% filter(!is.na(pvr))
+  vs_tag = gsub("\\+", "plus", vs)   # safe for filenames: "Baseline+" -> "Baselineplus"
+  vs_tag = tolower(vs_tag)
   
-  stats = data_clean %>%
-    group_by(method) %>%
-    summarise(
-      n = n(),
-      n_na = sum(is.na(pvr)),
-      mean_pvr = mean(pvr, na.rm = TRUE),
-      median_pvr = median(pvr, na.rm = TRUE),
-      sd_pvr = sd(pvr, na.rm = TRUE),
-      q25 = quantile(pvr, 0.25, na.rm = TRUE),
-      q75 = quantile(pvr, 0.75, na.rm = TRUE),
-      .groups = "drop"
-    ) %>%
-    mutate(across(c(mean_pvr, median_pvr, sd_pvr, q25, q75), ~ round(., 4)))
+  cat("\n========================================\n")
+  cat("VS Method:", vs_labels[vs], "\n")
+  cat("========================================\n\n")
   
-  return(stats)
+  # Prepare data
+  df_binary     = prepare_tmle_long_data(df_comparison, df_newcomp, "binary",     vs)
+  df_continuous = prepare_tmle_long_data(df_comparison, df_newcomp, "continuous", vs)
+  
+  cat("Binary observations:     ", nrow(df_binary), "\n")
+  cat("Continuous observations: ", nrow(df_continuous), "\n\n")
+  
+  # Generate plots
+  p_bin  = make_tmle_plot(df_binary,     "binary",     vs)
+  p_cont = make_tmle_plot(df_continuous, "continuous", vs)
+  
+  ggsave(file.path(output_dir, paste0("tmle_comparison_binary_",     vs_tag, ".png")),
+         p_bin,  width = pub_width, height = pub_height, dpi = pub_dpi, bg = "white")
+  ggsave(file.path(output_dir, paste0("tmle_comparison_continuous_", vs_tag, ".png")),
+         p_cont, width = pub_width, height = pub_height, dpi = pub_dpi, bg = "white")
+  
+  cat("Saved: tmle_comparison_binary_",     vs_tag, ".png\n", sep = "")
+  cat("Saved: tmle_comparison_continuous_", vs_tag, ".png\n", sep = "")
+  
+  # Summary stats
+  calc_stats = function(data) {
+    data %>%
+      filter(!is.na(pvr)) %>%
+      group_by(method) %>%
+      summarise(
+        n          = n(),
+        mean_pvr   = round(mean(pvr,               na.rm = TRUE), 4),
+        median_pvr = round(median(pvr,             na.rm = TRUE), 4),
+        sd_pvr     = round(sd(pvr,                 na.rm = TRUE), 4),
+        q25        = round(quantile(pvr, 0.25,     na.rm = TRUE), 4),
+        q75        = round(quantile(pvr, 0.75,     na.rm = TRUE), 4),
+        .groups    = "drop"
+      ) %>%
+      mutate(vs_method = vs_labels[vs], outcome = NA)   # outcome filled below
+  }
+  
+  bin_stats  = calc_stats(df_binary)     %>% mutate(outcome = "Binary")
+  cont_stats = calc_stats(df_continuous) %>% mutate(outcome = "Continuous")
+  
+  all_stats[[vs]] = bind_rows(bin_stats, cont_stats)
+  
+  cat("\nBinary stats:\n");     print(bin_stats)
+  cat("\nContinuous stats:\n"); print(cont_stats)
 }
 
-# Binary outcomes
-cat("BINARY OUTCOMES\n")
-cat("----------------------------------------\n")
-binary_stats = calculate_summary_stats(df_tmle_binary, "binary")
-print(binary_stats)
-
-# Continuous outcomes
-cat("\n\n========================================\n")
-cat("CONTINUOUS OUTCOMES\n")
-cat("----------------------------------------\n")
-continuous_stats = calculate_summary_stats(df_tmle_continuous, "continuous")
-print(continuous_stats)
-
 ###############################################################################
-##  Display plots ------------------------------------------------------------
+##  Combined summary table ---------------------------------------------------
 ###############################################################################
 cat("\n========================================\n")
-cat("All plots saved to:", output_dir, "\n")
-cat("Publication quality: 600 dpi, white background\n")
-cat("Y-axis range: -1 to 1\n")
-cat("No manual outlier removal\n")
+cat("COMBINED SUMMARY TABLE\n")
 cat("========================================\n\n")
+combined_stats = bind_rows(all_stats) %>%
+  select(vs_method, outcome, method, n, mean_pvr, median_pvr, sd_pvr, q25, q75)
+print(combined_stats)
 
-cat("Binary Outcome Plot:\n")
-print(p_binary)
-
-cat("\nContinuous Outcome Plot:\n")
-print(p_continuous)
-
+###############################################################################
+##  File list ----------------------------------------------------------------
+###############################################################################
 cat("\n========================================\n")
-cat("PLOT FILES GENERATED:\n")
+cat("ALL PLOT FILES GENERATED (6 total):\n")
 cat("========================================\n")
-cat("1. tmle_comparison_binary.png\n")
-cat("2. tmle_comparison_continuous.png\n")
+for (vs in vs_methods) {
+  vs_tag = tolower(gsub("\\+", "plus", vs))
+  cat("  tmle_comparison_binary_",     vs_tag, ".png\n", sep = "")
+  cat("  tmle_comparison_continuous_", vs_tag, ".png\n", sep = "")
+}
 cat("========================================\n\n")
 
 ```
