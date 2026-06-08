@@ -600,7 +600,8 @@ analyze_rct_dml = function(df,
     }
     
     # RobinCar - run both ANCOVA and ANHECOVA (using numeric version)
-    rc_fit_ancova = suppressWarnings(
+    rc_fit_ancova = 
+      suppressWarnings(
       robincar_linear(
         df_complete_numeric,
         treatment_col,
@@ -1799,9 +1800,9 @@ analyze_rct_ipw = function(df,
 ```{r}
 analyze_rct_psweight = function(df,
                            selection = FALSE,
-                           variable_selection_type = 1,   # 1: correlation, 2: manual
+                           variable_selection_type = 1,
                            manual_covariates = NULL,
-                           weight_method = "IPW",         # PSweight keywords: "IPW","treated","overlap","matching","entropy"
+                           weight_method = "IPW",   # "IPW", "AIPW", "OW", or "AOW"
                            n_select = 3,
                            outcome_cols = NULL,
                            covariate_col = NULL,
@@ -1812,9 +1813,21 @@ analyze_rct_psweight = function(df,
     require(PSweight)
     require(DescTools)
   })
-
+ 
+  # Map user-facing weight_method to PSweight arguments
+  wt_config = switch(weight_method,
+    "IPW"  = list(ps_weight = "IPW",     augment = FALSE),
+    "AIPW" = list(ps_weight = "IPW",     augment = TRUE),
+    "OW"   = list(ps_weight = "overlap", augment = FALSE),
+    "AOW"  = list(ps_weight = "overlap", augment = TRUE),
+    stop("weight_method must be one of: 'IPW', 'AIPW', 'OW', 'AOW'")
+  )
+ 
+  est_col = paste0("Est_", weight_method)
+  se_col  = paste0("SE_",  weight_method)
+ 
   set.seed(seed)
-
+ 
   # --- Outcomes autodetect ---
   if (is.null(outcome_cols)) {
     yp_cols = names(df)[startsWith(names(df), "YP")]
@@ -1827,9 +1840,10 @@ analyze_rct_psweight = function(df,
       }
     }
     outcome_cols = c(yp_cols, ys_valid)
-    cat("Auto-detected", length(outcome_cols), "outcome columns:", paste(outcome_cols, collapse = ", "), "\n")
+    cat("Auto-detected", length(outcome_cols), "outcome columns:",
+        paste(outcome_cols, collapse = ", "), "\n")
   }
-
+ 
   # --- Covariates ---
   if (is.null(covariate_col)) {
     covariates = names(df)[startsWith(names(df), "X_")]
@@ -1837,7 +1851,7 @@ analyze_rct_psweight = function(df,
   } else {
     covariates = covariate_col
   }
-
+ 
   # --- Simple imputations for covariates ---
   df = df %>%
     mutate(across(all_of(covariates), ~ if (is.numeric(.)) {
@@ -1845,39 +1859,36 @@ analyze_rct_psweight = function(df,
     } else if (is.factor(.)) {
       replace(., is.na(.), DescTools::Mode(., na.rm = TRUE)[1])
     }))
-
+ 
   # --- Arms (first level is control) ---
   arms = levels(df[[treatment_col]])
   control_level = arms[1]
   treatment_levels = arms[-1]
-
+ 
   all_results = vector("list", length(outcome_cols))
   valid_outcomes = character(0)
-
+ 
   for (i in seq_along(outcome_cols)) {
     outcome = outcome_cols[i]
-
-    # Skip high-missing outcomes
+ 
     miss = mean(is.na(df[[outcome]]))
     if (miss > 0.4) {
       cat("REMOVED outcome:", outcome, "- Missing proportion:", round(miss, 3), "(> 0.4)\n")
       next
     }
-
-    # Complete cases for current outcome + treatment + covariates
+ 
     keep_vars = c(outcome, treatment_col, covariates)
     idx = complete.cases(df[, keep_vars, drop = FALSE])
     df_complete = df[idx, , drop = FALSE]
-    cat("Outcome:", outcome, "- Sample size:", nrow(df_complete), "(", nrow(df) - nrow(df_complete), "rows removed)\n")
-
-    # Remove degenerate outcome
+    cat("Outcome:", outcome, "- Sample size:", nrow(df_complete),
+        "(", nrow(df) - nrow(df_complete), "rows removed)\n")
+ 
     if (is.factor(df_complete[[outcome]]) &&
         length(levels(droplevels(df_complete[[outcome]]))) <= 1) {
       cat("REMOVED outcome:", outcome, "- Only one level after filtering\n")
       next
     }
-
-    # Drop covariates with single level post-filter
+ 
     valid_covariates = character(0)
     for (cov in covariates) {
       if (is.factor(df_complete[[cov]]) &&
@@ -1887,31 +1898,32 @@ analyze_rct_psweight = function(df,
         valid_covariates = c(valid_covariates, cov)
       }
     }
-
-    # Force numeric outcome; we’ll fit Gaussian for all outcomes
+ 
+    # FIX 1: Convert outcome AND all covariates to numeric
     df_complete_num = df_complete
     df_complete_num[[outcome]] = as.numeric(df_complete_num[[outcome]])
-
-    # Optional variable selection
+    for (cov in valid_covariates) {
+      df_complete_num[[cov]] = as.numeric(df_complete_num[[cov]])
+    }
+ 
     if (selection && length(valid_covariates) > 0) {
       if (variable_selection_type == 1) {
-        selected_covariates = variable_selection_correlation(outcome, valid_covariates, df_complete_num, n_select)
+        selected_covariates = variable_selection_correlation(
+          outcome, valid_covariates, df_complete_num, n_select)
       } else {
-        selected_covariates = variable_selection_manual(outcome, valid_covariates, manual_covariates)
+        selected_covariates = variable_selection_manual(
+          outcome, valid_covariates, manual_covariates)
         if (length(selected_covariates) == 0) {
           cat("No valid covariates found for outcome:", outcome, "- Setting all estimates to NA\n")
           outcome_results_list = lapply(treatment_levels, function(trt) {
-            tibble(Outcome = outcome,
-                   Treatment = trt,
-                   Control = control_level,
-                   N = sum(df_complete[[treatment_col]] %in% c(control_level, trt)),
-                   N_Covariates = 0,
-                   Est_IPW = NA_real_,
-                   SE_IPW = NA_real_)
+            row = tibble(Outcome = outcome, Treatment = trt, Control = control_level,
+                         N = sum(df_complete[[treatment_col]] %in% c(control_level, trt)),
+                         N_Covariates = 0)
+            row[[est_col]] = NA_real_
+            row[[se_col]]  = NA_real_
+            if (selection) row$Selected_Covariates = ""
+            row
           })
-          if (selection) {
-            outcome_results_list = lapply(outcome_results_list, function(x) { x$Selected_Covariates = ""; x })
-          }
           outcome_results = bind_rows(outcome_results_list)
           valid_outcomes = c(valid_outcomes, outcome)
           all_results[[length(valid_outcomes)]] = outcome_results
@@ -1921,82 +1933,87 @@ analyze_rct_psweight = function(df,
       valid_covariates = selected_covariates
       cat("Selected covariates for", outcome, ":", paste(valid_covariates, collapse = ", "), "\n")
     }
-
-    # Pairwise treatment vs control
+ 
     outcome_results_list = vector("list", length(treatment_levels))
-
+ 
     for (j in seq_along(treatment_levels)) {
       trt = treatment_levels[j]
-      df_pair = df_complete_num %>% dplyr::filter(!!rlang::sym(treatment_col) %in% c(control_level, trt))
+      df_pair = df_complete_num %>%
+        dplyr::filter(!!rlang::sym(treatment_col) %in% c(control_level, trt))
       df_pair$Z = as.numeric(df_pair[[treatment_col]] == trt)
-
+ 
       ps.formula = if (length(valid_covariates) > 0) {
         as.formula(paste("Z ~", paste(valid_covariates, collapse = " + ")))
-      } else {
-        as.formula("Z ~ 1")
+      } else as.formula("Z ~ 1")
+ 
+      out.formula = if (length(valid_covariates) > 0) {
+        as.formula(paste(outcome, "~", paste(valid_covariates, collapse = " + ")))
+      } else as.formula(paste(outcome, "~ 1"))
+ 
+      # Sanitize for PSweight
+      keep_cols = c("Z", outcome, valid_covariates)
+      clean_df = as.data.frame(df_pair[, keep_cols, drop = FALSE])
+      ok = vapply(clean_df, function(x) is.atomic(x) || is.factor(x), logical(1))
+      if (!all(ok)) {
+        bad = names(clean_df)[!ok]
+        cat("Dropping non-atomic columns for PSweight:", paste(bad, collapse = ", "), "\n")
+        clean_df = clean_df[, ok, drop = FALSE]
+        valid_covariates2 = intersect(valid_covariates, names(clean_df))
+        ps.formula = if (length(valid_covariates2) > 0)
+          as.formula(paste("Z ~", paste(valid_covariates2, collapse = " + ")))
+        else as.formula("Z ~ 1")
+        out.formula = if (length(valid_covariates2) > 0)
+          as.formula(paste(outcome, "~", paste(valid_covariates2, collapse = " + ")))
+        else as.formula(paste(outcome, "~ 1"))
       }
-
-      # ---- PSweight block (Gaussian for all outcomes) ----
-      ipw = tryCatch({
-        # PSweight is sensitive to list/data.frame cols; sanitize to base data.frame with atomic columns
-        keep_cols = c("Z", outcome, valid_covariates)
-        clean_df = as.data.frame(df_pair[, keep_cols, drop = FALSE])
-        ok = vapply(clean_df, function(x) is.atomic(x) || is.factor(x), logical(1))
-        if (!all(ok)) {
-          bad = names(clean_df)[!ok]
-          cat("Dropping non-atomic columns for PSweight:", paste(bad, collapse = ", "), "\n")
-          clean_df = clean_df[, ok, drop = FALSE]
-          valid_covariates2 = intersect(valid_covariates, names(clean_df))
-          ps.formula = if (length(valid_covariates2) > 0) {
-            as.formula(paste("Z ~", paste(valid_covariates2, collapse = " + ")))
-          } else as.formula("Z ~ 1")
-        }
-
-        # Ensure numeric
-        clean_df$Z = as.numeric(clean_df$Z)
-        clean_df[[outcome]] = as.numeric(clean_df[[outcome]])
-
-        # Fit PSweight and get DIF summary
+ 
+      # FIX 2: Convert ALL columns to numeric (outcome, Z, and covariates)
+      clean_df$Z = as.numeric(clean_df$Z)
+      clean_df[[outcome]] = as.numeric(clean_df[[outcome]])
+      for (cov in intersect(valid_covariates, names(clean_df))) {
+        clean_df[[cov]] = as.numeric(clean_df[[cov]])
+      }
+ 
+      fit_result = tryCatch({
         psw_fit = PSweight(
-          ps.formula = ps.formula,
-          yname = outcome,
-          data = clean_df,
-          weight = weight_method,    # must be PSweight keyword
-          augmentation = FALSE,
-          bootstrap = FALSE,
-          family = "gaussian"
+          ps.formula   = ps.formula,
+          yname        = outcome,
+          data         = clean_df,
+          weight       = wt_config$ps_weight,
+          augmentation = wt_config$augment,
+          out.formula  = if (wt_config$augment) out.formula else NULL,
+          bootstrap    = FALSE,
+          family       = "gaussian"
         )
         psw_sum = summary(psw_fit, type = "DIF")
-
-        est = as.numeric(psw_sum$estimates[1, "Estimate"])
-        se  = as.numeric(psw_sum$estimates[1, "Std.Error"])
-        list(est = est, se = se, success = TRUE)
+        list(est = as.numeric(psw_sum$estimates[1, "Estimate"]),
+             se  = as.numeric(psw_sum$estimates[1, "Std.Error"]),
+             success = TRUE)
       }, error = function(e) {
-        cat("IPW Error for outcome", outcome, "treatment", trt, ":", e$message, "\n")
+        cat(weight_method, "Error for outcome", outcome, "treatment", trt, ":", e$message, "\n")
         list(est = NA_real_, se = NA_real_, success = FALSE)
       })
-      # ---- end PSweight block ----
-
+ 
       res_row = tibble(
-        Outcome = outcome,
-        Treatment = trt,
-        Control = control_level,
-        N = nrow(df_pair),
-        N_Covariates = length(valid_covariates),
-        Est_IPW = ipw$est,
-        SE_IPW  = ipw$se
+        Outcome      = outcome,
+        Treatment    = trt,
+        Control      = control_level,
+        N            = nrow(df_pair),
+        N_Covariates = length(valid_covariates)
       )
+      res_row[[est_col]] = fit_result$est
+      res_row[[se_col]]  = fit_result$se
       if (selection) res_row$Selected_Covariates = paste(valid_covariates, collapse = ", ")
       outcome_results_list[[j]] = res_row
     }
-
+ 
     outcome_results = bind_rows(outcome_results_list)
     valid_outcomes = c(valid_outcomes, outcome)
     all_results[[length(valid_outcomes)]] = outcome_results
   }
-
+ 
   if (length(valid_outcomes) == 0) stop("No valid outcomes remaining after data cleaning")
-
+ 
   final_results = bind_rows(all_results[1:length(valid_outcomes)]) %>%
     mutate(across(starts_with("Est_"), ~ round(.x, 5)),
            across(starts_with("SE_"),  ~ round(.x, 5)))
@@ -2004,6 +2021,985 @@ analyze_rct_psweight = function(df,
 }
 ```
 
+## analyze_rct_mmrm() pre+post
+```{r}
+## =============================================================================
+##  analyze_rct_mmrm()
+##  Implements MMRM-I and MMRM-II from Wang & Du (2024), Int J Biostat 20(2):585-598
+##
+##  MMRM-I  (Eq. 2): Y_it = beta_0t + sum_j beta_Ajt * I{A=j} + beta_X^T  * X_i + eps_it
+##  MMRM-II (Eq. 3): Y_it = beta_0t + sum_j beta_Ajt * I{A=j} + beta_Xt^T * X_i + eps_it
+##
+##  Selected via mmrm_type = 1 or mmrm_type = 2
+##
+##  Key difference:
+##    MMRM-I  : constant covariate coefficients across visits   `+ cov`
+##    MMRM-II : visit-specific covariate coefficients           `+ visit:cov`
+##
+##  Shared properties:
+##    - Visit-specific intercepts and treatment effects
+##    - Unstructured residual covariance Sigma (shared across arms)
+##    - Missing outcomes handled by MMRM likelihood (not complete-case)
+##    - Continuous outcomes only (YP_ and YS_)
+##
+##  Naming conventions expected in data:
+##    Primary YP_/YS_ col : YP_<stem>_<time>       e.g. YP_hba1c_4w
+##    Pre-visit outcomes  : pre_YP_<stem>_<time>   e.g. pre_YP_hba1c_2w
+##    Post-visit outcomes : post_YP_<stem>_<time>  e.g. post_YP_hba1c_12w
+##    Baseline covariate  : X_<stem>_0<unit>       e.g. X_hba1c_0w
+##    Other covariates    : X_<n>_0<unit>
+##
+##  Visit stack (sorted ascending by numeric time):
+##    [visit_0 if baseline_as_outcome] -> pre_ visits -> YP_/YS_ col -> post_ visits
+##    The LAST visit in this stack is the MMRM primary endpoint.
+##
+##  baseline_as_outcome argument:
+##    FALSE (default) : X_stem_0 is covariate only      [standard]
+##    TRUE            : X_stem_0 also enters as visit 0 [augmented]
+##
+##  Single-arm check:
+##    If fewer than 2 arms have non-missing data in the final visit column,
+##    the outcome is skipped entirely.
+##
+##  Output tibble (one row per outcome x treatment arm):
+##    Outcome, Final_Visit_Col, N, N_visits, N_Covariates, Treatment, Control,
+##    Est_MMRM1/Est_MMRM2, SE_MMRM1/SE_MMRM2
+## =============================================================================
+
+analyze_rct_mmrm = function(
+    df,
+    mmrm_type            = 1,          # 1 = MMRM-I, 2 = MMRM-II
+    treatment_col        = "Treatment",
+    covariate_col        = NULL,       # NULL = auto-detect X_ columns
+    outcome_cols         = NULL,       # NULL = auto-detect YP_ and YS_ columns
+    baseline_as_outcome  = FALSE,      # FALSE = baseline as covariate only
+                                       # TRUE  = baseline also as visit 0
+    reml                 = TRUE,       # TRUE = REML (recommended), FALSE = ML
+    seed                 = 123
+) {
+
+  require(dplyr)
+  require(tidyr)
+  require(mmrm)
+  require(stringr)
+  require(DescTools)
+
+  # ---------------------------------------------------------------------------
+  # 0. Validate inputs
+  # ---------------------------------------------------------------------------
+  if (!mmrm_type %in% c(1, 2)) {
+    stop("mmrm_type must be 1 (MMRM-I) or 2 (MMRM-II).")
+  }
+
+  model_label = paste0("MMRM-", mmrm_type)
+  est_col     = paste0("Est_MMRM", mmrm_type)
+  se_col      = paste0("SE_MMRM",  mmrm_type)
+
+  cat(sprintf("Fitting %s (baseline_as_outcome = %s)\n\n", model_label, baseline_as_outcome))
+
+  set.seed(seed)
+
+  # ---------------------------------------------------------------------------
+  # 1. Basic setup
+  # ---------------------------------------------------------------------------
+  arms          = levels(df[[treatment_col]])
+  control_level = arms[1]
+  treat_levels  = arms[-1]
+
+  if (is.null(covariate_col)) {
+    covariates = names(df)[startsWith(names(df), "X_")]
+  } else {
+    covariates = covariate_col
+  }
+
+  if (is.null(outcome_cols)) {
+    primary_cols = names(df)[startsWith(names(df), "YP_") | startsWith(names(df), "YS_")]
+  } else {
+    primary_cols = outcome_cols[startsWith(outcome_cols, "YP_") | startsWith(outcome_cols, "YS_")]
+  }
+
+  if (length(primary_cols) == 0) {
+    stop("No YP_ or YS_ outcome columns found.")
+  }
+
+  # ---------------------------------------------------------------------------
+  # 2. Filter to continuous outcomes only
+  # ---------------------------------------------------------------------------
+  is_continuous = function(col) {
+    x = df[[col]]
+    if (!is.numeric(x)) return(FALSE)
+    return(length(unique(x[!is.na(x)])) > 2)
+  }
+
+  continuous_mask = sapply(primary_cols, is_continuous)
+  skipped         = primary_cols[!continuous_mask]
+
+  if (length(skipped) > 0) {
+    cat("Skipping non-continuous outcomes (binary or non-numeric):\n")
+    cat(" ", paste(skipped, collapse = ", "), "\n\n")
+  }
+
+  primary_cols = primary_cols[continuous_mask]
+
+  if (length(primary_cols) == 0) {
+    message("No continuous YP_ or YS_ outcomes found. Returning empty tibble.")
+    return(tibble())
+  }
+
+  # ---------------------------------------------------------------------------
+  # 3. Detect longitudinal series for each primary outcome
+  #    Includes pre_ AND post_ siblings
+  #    Primary endpoint = chronologically LAST visit in the full stack
+  # ---------------------------------------------------------------------------
+  parse_time = function(time_str) {
+    as.numeric(gsub("[^0-9.]", "", time_str))
+  }
+
+  detect_longitudinal_series = function(primary_col) {
+
+    parts = str_split(primary_col, "_")[[1]]
+    if (length(parts) < 3) return(NULL)
+
+    prefix     = parts[1]    # "YP" or "YS"
+    stem       = paste(parts[2:(length(parts) - 1)], collapse = "_")
+    time_oc    = parts[length(parts)]
+
+    # Find pre_ and post_ sibling visits
+    pre_pattern  = paste0("^pre_",  prefix, "_", stem, "_")
+    post_pattern = paste0("^post_", prefix, "_", stem, "_")
+    pre_cols     = names(df)[grepl(pre_pattern,  names(df))]
+    post_cols    = names(df)[grepl(post_pattern, names(df))]
+
+    # Find matching baseline covariate X_<stem>_0<unit>
+    baseline_pattern = paste0("^X_", stem, "_0")
+    baseline_col     = names(df)[grepl(baseline_pattern, names(df), ignore.case = TRUE)]
+    if (length(baseline_col) > 1) baseline_col = baseline_col[1]
+    if (length(baseline_col) == 0) baseline_col = NULL
+
+    has_pre      = length(pre_cols)  > 0
+    has_post     = length(post_cols) > 0
+    has_baseline = !is.null(baseline_col)
+
+    is_longitudinal = has_pre || has_post || (baseline_as_outcome && has_baseline)
+
+    # Build full ordered visit sequence to identify true final visit
+    all_cols  = c(pre_cols, primary_col, post_cols)
+    all_times = sapply(all_cols, function(col) {
+      p = str_split(col, "_")[[1]]
+      parse_time(p[length(p)])
+    })
+    ordered_cols  = all_cols[order(all_times)]
+    final_col     = ordered_cols[length(ordered_cols)]   # last = MMRM endpoint
+
+    list(
+      primary_col     = primary_col,
+      final_col       = final_col,       # actual MMRM target (last visit)
+      prefix          = prefix,
+      stem            = stem,
+      time_oc         = time_oc,
+      pre_cols        = pre_cols,
+      post_cols       = post_cols,
+      baseline_col    = baseline_col,
+      has_pre         = has_pre,
+      has_post        = has_post,
+      has_baseline    = has_baseline,
+      is_longitudinal = is_longitudinal
+    )
+  }
+
+  series_list = lapply(primary_cols, detect_longitudinal_series)
+  names(series_list) = primary_cols
+
+  is_long     = sapply(series_list, function(s) s$is_longitudinal)
+  long_cols   = primary_cols[is_long]
+  scalar_cols = primary_cols[!is_long]
+
+  if (length(scalar_cols) > 0) {
+    cat("Non-longitudinal outcomes (no pre_ or post_ visits found, skipping):\n")
+    cat(" ", paste(scalar_cols, collapse = ", "), "\n\n")
+  }
+
+  if (length(long_cols) == 0) {
+    message("No longitudinal outcome series detected. Returning empty tibble.")
+    return(tibble())
+  }
+
+  # ---------------------------------------------------------------------------
+  # 4. Impute missing covariates
+  # ---------------------------------------------------------------------------
+  df = df %>%
+    mutate(across(all_of(covariates), ~ if (is.numeric(.)) {
+      replace(., is.na(.), mean(., na.rm = TRUE))
+    } else if (is.factor(.)) {
+      replace(., is.na(.), DescTools::Mode(., na.rm = TRUE)[1])
+    }))
+
+  # ---------------------------------------------------------------------------
+  # 5. Process each longitudinal outcome series
+  # ---------------------------------------------------------------------------
+  all_results = vector("list", length(long_cols))
+
+  for (idx in seq_along(long_cols)) {
+
+    primary_col = long_cols[idx]
+    s           = series_list[[primary_col]]
+    final_col   = s$final_col    # MMRM target = last visit chronologically
+
+    cat("========================================\n")
+    cat("Outcome (YP_/YS_) :", primary_col, "\n")
+    cat("Model             :", model_label, "\n")
+    cat("Stem              :", s$stem, "\n")
+    cat("Pre visits        :", if (s$has_pre)  paste(s$pre_cols,  collapse = ", ") else "none", "\n")
+    cat("Post visits       :", if (s$has_post) paste(s$post_cols, collapse = ", ") else "none", "\n")
+    cat("Baseline col      :", if (!is.null(s$baseline_col)) s$baseline_col else "none", "\n")
+    cat("MMRM endpoint     :", final_col, "\n")
+    cat("baseline_as_outcome:", baseline_as_outcome, "\n")
+    cat("========================================\n")
+
+    # -------------------------------------------------------------------------
+    # 5a. Single-arm check on the MMRM endpoint column
+    #     If fewer than 2 arms have any non-missing data, skip
+    # -------------------------------------------------------------------------
+    arm_has_data = sapply(arms, function(a) {
+      rows = df[[treatment_col]] == a
+      sum(!is.na(df[[final_col]][rows])) > 0
+    })
+
+    if (sum(arm_has_data) < 2) {
+      cat(sprintf("SKIPPED: only %d arm(s) have data in final visit %s\n\n",
+                  sum(arm_has_data), final_col))
+      next
+    }
+
+    # Restrict treatment levels to arms that have data
+    treat_levels_valid = intersect(treat_levels, arms[arm_has_data])
+
+    # -------------------------------------------------------------------------
+    # 5b. Build ordered visit sequence
+    # -------------------------------------------------------------------------
+    visit_rows = list()
+
+    # Visit 0: baseline as outcome (Version B only)
+    if (baseline_as_outcome && !is.null(s$baseline_col)) {
+      visit_rows[["v0"]] = list(
+        col         = s$baseline_col,
+        visit_label = "visit_0",
+        visit_num   = 0
+      )
+    }
+
+    # Pre-visits
+    for (pc in s$pre_cols) {
+      pc_parts = str_split(pc, "_")[[1]]
+      pc_time  = pc_parts[length(pc_parts)]
+      visit_rows[[pc]] = list(
+        col         = pc,
+        visit_label = paste0("visit_pre_", pc_time),
+        visit_num   = parse_time(pc_time)
+      )
+    }
+
+    # The named YP_/YS_ column itself
+    visit_rows[[primary_col]] = list(
+      col         = primary_col,
+      visit_label = paste0("visit_", s$time_oc),
+      visit_num   = parse_time(s$time_oc)
+    )
+
+    # Post-visits
+    for (pc in s$post_cols) {
+      pc_parts = str_split(pc, "_")[[1]]
+      pc_time  = pc_parts[length(pc_parts)]
+      visit_rows[[pc]] = list(
+        col         = pc,
+        visit_label = paste0("visit_post_", pc_time),
+        visit_num   = parse_time(pc_time)
+      )
+    }
+
+    # Sort ALL visits by numeric time — last = MMRM primary endpoint
+    visit_order  = visit_rows[order(sapply(visit_rows, function(v) v$visit_num))]
+    visit_labels = unname(sapply(visit_order, function(v) v$visit_label))
+    visit_cols   = unname(sapply(visit_order, function(v) v$col))
+    n_visits     = length(visit_order)
+
+    cat("Visit order:", paste(visit_labels, collapse = " -> "), "\n\n")
+
+    # -------------------------------------------------------------------------
+    # 5c. Determine active covariates
+    #     When baseline_as_outcome = TRUE, exclude baseline col from covariates
+    # -------------------------------------------------------------------------
+    active_covariates = covariates
+    if (baseline_as_outcome && !is.null(s$baseline_col)) {
+      active_covariates = setdiff(active_covariates, s$baseline_col)
+    }
+
+    valid_covariates = character(0)
+    for (cov in active_covariates) {
+      if (is.factor(df[[cov]]) && length(levels(droplevels(df[[cov]]))) <= 1) {
+        cat("REMOVED covariate:", cov, "- only one level\n")
+      } else {
+        valid_covariates = c(valid_covariates, cov)
+      }
+    }
+
+    # -------------------------------------------------------------------------
+    # 5d. Reshape wide -> long
+    # -------------------------------------------------------------------------
+    id_col  = "subject_id_mmrm_internal__"
+    df_wide = df %>% mutate(!!id_col := row_number())
+    df_sub  = df_wide %>% select(all_of(c(id_col, treatment_col, valid_covariates, visit_cols)))
+
+    df_long = df_sub %>%
+      pivot_longer(
+        cols      = all_of(visit_cols),
+        names_to  = "visit_col_name",
+        values_to = "Y"
+      ) %>%
+      mutate(
+        visit = factor(
+          visit_labels[match(visit_col_name, visit_cols)],
+          levels = visit_labels
+        )
+      ) %>%
+      select(-visit_col_name) %>%
+      mutate(
+        !!id_col        := factor(.data[[id_col]]),
+        !!treatment_col := factor(.data[[treatment_col]], levels = arms)
+      )
+
+    # mmrm requires numeric covariates
+    for (cov in valid_covariates) {
+      df_long[[cov]] = as.numeric(df_long[[cov]])
+    }
+
+    # -------------------------------------------------------------------------
+    # 5e. Data quality checks
+    # -------------------------------------------------------------------------
+
+    # Drop visits with no observed data across all subjects
+    empty_visits = df_long %>%
+      group_by(visit) %>%
+      summarise(n_obs = sum(!is.na(Y)), .groups = "drop") %>%
+      filter(n_obs == 0) %>%
+      pull(visit)
+
+    if (length(empty_visits) > 0) {
+      cat("WARNING: Dropping empty visits:", paste(as.character(empty_visits), collapse = ", "), "\n")
+      df_long       = df_long %>% filter(!as.character(visit) %in% as.character(empty_visits))
+      df_long$visit = droplevels(df_long$visit)
+      visit_labels  = levels(df_long$visit)
+      n_visits      = length(visit_labels)
+    }
+
+    if (n_visits < 2) {
+      cat("SKIPPED:", primary_col, "- fewer than 2 usable visits\n\n")
+      next
+    }
+
+    # Drop subjects with no observations at all (contribute nothing to likelihood)
+    keep_subjects = df_long %>%
+      group_by(.data[[id_col]]) %>%
+      summarise(any_obs = any(!is.na(Y)), .groups = "drop") %>%
+      filter(any_obs) %>%
+      pull(.data[[id_col]])
+
+    df_long = df_long %>% filter(.data[[id_col]] %in% keep_subjects)
+    cat("Subjects with at least one observation:", length(keep_subjects), "\n")
+
+    # -------------------------------------------------------------------------
+    # 5f. Build MMRM formula
+    #
+    #  MMRM-I  : Y ~ 0 + visit + Treatment:visit + cov1 + cov2 + us(visit|id)
+    #  MMRM-II : Y ~ 0 + visit + Treatment:visit + visit:cov1 + visit:cov2 + us(visit|id)
+    # -------------------------------------------------------------------------
+    cov_terms = if (length(valid_covariates) > 0) {
+      if (mmrm_type == 1) {
+        valid_covariates                    # constant beta_X  (MMRM-I)
+      } else {
+        paste0("visit:", valid_covariates)  # visit-specific beta_Xt (MMRM-II)
+      }
+    } else {
+      character(0)
+    }
+
+    fixed_terms = c(
+      "visit",
+      paste0(treatment_col, ":visit"),
+      cov_terms
+    )
+
+    cov_structure = paste0("us(visit | ", id_col, ")")
+
+    mmrm_formula = as.formula(paste0(
+      "Y ~ 0 + ",
+      paste(fixed_terms, collapse = " + "),
+      " + ",
+      cov_structure
+    ))
+
+    cat(model_label, "formula:", deparse(mmrm_formula), "\n\n")
+
+    # -------------------------------------------------------------------------
+    # 5g. Fit model (Kenward-Roger, fallback to Satterthwaite)
+    # -------------------------------------------------------------------------
+    mmrm_fit = tryCatch({
+      mmrm(formula = mmrm_formula, data = df_long, reml = reml, method = "Kenward-Roger")
+    }, error = function(e) {
+      cat("Kenward-Roger failed:", e$message, "\nRetrying with Satterthwaite...\n")
+      tryCatch({
+        mmrm(formula = mmrm_formula, data = df_long, reml = reml, method = "Satterthwaite")
+      }, error = function(e2) {
+        cat(model_label, "fit failed for", primary_col, ":", e2$message, "\n")
+        NULL
+      })
+    })
+
+    if (is.null(mmrm_fit)) next
+
+    # -------------------------------------------------------------------------
+    # 5h. Extract treatment effects at the final visit (last in visit_labels)
+    # -------------------------------------------------------------------------
+    final_visit_label = visit_labels[length(visit_labels)]
+    coef_all          = coef(mmrm_fit)
+    vcov_all          = vcov(mmrm_fit)
+
+    outcome_results_list = vector("list", length(treat_levels_valid))
+
+    for (j in seq_along(treat_levels_valid)) {
+      arm = treat_levels_valid[j]
+
+      # Try both interaction orderings
+      coef_name_v1 = paste0("visit", final_visit_label, ":", treatment_col, arm)
+      coef_name_v2 = paste0(treatment_col, arm, ":visit", final_visit_label)
+
+      coef_name = if (coef_name_v1 %in% names(coef_all)) {
+        coef_name_v1
+      } else if (coef_name_v2 %in% names(coef_all)) {
+        coef_name_v2
+      } else {
+        matches = names(coef_all)[
+          grepl(final_visit_label, names(coef_all), fixed = TRUE) &
+          grepl(arm,               names(coef_all), fixed = TRUE)
+        ]
+        if (length(matches) == 1) matches[1] else NA_character_
+      }
+
+      if (is.na(coef_name)) {
+        cat("WARNING: Could not find coefficient for arm", arm,
+            "at visit", final_visit_label, "\n")
+        cat("Available coefficients:\n ", paste(names(coef_all), collapse = "\n  "), "\n")
+        est = NA_real_
+        se  = NA_real_
+      } else {
+        est = unname(coef_all[coef_name])
+        se  = sqrt(vcov_all[coef_name, coef_name])
+      }
+
+      # N = subjects in this arm pair with observed final visit
+      n_pair = sum(
+        df[[treatment_col]] %in% c(control_level, arm) &
+        !is.na(df[[final_col]])
+      )
+
+      row = tibble(
+        Outcome          = primary_col,
+        Final_Visit_Col  = final_col,
+        N                = n_pair,
+        N_visits         = n_visits,
+        N_Covariates     = length(valid_covariates),
+        Treatment        = arm,
+        Control          = control_level
+      )
+      row[[est_col]] = round(est, 5)
+      row[[se_col]]  = round(se,  5)
+
+      outcome_results_list[[j]] = row
+    }
+
+    all_results[[idx]] = bind_rows(outcome_results_list)
+    cat("Done:", primary_col, "\n\n")
+  }
+
+  # ---------------------------------------------------------------------------
+  # 6. Combine and return
+  # ---------------------------------------------------------------------------
+  final_results = bind_rows(all_results)
+
+  if (nrow(final_results) == 0) {
+    message("No ", model_label, " results produced.")
+    return(tibble())
+  }
+
+  return(final_results)
+}
+```
+
+## analyze_rct_mmrm
+```{r}
+## =============================================================================
+##  analyze_rct_mmrm()
+##  Implements MMRM-I and MMRM-II from Wang & Du (2024), Int J Biostat 20(2):585-598
+##
+##  MMRM-I  (Eq. 2): Y_it = beta_0t + sum_j beta_Ajt * I{A=j} + beta_X^T  * X_i + eps_it
+##  MMRM-II (Eq. 3): Y_it = beta_0t + sum_j beta_Ajt * I{A=j} + beta_Xt^T * X_i + eps_it
+##
+##  Selected via mmrm_type = 1 or mmrm_type = 2
+##
+##  Key difference:
+##    MMRM-I  : constant covariate coefficients across visits   `+ cov`
+##    MMRM-II : visit-specific covariate coefficients           `+ visit:cov`
+##
+##  Shared properties:
+##    - Visit-specific intercepts and treatment effects
+##    - Unstructured residual covariance Sigma (shared across arms)
+##    - Missing outcomes handled by MMRM likelihood (not complete-case)
+##    - Continuous outcomes only (YP_ and YS_)
+##
+##  Naming conventions expected in data:
+##    Primary outcome   : YP_<stem>_<time>       e.g. YP_hba1c_4w
+##    Pre-visit outcomes: pre_YP_<stem>_<time>   e.g. pre_YP_hba1c_2w
+##    Post outcomes     : post_YP_<stem>_<time>  (ignored)
+##    Baseline covariate: X_<stem>_0<unit>       e.g. X_hba1c_0w
+##    Other covariates  : X_<n>_0<unit>
+##
+##  baseline_as_outcome argument:
+##    FALSE (default) : X_stem_0 is covariate only      [standard]
+##    TRUE            : X_stem_0 also enters as visit 0 [augmented]
+##
+##  Output:
+##    tibble matching analyze_rct_dml() style:
+##    Outcome, N, N_visits, N_Covariates, Treatment, Control,
+##    Est_MMRM1/Est_MMRM2, SE_MMRM1/SE_MMRM2
+## =============================================================================
+
+analyze_rct_mmrm = function(
+    df,
+    mmrm_type            = 1,          # 1 = MMRM-I, 2 = MMRM-II
+    treatment_col        = "Treatment",
+    covariate_col        = NULL,       # NULL = auto-detect X_ columns
+    outcome_cols         = NULL,       # NULL = auto-detect YP_ and YS_ columns
+    baseline_as_outcome  = FALSE,      # FALSE = baseline as covariate only
+                                       # TRUE  = baseline also as visit 0
+    reml                 = TRUE,       # TRUE = REML (recommended), FALSE = ML
+    seed                 = 123
+) {
+
+  require(dplyr)
+  require(tidyr)
+  require(mmrm)
+  require(stringr)
+
+  # ---------------------------------------------------------------------------
+  # 0. Validate mmrm_type
+  # ---------------------------------------------------------------------------
+  if (!mmrm_type %in% c(1, 2)) {
+    stop("mmrm_type must be 1 (MMRM-I) or 2 (MMRM-II).")
+  }
+
+  model_label = paste0("MMRM-", mmrm_type)
+  est_col     = paste0("Est_MMRM", mmrm_type)
+  se_col      = paste0("SE_MMRM",  mmrm_type)
+
+  cat(sprintf("Fitting %s (baseline_as_outcome = %s)\n\n", model_label, baseline_as_outcome))
+
+  set.seed(seed)
+
+  # ---------------------------------------------------------------------------
+  # 1. Basic setup
+  # ---------------------------------------------------------------------------
+  arms          = levels(df[[treatment_col]])
+  control_level = arms[1]
+  treat_levels  = arms[-1]
+
+  # Auto-detect covariates
+  if (is.null(covariate_col)) {
+    covariates = names(df)[startsWith(names(df), "X_")]
+  } else {
+    covariates = covariate_col
+  }
+
+  # Auto-detect outcomes (YP_ and YS_)
+  if (is.null(outcome_cols)) {
+    primary_cols = names(df)[startsWith(names(df), "YP_") | startsWith(names(df), "YS_")]
+  } else {
+    primary_cols = outcome_cols[startsWith(outcome_cols, "YP_") | startsWith(outcome_cols, "YS_")]
+  }
+
+  if (length(primary_cols) == 0) {
+    stop("No YP_ or YS_ outcome columns found.")
+  }
+
+  # ---------------------------------------------------------------------------
+  # 2. Filter to continuous outcomes only
+  #    Continuous = numeric with more than 2 unique non-missing values
+  # ---------------------------------------------------------------------------
+  is_continuous = function(col) {
+    x = df[[col]]
+    if (!is.numeric(x)) return(FALSE)
+    return(length(unique(x[!is.na(x)])) > 2)
+  }
+
+  continuous_mask = sapply(primary_cols, is_continuous)
+  skipped         = primary_cols[!continuous_mask]
+
+  if (length(skipped) > 0) {
+    cat("Skipping non-continuous outcomes (binary or non-numeric):\n")
+    cat(" ", paste(skipped, collapse = ", "), "\n\n")
+  }
+
+  primary_cols = primary_cols[continuous_mask]
+
+  if (length(primary_cols) == 0) {
+    message("No continuous YP_ or YS_ outcomes found. Returning empty tibble.")
+    return(tibble())
+  }
+
+  # ---------------------------------------------------------------------------
+  # 3. Detect longitudinal series for each primary outcome
+  #    Series = primary outcome + any matching pre_ intermediate visits
+  # ---------------------------------------------------------------------------
+  detect_longitudinal_series = function(primary_col) {
+
+    parts = str_split(primary_col, "_")[[1]]
+    if (length(parts) < 3) return(NULL)
+
+    prefix     = parts[1]                                  # "YP" or "YS"
+    stem       = paste(parts[2:(length(parts) - 1)], collapse = "_")
+    time_final = parts[length(parts)]
+
+    # Find pre_ intermediate visits
+    pre_pattern = paste0("^pre_", prefix, "_", stem, "_")
+    pre_cols    = names(df)[grepl(pre_pattern, names(df))]
+
+    # Find matching baseline covariate X_<stem>_0<unit>
+    baseline_pattern = paste0("^X_", stem, "_0")
+    baseline_col     = names(df)[grepl(baseline_pattern, names(df), ignore.case = TRUE)]
+    if (length(baseline_col) > 1) baseline_col = baseline_col[1]
+    if (length(baseline_col) == 0) baseline_col = NULL
+
+    has_pre      = length(pre_cols) > 0
+    has_baseline = !is.null(baseline_col)
+
+    # Qualifies as longitudinal if it has pre_ visits,
+    # or if baseline_as_outcome = TRUE and a baseline column exists
+    is_longitudinal = has_pre || (baseline_as_outcome && has_baseline)
+
+    list(
+      primary_col     = primary_col,
+      prefix          = prefix,
+      stem            = stem,
+      time_final      = time_final,
+      pre_cols        = pre_cols,
+      baseline_col    = baseline_col,
+      has_pre         = has_pre,
+      has_baseline    = has_baseline,
+      is_longitudinal = is_longitudinal
+    )
+  }
+
+  series_list = lapply(primary_cols, detect_longitudinal_series)
+  names(series_list) = primary_cols
+
+  is_long     = sapply(series_list, function(s) s$is_longitudinal)
+  long_cols   = primary_cols[is_long]
+  scalar_cols = primary_cols[!is_long]
+
+  if (length(scalar_cols) > 0) {
+    cat("Non-longitudinal outcomes (no pre_ visits found, skipping):\n")
+    cat(" ", paste(scalar_cols, collapse = ", "), "\n\n")
+  }
+
+  if (length(long_cols) == 0) {
+    message("No longitudinal outcome series detected. Returning empty tibble.")
+    return(tibble())
+  }
+
+  # ---------------------------------------------------------------------------
+  # 4. Impute missing covariates
+  # ---------------------------------------------------------------------------
+  df = df %>%
+    mutate(across(all_of(covariates), ~ if (is.numeric(.)) {
+      replace(., is.na(.), mean(., na.rm = TRUE))
+    } else if (is.factor(.)) {
+      replace(., is.na(.), DescTools::Mode(., na.rm = TRUE)[1])
+    }))
+
+  # ---------------------------------------------------------------------------
+  # 5. Process each longitudinal outcome series
+  # ---------------------------------------------------------------------------
+  parse_time = function(time_str) {
+    as.numeric(gsub("[^0-9.]", "", time_str))
+  }
+
+  all_results = vector("list", length(long_cols))
+
+  for (idx in seq_along(long_cols)) {
+
+    primary_col = long_cols[idx]
+    s           = series_list[[primary_col]]
+
+    cat("========================================\n")
+    cat("Outcome    :", primary_col, "\n")
+    cat("Model      :", model_label, "\n")
+    cat("Stem       :", s$stem, "\n")
+    cat("Pre visits :", if (length(s$pre_cols) > 0) paste(s$pre_cols, collapse = ", ") else "none", "\n")
+    cat("Baseline   :", if (!is.null(s$baseline_col)) s$baseline_col else "none", "\n")
+    cat("Baseline as outcome:", baseline_as_outcome, "\n")
+    cat("========================================\n")
+
+    # -------------------------------------------------------------------------
+    # 5a. Build ordered visit sequence
+    # -------------------------------------------------------------------------
+    visit_rows = list()
+
+    # Visit 0: baseline as outcome (Version B only)
+    if (baseline_as_outcome && !is.null(s$baseline_col)) {
+      visit_rows[["v0"]] = list(
+        col         = s$baseline_col,
+        visit_label = "visit_0",
+        visit_num   = 0
+      )
+    }
+
+    # Pre-visits
+    for (pc in s$pre_cols) {
+      pc_parts = str_split(pc, "_")[[1]]
+      pc_time  = pc_parts[length(pc_parts)]
+      visit_rows[[pc]] = list(
+        col         = pc,
+        visit_label = paste0("visit_pre_", pc_time),
+        visit_num   = parse_time(pc_time)
+      )
+    }
+
+    # Final (primary) visit
+    visit_rows[[primary_col]] = list(
+      col         = primary_col,
+      visit_label = paste0("visit_final_", s$time_final),
+      visit_num   = parse_time(s$time_final)
+    )
+
+    # Sort by numeric time
+    visit_order  = visit_rows[order(sapply(visit_rows, function(v) v$visit_num))]
+    visit_labels = unname(sapply(visit_order, function(v) v$visit_label))
+    visit_cols   = unname(sapply(visit_order, function(v) v$col))
+    n_visits     = length(visit_order)
+
+    cat("Visit order:", paste(visit_labels, collapse = " -> "), "\n\n")
+
+    # -------------------------------------------------------------------------
+    # 5b. Determine active covariates
+    #     When baseline_as_outcome = TRUE, remove the baseline col from
+    #     covariates to avoid it appearing in both outcome stack and covariate list
+    # -------------------------------------------------------------------------
+    active_covariates = covariates
+    if (baseline_as_outcome && !is.null(s$baseline_col)) {
+      active_covariates = setdiff(active_covariates, s$baseline_col)
+    }
+
+    # Remove single-level factors
+    valid_covariates = character(0)
+    for (cov in active_covariates) {
+      if (is.factor(df[[cov]]) && length(levels(droplevels(df[[cov]]))) <= 1) {
+        cat("REMOVED covariate:", cov, "- only one level\n")
+      } else {
+        valid_covariates = c(valid_covariates, cov)
+      }
+    }
+
+    # -------------------------------------------------------------------------
+    # 5c. Reshape wide -> long
+    # -------------------------------------------------------------------------
+    id_col  = "subject_id_mmrm_internal__"
+    df_wide = df %>% mutate(!!id_col := row_number())
+
+    df_sub  = df_wide %>% select(all_of(c(id_col, treatment_col, valid_covariates, visit_cols)))
+
+    df_long = df_sub %>%
+      pivot_longer(
+        cols      = all_of(visit_cols),
+        names_to  = "visit_col_name",
+        values_to = "Y"
+      ) %>%
+      mutate(
+        visit = factor(
+          visit_labels[match(visit_col_name, visit_cols)],
+          levels = visit_labels
+        )
+      ) %>%
+      select(-visit_col_name) %>%
+      mutate(
+        !!id_col        := factor(.data[[id_col]]),
+        !!treatment_col := factor(.data[[treatment_col]], levels = arms)
+      )
+
+    # mmrm requires numeric covariates
+    for (cov in valid_covariates) {
+      df_long[[cov]] = as.numeric(df_long[[cov]])
+    }
+
+    # -------------------------------------------------------------------------
+    # 5d. Data quality checks
+    # -------------------------------------------------------------------------
+
+    # Drop visits with no observed data at all
+    empty_visits = df_long %>%
+      group_by(visit) %>%
+      summarise(n_obs = sum(!is.na(Y)), .groups = "drop") %>%
+      filter(n_obs == 0) %>%
+      pull(visit)
+
+    if (length(empty_visits) > 0) {
+      cat("WARNING: Dropping empty visits:", paste(empty_visits, collapse = ", "), "\n")
+      df_long       = df_long %>% filter(!visit %in% empty_visits)
+      df_long$visit = droplevels(df_long$visit)
+      visit_labels  = levels(df_long$visit)
+      n_visits      = length(visit_labels)
+    }
+
+    if (n_visits < 2) {
+      cat("SKIPPED:", primary_col, "- fewer than 2 usable visits\n\n")
+      next
+    }
+
+    # Drop subjects with no observations at all
+    keep_subjects = df_long %>%
+      group_by(.data[[id_col]]) %>%
+      summarise(any_obs = any(!is.na(Y)), .groups = "drop") %>%
+      filter(any_obs) %>%
+      pull(.data[[id_col]])
+
+    df_long = df_long %>% filter(.data[[id_col]] %in% keep_subjects)
+    cat("Subjects with at least one observation:", length(keep_subjects), "\n")
+
+    # -------------------------------------------------------------------------
+    # 5e. Build formula
+    #
+    #  MMRM-I  : Y ~ 0 + visit + Treatment:visit + cov1 + cov2 + us(visit|id)
+    #  MMRM-II : Y ~ 0 + visit + Treatment:visit + visit:cov1 + visit:cov2 + us(visit|id)
+    #
+    #  The ONLY difference is how covariates enter:
+    #    mmrm_type = 1 -> `cov`        (constant across visits)
+    #    mmrm_type = 2 -> `visit:cov`  (visit-specific)
+    # -------------------------------------------------------------------------
+    cov_terms = if (length(valid_covariates) > 0) {
+      if (mmrm_type == 1) {
+        valid_covariates                      # constant beta_X  (MMRM-I)
+      } else {
+        paste0("visit:", valid_covariates)    # visit-specific beta_Xt (MMRM-II)
+      }
+    } else {
+      character(0)
+    }
+
+    fixed_terms = c(
+      "visit",                          # visit-specific intercepts
+      paste0(treatment_col, ":visit"),   # visit-specific treatment effects
+      cov_terms                          # covariate terms (differ by mmrm_type)
+    )
+
+    cov_structure = paste0("us(visit | ", id_col, ")")
+
+    mmrm_formula = as.formula(paste0(
+      "Y ~ 0 + ",
+      paste(fixed_terms, collapse = " + "),
+      " + ",
+      cov_structure
+    ))
+
+    cat(model_label, "formula:", deparse(mmrm_formula), "\n\n")
+
+    # -------------------------------------------------------------------------
+    # 5f. Fit model (Kenward-Roger, fallback to Satterthwaite)
+    # -------------------------------------------------------------------------
+    mmrm_fit = tryCatch({
+      mmrm(formula = mmrm_formula, data = df_long, reml = reml, method = "Kenward-Roger")
+    }, error = function(e) {
+      cat("Kenward-Roger failed:", e$message, "\nRetrying with Satterthwaite...\n")
+      tryCatch({
+        mmrm(formula = mmrm_formula, data = df_long, reml = reml, method = "Satterthwaite")
+      }, error = function(e2) {
+        cat(model_label, "fit failed for", primary_col, ":", e2$message, "\n")
+        NULL
+      })
+    })
+
+    if (is.null(mmrm_fit)) next
+
+    # -------------------------------------------------------------------------
+    # 5g. Extract treatment effects at the final visit
+    # -------------------------------------------------------------------------
+    final_visit_label = visit_labels[length(visit_labels)]
+    coef_all          = coef(mmrm_fit)
+    vcov_all          = vcov(mmrm_fit)
+
+    outcome_results_list = vector("list", length(treat_levels))
+
+    for (j in seq_along(treat_levels)) {
+      arm = treat_levels[j]
+
+      # Try both interaction orderings (mmrm may place either term first)
+      coef_name_v1 = paste0("visit", final_visit_label, ":", treatment_col, arm)
+      coef_name_v2 = paste0(treatment_col, arm, ":visit", final_visit_label)
+
+      coef_name = if (coef_name_v1 %in% names(coef_all)) {
+        coef_name_v1
+      } else if (coef_name_v2 %in% names(coef_all)) {
+        coef_name_v2
+      } else {
+        matches = names(coef_all)[
+          grepl(final_visit_label, names(coef_all)) &
+          grepl(arm, names(coef_all))
+        ]
+        if (length(matches) == 1) matches[1] else NA_character_
+      }
+
+      if (is.na(coef_name)) {
+        cat("WARNING: Could not find coefficient for arm", arm,
+            "at visit", final_visit_label, "\n")
+        cat("Available coefficients:\n ", paste(names(coef_all), collapse = "\n  "), "\n")
+        est = NA_real_
+        se  = NA_real_
+      } else {
+        est = coef_all[coef_name]
+        se  = sqrt(vcov_all[coef_name, coef_name])
+      }
+
+      n_pair = sum(df[[treatment_col]] %in% c(control_level, arm) &
+                   !is.na(df[[primary_col]]))
+
+      row = tibble(
+        Outcome      = primary_col,
+        N            = n_pair,
+        N_visits     = n_visits,
+        N_Covariates = length(valid_covariates),
+        Treatment    = arm,
+        Control      = control_level
+      )
+      row[[est_col]] = round(est, 5)
+      row[[se_col]]  = round(se,  5)
+
+      outcome_results_list[[j]] = row
+    }
+
+    all_results[[idx]] = bind_rows(outcome_results_list)
+    cat("Done:", primary_col, "\n\n")
+  }
+
+  # ---------------------------------------------------------------------------
+  # 6. Combine and return
+  # ---------------------------------------------------------------------------
+  final_results = bind_rows(all_results)
+
+  if (nrow(final_results) == 0) {
+    message("No ", model_label, " results produced.")
+    return(tibble())
+  }
+
+  return(final_results)
+}
+```
 
 ## update_df_dml()
 ```{r}
@@ -3093,182 +4089,115 @@ update_df_ipw = function(trial_no,
 
 ## update_df_ipw_psweight()
 ```{r}
-update_df_ipw_psweight = function(trial_no,
-                         outcome_type,
-                         results,
-                         suffix = "",
-                         contrast = "diff",
-                         df = df_comparison) {
-  
+update_df_psweight = function(trial_no,
+                              outcome_type,
+                              results,
+                              weight_method = "IPW",   # "IPW", "AIPW", "OW", or "AOW"
+                              suffix = "",
+                              df = df_comparison) {
   library(dplyr)
-  
-  ## ────────────────────────────────────────────────────────────────
-  ## 0) Check if all N_Covariates are 0 - if so, skip update entirely
-  ##    Otherwise, filter to only rows with covariates
-  ## ────────────────────────────────────────────────────────────────
+ 
+  # Map weight_method to the tag used in column names
+  # e.g. "IPW" -> "IPW_PSWeight", "OW" -> "OW_PSWeight", "AOW" -> "AOW_PSWeight"
+if (!weight_method %in% c("IPW", "AIPW", "OW", "AOW"))
+  stop("weight_method must be one of: 'IPW', 'AIPW', 'OW', 'AOW'")
+ 
+  method_tag = paste0(weight_method, "_PSWeight")
+  est_col    = paste0("Est_", weight_method)
+  se_col     = paste0("SE_",  weight_method)
+ 
+  ## ── 0) Guard ─────────────────────────────────────────────────────────────
   if (all(results$N_Covariates == 0)) {
-    cat("Skipping IPW_PSWeight update for trial", trial_no, "- All outcomes have N_Covariates = 0\n")
+    cat("Skipping", method_tag, "update for trial", trial_no,
+        "- All outcomes have N_Covariates = 0\n")
     return(df)
   }
-  
-  # Store original results for outcome_type mapping
+ 
   results_original = results
-  
-  # Filter to only rows with covariates
-  results_with_covariates = results[results$N_Covariates > 0, ]
-  
-  if (nrow(results_with_covariates) == 0) {
-    cat("Skipping IPW_PSWeight update for trial", trial_no, "- No outcomes with covariates after filtering\n")
+  results = results[results$N_Covariates > 0, ]
+ 
+  if (nrow(results) == 0) {
+    cat("Skipping", method_tag, "update for trial", trial_no,
+        "- No outcomes with covariates after filtering\n")
     return(df)
   }
-  
-  if (nrow(results_with_covariates) < nrow(results)) {
-    cat("Note: Processing", nrow(results_with_covariates), "out of", nrow(results), 
-        "outcomes (skipping", nrow(results) - nrow(results_with_covariates), "with N_Covariates = 0)\n")
-  }
-  
-  # Use filtered results for the rest of the function
-  results = results_with_covariates
-  
-  ## ────────────────────────────────────────────────────────────────
-  ## 1)  Outcome → Outcome-Type lookup
-  ## ────────────────────────────────────────────────────────────────
-  
-  # Determine the multiplier (number of comparisons per outcome)
-  # This is always nrow(results_original) / length(outcome_type)
+  if (nrow(results) < nrow(results_original))
+    cat("Note: Processing", nrow(results), "out of", nrow(results_original),
+        "outcomes (skipping", nrow(results_original) - nrow(results),
+        "with N_Covariates = 0)\n")
+ 
+  ## ── 1) Outcome-type mapping ───────────────────────────────────────────────
   multiplier = nrow(results_original) / length(outcome_type)
-  
-  if (multiplier != round(multiplier)) {
-    stop("Number of rows in results (", nrow(results_original), 
-         ") is not a multiple of length of outcome_type (", length(outcome_type), ")")
-  }
-  
-  # Create outcome_type mapping for filtered results
-  # For each row in results, find which outcome_type it corresponds to
+  if (multiplier != round(multiplier))
+    stop("nrow(results) (", nrow(results_original),
+         ") is not a multiple of length(outcome_type) (", length(outcome_type), ")")
+ 
   outcome_type_expanded = rep(outcome_type, each = multiplier)
-  
-  # Now subset this expanded vector to match the filtered results
-  # We need to find the indices of results_with_covariates in results_original
   original_indices = match(
-    paste(results_with_covariates$Outcome, 
-          results_with_covariates$Treatment, 
-          results_with_covariates$Control),
-    paste(results_original$Outcome, 
-          results_original$Treatment, 
-          results_original$Control)
+    paste(results$Outcome, results$Treatment, results$Control),
+    paste(results_original$Outcome, results_original$Treatment, results_original$Control)
   )
-  
-  outcome_type_filtered = outcome_type_expanded[original_indices]
-  
-  unique_outcomes = unique(results$Outcome)
-  
-  # Create mapping based on filtered data
-  outcome_type_map = tibble(
-    Outcome = results$Outcome,
-    `Outcome Type` = outcome_type_filtered
-  ) %>%
-    distinct(Outcome, .keep_all = TRUE)
-  
-  ## ────────────────────────────────────────────────────────────────
-  ## 2) Process each row in results and update IPW_PSWeight columns
-  ## ────────────────────────────────────────────────────────────────
-  
+ 
+  ## ── 2) Build df column names ──────────────────────────────────────────────
+  sfx = if (suffix == "") "" else paste0("_", suffix)
+  col_est  = paste0(method_tag, sfx, "_est")
+  col_se   = paste0(method_tag, sfx, "_se")
+  col_pval = paste0(method_tag, sfx, "_pval")
+  col_pg   = paste0("How much precision gain can ", method_tag, sfx, " provide?")
+  col_diff = paste0("The difference between unadjusted and ", method_tag, sfx, " point estimates")
+ 
+  ensure_col = function(df, col) {
+    if (!col %in% names(df)) df[[col]] = NA_real_
+    df
+  }
+  df = ensure_col(df, col_est)
+  df = ensure_col(df, col_se)
+  df = ensure_col(df, col_pval)
+ 
+  ## ── 3) Loop over results rows ─────────────────────────────────────────────
   for (i in seq_len(nrow(results))) {
     row_i = results[i, ]
-    
-    # Find matching row in df
+ 
     idx = which(
-      df$Trial_No == trial_no &
-        df$Outcome   == row_i$Outcome &
-        df$Treatment == row_i$Treatment &
-        df$Control   == row_i$Control
+      df$Trial_No  == trial_no        &
+      df$Outcome   == row_i$Outcome   &
+      df$Treatment == row_i$Treatment &
+      df$Control   == row_i$Control
     )
-    
     if (length(idx) == 0) {
-      warning("No matching row found in df for Trial_No=", trial_no, 
+      warning("No matching row in df for Trial_No=", trial_no,
               ", Outcome=", row_i$Outcome, ", Treatment=", row_i$Treatment)
       next
     }
-    
-    ## ────────────────────────────────────────────────────────────────
-    ## 2a) Update IPW_PSWeight estimate columns (if Est_IPW_PSWeight exists)
-    ## ────────────────────────────────────────────────────────────────
-    
-    if ("Est_IPW_PSWeight" %in% names(row_i)) {
-      if (suffix == "") {
-        ipw_est_col = "IPW_PSWeight_est"
-        ipw_se_col = "IPW_PSWeight_se"
-        ipw_pval_col = "IPW_PSWeight_pval"
-      } else {
-        suffix_clean = paste0("_", suffix)
-        ipw_est_col = paste0("IPW_PSWeight", suffix_clean, "_est")
-        ipw_se_col = paste0("IPW_PSWeight", suffix_clean, "_se")
-        ipw_pval_col = paste0("IPW_PSWeight", suffix_clean, "_pval")
-      }
-      
-      # Add columns if they don't exist
-      if (!ipw_est_col %in% names(df)) {
-        df[[ipw_est_col]] = NA_real_
-      }
-      if (!ipw_se_col %in% names(df)) {
-        df[[ipw_se_col]] = NA_real_
-      }
-      if (!ipw_pval_col %in% names(df)) {
-        df[[ipw_pval_col]] = NA_real_
-      }
-      
-      # Update values
-      df[idx[1], ipw_est_col] = row_i$Est_IPW_PSWeight
-      df[idx[1], ipw_se_col] = row_i$SE_IPW_PSWeight
-      
-      # Calculate p-value
-      ipw_est = row_i$Est_IPW_PSWeight
-      ipw_se = row_i$SE_IPW_PSWeight
-      if (!is.na(ipw_est) && !is.na(ipw_se) && ipw_se > 0) {
-        df[idx[1], ipw_pval_col] = 2 * pnorm(-abs(ipw_est / ipw_se))
-      }
-      
-      ## ────────────────────────────────────────────────────────────────
-      ## 2b) Calculate and update derived metrics for IPW_PSWeight
-      ## ────────────────────────────────────────────────────────────────
-      
-      # Only if Unadjust_se and Unadjust_est exist in df
-      if ("Unadjust_se" %in% names(df) && "Unadjust_est" %in% names(df)) {
-        unadjust_se = df[idx[1], "Unadjust_se"]
-        unadjust_est = df[idx[1], "Unadjust_est"]
-        
-        if (suffix == "") {
-          pg_col = "How much precision gain can IPW_PSWeight provide?"
-          diff_col = "The difference between unadjusted and IPW_PSWeight point estimates"
-        } else {
-          suffix_clean = paste0("_", suffix)
-          pg_col = paste0("How much precision gain can IPW_PSWeight", suffix_clean, " provide?")
-          diff_col = paste0("The difference between unadjusted and IPW_PSWeight", suffix_clean, " point estimates")
-        }
-        
-        # Add derived metric columns if they don't exist
-        if (!pg_col %in% names(df)) {
-          df[[pg_col]] = NA_real_
-        }
-        if (!diff_col %in% names(df)) {
-          df[[diff_col]] = NA_real_
-        }
-        
-        # Calculate precision gain
-        if (!is.na(ipw_se) && !is.na(unadjust_se) && unadjust_se != 0) {
-          df[idx[1], pg_col] = (ipw_se / unadjust_se)^2
-        }
-        
-        # Calculate point estimate difference (using unadjust_se only)
-        if (!is.na(ipw_est) && !is.na(unadjust_est) && !is.na(unadjust_se) && unadjust_se > 0) {
-          df[idx[1], diff_col] = (ipw_est - unadjust_est) / unadjust_se
-        }
-      }
+ 
+    est_val = row_i[[est_col]]
+    se_val  = row_i[[se_col]]
+ 
+    df[idx[1], col_est] = est_val
+    df[idx[1], col_se]  = se_val
+ 
+    if (!is.na(est_val) && !is.na(se_val) && se_val > 0)
+      df[idx[1], col_pval] = 2 * pnorm(-abs(est_val / se_val))
+ 
+    # Derived metrics
+    if ("Unadjust_se" %in% names(df) && "Unadjust_est" %in% names(df)) {
+      unadj_se  = df[idx[1], "Unadjust_se"]
+      unadj_est = df[idx[1], "Unadjust_est"]
+ 
+      df = ensure_col(df, col_pg)
+      df = ensure_col(df, col_diff)
+ 
+      if (!is.na(se_val) && !is.na(unadj_se) && unadj_se != 0)
+        df[idx[1], col_pg] = (se_val / unadj_se)^2
+ 
+      if (!is.na(est_val) && !is.na(unadj_est) && !is.na(unadj_se) && unadj_se > 0)
+        df[idx[1], col_diff] = (est_val - unadj_est) / unadj_se
     }
   }
-  
+ 
   df
 }
+ 
 
 ```
 
@@ -3559,80 +4488,73 @@ process_single_trial_dml = function(trial_no,
 
 ## process_single_trial_ipw_psweight()
 ```{r}
-process_single_trial_ipw_psweight = function(trial_no,
-                                    df,
-                                    manual_covariates,
-                                    outcome_type_vec,
-                                    selection = TRUE,
-                                    variable_selection_type = 2,
-                                    weight_method = "IPW",   # PSweight keywords: "IPW","treated","overlap","matching","entropy"
-                                    n_select = 3,
-                                    seed = 123,
-                                    df_comparison) {
-  
+process_single_trial_psweight = function(trial_no,
+                                         df,
+                                         manual_covariates,
+                                         outcome_type_vec,
+                                         selection = TRUE,
+                                         variable_selection_type = 2,
+                                         weight_method = "IPW",   # "IPW", "AIPW", "OW", or "AOW"
+                                         n_select = 3,
+                                         seed = 123,
+                                         df_comparison) {
+
   cat("\n========================================\n")
-  cat("Processing Trial", trial_no, "(PSWeight)\n")
+  cat("Processing Trial", trial_no, "(PSWeight -", weight_method, ")\n")
   cat("========================================\n")
-  
-  ## ────────────────────────────────────────────────────────────────
-  ## 1) Run IPW_PSWeight analysis (PSweight)
-  ## ────────────────────────────────────────────────────────────────
-  cat("\n--- Running IPW_PSWeight Analysis ---\n")
-  
-  results_ipw = tryCatch({
+
+  ## ── 1) Run analysis ───────────────────────────────────────────────────────
+  cat("\n--- Running", weight_method, "Analysis ---\n")
+
+  results = tryCatch({
     analyze_rct_psweight(
-      df = df,
-      selection = selection,
+      df                     = df,
+      selection              = selection,
       variable_selection_type = variable_selection_type,
-      manual_covariates = manual_covariates,
-      weight_method = weight_method,   # pass straight through
-      n_select = n_select,
-      seed = seed
+      manual_covariates      = manual_covariates,
+      weight_method          = weight_method,
+      n_select               = n_select,
+      seed                   = seed
     )
   }, error = function(e) {
-    message("✗ IPW_PSWeight analysis failed for trial ", trial_no, ": ", e$message)
+    message("✗ ", weight_method, " analysis failed for trial ", trial_no, ": ", e$message)
     return(NULL)
   })
-  
-  if (is.null(results_ipw)) {
-    message("Skipping trial ", trial_no, " - IPW_PSWeight analysis returned NULL")
+
+  if (is.null(results)) {
+    message("Skipping trial ", trial_no, " - ", weight_method, " analysis returned NULL")
     return(df_comparison)
   }
-  
-  ## ────────────────────────────────────────────────────────────────
-  ## 2) Determine suffix based on selection settings
-  ## ────────────────────────────────────────────────────────────────
-  if (selection) {
-    if (variable_selection_type == 1) {
-      suffix = "VS1"
-    } else if (variable_selection_type == 2) {
-      suffix = "VS2"
-    } else {
-      suffix = ""
-    }
+
+  ## ── 2) Determine suffix ───────────────────────────────────────────────────
+  suffix = if (!selection) {
+    ""
+  } else if (variable_selection_type == 1) {
+    "VS1"
+  } else if (variable_selection_type == 2) {
+    "VS2"
   } else {
-    suffix = ""
+    ""
   }
-  
-  ## ────────────────────────────────────────────────────────────────
-  ## 3) Update df_comparison with IPW_PSWeight results
-  ## ────────────────────────────────────────────────────────────────
+
+  ## ── 3) Update df_comparison ───────────────────────────────────────────────
   cat("\n--- Updating Comparison DataFrame ---\n")
-  
+
   df_comparison = tryCatch({
-    update_df_ipw_psweight(
-      trial_no = trial_no,
+    update_df_psweight(
+      trial_no     = trial_no,
       outcome_type = outcome_type_vec,
-      results = results_ipw,
-      suffix = suffix,
-      df = df_comparison
+      results      = results,
+      weight_method = weight_method,
+      suffix       = suffix,
+      df           = df_comparison
     )
   }, error = function(e) {
     message("✗ Failed to update df_comparison for trial ", trial_no, ": ", e$message)
     return(df_comparison)
   })
-  
-  cat("✓ Trial", trial_no, "completed successfully\n")
+
+  cat("✓ Trial", trial_no, "(", weight_method, ") completed successfully\n")
   return(df_comparison)
 }
 
@@ -4317,15 +5239,14 @@ run_dml_analysis = function(df_indices = 1:50,
 
 ## run_ipw_psweight_analysis()
 ```{r}
-run_ipw_psweight_analysis = function(df_indices = 1:50, 
-                            selection = TRUE, 
-                            variable_selection_type = 2,
-                            weight_method = "IPW",   # PSweight keywords only
-                            n_select = 3,
-                            seed = 123,
-                            df_comparison) {
+run_psweight_analysis = function(df_indices = 1:50, 
+                                 selection = TRUE, 
+                                 variable_selection_type = 2,
+                                 weight_method = "IPW",   # "AIPW", "IPW", "OW", or "AOW"
+                                 n_select = 3,
+                                 seed = 123,
+                                 df_comparison) {
   
-  # Initialize df_comparison if NULL
   if (is.null(df_comparison)) {
     df_comparison = data.frame()
   }
@@ -4450,17 +5371,17 @@ run_ipw_psweight_analysis = function(df_indices = 1:50,
     }
     
     tryCatch({
-      df_comparison = process_single_trial_ipw_psweight(
-        trial_no = i,
-        df = df,
-        manual_covariates = manual_covs,
-        outcome_type_vec = outcome_type_vec,
-        selection = selection,
+      df_comparison = process_single_trial_psweight(
+        trial_no               = i,
+        df                     = df,
+        manual_covariates      = manual_covs,
+        outcome_type_vec       = outcome_type_vec,
+        selection              = selection,
         variable_selection_type = variable_selection_type,
-        weight_method = weight_method,  # pass PSweight keyword directly
-        n_select = n_select,
-        seed = seed,
-        df_comparison = df_comparison
+        weight_method          = weight_method,
+        n_select               = n_select,
+        seed                   = seed,
+        df_comparison          = df_comparison
       )
     }, error = function(e) {
       message("✗ Error in ", df_name, ": ", e$message)
@@ -4468,7 +5389,7 @@ run_ipw_psweight_analysis = function(df_indices = 1:50,
   }
   
   cat("\n========================================\n")
-  cat("All trials processed (PSWeight)\n")
+  cat("All trials processed (PSWeight -", weight_method, ")\n")
   cat("========================================\n")
   
   return(df_comparison)
@@ -4486,7 +5407,7 @@ SL2_lib = c("SL.glm", "SL.glmnet", "SL.bartMachine", "SL.randomForest")
 ```{r}
 # ALL
 df_comparison = run_dml_analysis(
-  df_indices = 50,
+  df_indices = 45,
   selection = F,
   variable_selection_type = 1,
   run_individual_SL = F,
@@ -4744,7 +5665,7 @@ df_newcomp = run_aipw_analysis(
 ```{r}
 # ALL
 df_comparison = run_ipw_analysis(
-  df_indices = 1:50,
+  df_indices = 45,
   selection = FALSE,            # no variable selection
   variable_selection_type = 1,
   weight_method = "ATE",        # PSweight keyword for ATE
@@ -4779,7 +5700,133 @@ df_comparison = run_ipw_analysis(
 
 ## PSWeight
 ```{r}
+# ============================================================
+# IPW - All
+df_comparison = run_psweight_analysis(
+  df_indices              = 45,
+  selection               = FALSE,
+  variable_selection_type = 1,
+  weight_method           = "IPW",
+  n_select                = 3,
+  seed                    = 123,
+  df_comparison           = df_comparison
+)
+# IPW - Top3
+df_comparison = run_psweight_analysis(
+  df_indices              = 1:50,
+  selection               = TRUE,
+  variable_selection_type = 1,
+  weight_method           = "IPW",
+  n_select                = 3,
+  seed                    = 123,
+  df_comparison           = df_comparison
+)
+# IPW - Baseline+
+df_comparison = run_psweight_analysis(
+  df_indices              = 1:50,
+  selection               = TRUE,
+  variable_selection_type = 2,
+  weight_method           = "IPW",
+  n_select                = 3,
+  seed                    = 123,
+  df_comparison           = df_comparison
+)
 
+# ============================================================
+# AIPW - All
+df_comparison = run_psweight_analysis(
+  df_indices              = 45,
+  selection               = FALSE,
+  variable_selection_type = 1,
+  weight_method           = "AIPW",
+  n_select                = 3,
+  seed                    = 123,
+  df_comparison           = df_comparison
+)
+# AIPW - Top3
+df_comparison = run_psweight_analysis(
+  df_indices              = 1:50,
+  selection               = TRUE,
+  variable_selection_type = 1,
+  weight_method           = "AIPW",
+  n_select                = 3,
+  seed                    = 123,
+  df_comparison           = df_comparison
+)
+# AIPW - Baseline+
+df_comparison = run_psweight_analysis(
+  df_indices              = 1:50,
+  selection               = TRUE,
+  variable_selection_type = 2,
+  weight_method           = "AIPW",
+  n_select                = 3,
+  seed                    = 123,
+  df_comparison           = df_comparison
+)
+
+# ============================================================
+# OW - All
+df_comparison = run_psweight_analysis(
+  df_indices              = 45,
+  selection               = FALSE,
+  variable_selection_type = 1,
+  weight_method           = "OW",
+  n_select                = 3,
+  seed                    = 123,
+  df_comparison           = df_comparison
+)
+# OW - Top3
+df_comparison = run_psweight_analysis(
+  df_indices              = 1:50,
+  selection               = TRUE,
+  variable_selection_type = 1,
+  weight_method           = "OW",
+  n_select                = 3,
+  seed                    = 123,
+  df_comparison           = df_comparison
+)
+# OW - Baseline+
+df_comparison = run_psweight_analysis(
+  df_indices              = 1:50,
+  selection               = TRUE,
+  variable_selection_type = 2,
+  weight_method           = "OW",
+  n_select                = 3,
+  seed                    = 123,
+  df_comparison           = df_comparison
+)
+
+# ============================================================
+# AOW - All
+df_comparison = run_psweight_analysis(
+  df_indices              = 1:50,
+  selection               = FALSE,
+  variable_selection_type = 1,
+  weight_method           = "AOW",
+  n_select                = 3,
+  seed                    = 123,
+  df_comparison           = df_comparison
+)
+# AOW - Top3
+df_comparison = run_psweight_analysis(
+  df_indices              = 1:50,
+  selection               = TRUE,
+  variable_selection_type = 1,
+  weight_method           = "AOW",
+  n_select                = 3,
+  seed                    = 123,
+  df_comparison           = df_comparison
+)
+# AOW - Baseline+
+df_comparison = run_psweight_analysis(
+  df_indices              = 1:50,
+  selection               = TRUE,
+  variable_selection_type = 2,
+  weight_method           = "AOW",
+  n_select                = 3,
+  seed                    = 123,
+  df_comparison           = df_comparison
+)
 ```
 
 
@@ -4793,122 +5840,143 @@ write_xlsx(df_newcomp, "cleaned_data/meta_data_comparison_new.xlsx")
 
 # Summary Data
 ```{r}
-# Create outcome_group variable
+# Summary Data
+# ── Create outcome_group ──────────────────────────────────────────────────────
 df_new = df_comparison %>%
   mutate(
     outcome_group = case_when(
       `Outcome Type` %in% c("continuous", "continuous proportion") ~ "continuous",
-      `Outcome Type` %in% c("ordinal", "categorical") ~ "categorical", 
-      `Outcome Type` %in% c("binary", "composite binary") ~ "binary",
-      `Outcome Type` == "time to event" ~ "time_to_event",
-      TRUE ~ "other"
+      `Outcome Type` %in% c("ordinal", "categorical")             ~ "categorical",
+      `Outcome Type` %in% c("binary", "composite binary")         ~ "binary",
+      `Outcome Type` == "time to event"                           ~ "time_to_event",
+      TRUE                                                        ~ "other"
     )
   )
 
-# Rename all precision gain and variance ratio columns
+# ── Rename ALL columns (existing + new PSWeight) ──────────────────────────────
 df_new = df_new %>%
   rename(
-    # All (base) precision gain columns
-    precision_gain_ANCOVA = `How much precision gain can ANCOVA provide?`,
-    precision_gain_ANHECOVA = `How much precision gain can ANHECOVA provide?`,
-    precision_gain_G_Logistic = `How much precision gain can Logistic G-Computation provide?`,
-    precision_gain_SL1 = `How much precision gain can SL1 provide?`,
-    precision_gain_SL_rpart = `How much precision gain can SL_rpart provide?`,
-    precision_gain_SL_randomForest = `How much precision gain can SL_randomForest provide?`,
-    precision_gain_SL_glmnet = `How much precision gain can SL_glmnet provide?`,
-    precision_gain_SL_gam = `How much precision gain can SL_gam provide?`,
-    precision_gain_SL_bartMachine = `How much precision gain can SL_bartMachine provide?`,
-    precision_gain_DML = `How much precision gain can DML provide?`,
-    precision_gain_TMLE = `How much precision gain can TMLE provide?`,
-    precision_gain_AIPW = `How much precision gain can AIPW provide?`,
-    precision_gain_IPW = `How much precision gain can IPW provide?`,
-    
-    # Top-3 (VS1) precision gain columns
-    `precision_gain_ANCOVA_Top-3` = `How much precision gain can ANCOVA_VS1 provide?`,
-    `precision_gain_ANHECOVA_Top-3` = `How much precision gain can ANHECOVA_VS1 provide?`,
-    `precision_gain_G_Logistic_Top-3` = `How much precision gain can Logistic G-Computation_VS1 provide?`,
-    `precision_gain_SL1_Top-3` = `How much precision gain can SL1_VS1 provide?`,
-    `precision_gain_SL_rpart_Top-3` = `How much precision gain can SL_rpart_VS1 provide?`,
-    `precision_gain_SL_randomForest_Top-3` = `How much precision gain can SL_randomForest_VS1 provide?`,
-    `precision_gain_SL_glmnet_Top-3` = `How much precision gain can SL_glmnet_VS1 provide?`,
-    `precision_gain_SL_gam_Top-3` = `How much precision gain can SL_gam_VS1 provide?`,
-    `precision_gain_SL_bartMachine_Top-3` = `How much precision gain can SL_bartMachine_VS1 provide?`,
-    `precision_gain_DML_Top-3` = `How much precision gain can DML_VS1 provide?`,
-    `precision_gain_TMLE_Top-3` = `How much precision gain can TMLE_VS1 provide?`,
-    `precision_gain_AIPW_Top-3` = `How much precision gain can AIPW_VS1 provide?`,
-    `precision_gain_IPW_Top-3` = `How much precision gain can IPW_VS1 provide?`,
-    
-    # Baseline+ (VS2) precision gain columns
-    `precision_gain_ANCOVA_Baseline+` = `How much precision gain can ANCOVA_VS2 provide?`,
-    `precision_gain_ANHECOVA_Baseline+` = `How much precision gain can ANHECOVA_VS2 provide?`,
-    `precision_gain_G_Logistic_Baseline+` = `How much precision gain can Logistic G-Computation_VS2 provide?`,
-    `precision_gain_SL1_Baseline+` = `How much precision gain can SL1_VS2 provide?`,
-    `precision_gain_SL_rpart_Baseline+` = `How much precision gain can SL_rpart_VS2 provide?`,
-    `precision_gain_SL_randomForest_Baseline+` = `How much precision gain can SL_randomForest_VS2 provide?`,
-    `precision_gain_SL_glmnet_Baseline+` = `How much precision gain can SL_glmnet_VS2 provide?`,
-    `precision_gain_SL_gam_Baseline+` = `How much precision gain can SL_gam_VS2 provide?`,
-    `precision_gain_SL_bartMachine_Baseline+` = `How much precision gain can SL_bartMachine_VS2 provide?`,
-    `precision_gain_DML_Baseline+` = `How much precision gain can DML_VS2 provide?`,
-    `precision_gain_TMLE_Baseline+` = `How much precision gain can TMLE_VS2 provide?`,
-    `precision_gain_AIPW_Baseline+` = `How much precision gain can AIPW_VS2 provide?`,
-    `precision_gain_IPW_Baseline+` = `How much precision gain can IPW_VS2 provide?`,
-    
-    # All (base) variance ratio columns
-    variance_ratio_robust_model = `The ratio between robust and model-based variance estimators`,
-    variance_ratio_ANCOVA_ANHECOVA = `ANCOVA vs ANHECOVA variance ratio`,
-    
-    # Top-3 (VS1) variance ratio columns  
-    `variance_ratio_robust_model_Top-3` = `The ratio between robust and model-based variance estimators_VS1`,
-    `variance_ratio_ANCOVA_ANHECOVA_Top-3` = `ANCOVA_VS1 vs ANHECOVA_VS1 variance ratio`,
-    
-    # Baseline+ (VS2) variance ratio columns
-    `variance_ratio_robust_model_Baseline+` = `The ratio between robust and model-based variance estimators_VS2`,
+    # ── Precision gain: All covariates ────────────────────────────────────────
+    precision_gain_ANCOVA              = `How much precision gain can ANCOVA provide?`,
+    precision_gain_ANHECOVA            = `How much precision gain can ANHECOVA provide?`,
+    precision_gain_G_Logistic          = `How much precision gain can Logistic G-Computation provide?`,
+    precision_gain_SL1                 = `How much precision gain can SL1 provide?`,
+    precision_gain_SL_rpart            = `How much precision gain can SL_rpart provide?`,
+    precision_gain_SL_randomForest     = `How much precision gain can SL_randomForest provide?`,
+    precision_gain_SL_glmnet           = `How much precision gain can SL_glmnet provide?`,
+    precision_gain_SL_gam              = `How much precision gain can SL_gam provide?`,
+    precision_gain_SL_bartMachine      = `How much precision gain can SL_bartMachine provide?`,
+    precision_gain_DML                 = `How much precision gain can DML provide?`,
+    precision_gain_TMLE                = `How much precision gain can TMLE provide?`,
+    precision_gain_AIPW                = `How much precision gain can AIPW provide?`,
+    precision_gain_IPW                 = `How much precision gain can IPW provide?`,
+    precision_gain_IPW_PSWeight        = `How much precision gain can IPW_PSWeight provide?`,
+    precision_gain_AIPW_PSWeight       = `How much precision gain can AIPW_PSWeight provide?`,
+    precision_gain_OW_PSWeight         = `How much precision gain can OW_PSWeight provide?`,
+    precision_gain_AOW_PSWeight        = `How much precision gain can AOW_PSWeight provide?`,
+
+    # ── Precision gain: Top-3 (VS1) ───────────────────────────────────────────
+    `precision_gain_ANCOVA_Top-3`              = `How much precision gain can ANCOVA_VS1 provide?`,
+    `precision_gain_ANHECOVA_Top-3`            = `How much precision gain can ANHECOVA_VS1 provide?`,
+    `precision_gain_G_Logistic_Top-3`          = `How much precision gain can Logistic G-Computation_VS1 provide?`,
+    `precision_gain_SL1_Top-3`                 = `How much precision gain can SL1_VS1 provide?`,
+    `precision_gain_SL_rpart_Top-3`            = `How much precision gain can SL_rpart_VS1 provide?`,
+    `precision_gain_SL_randomForest_Top-3`     = `How much precision gain can SL_randomForest_VS1 provide?`,
+    `precision_gain_SL_glmnet_Top-3`           = `How much precision gain can SL_glmnet_VS1 provide?`,
+    `precision_gain_SL_gam_Top-3`              = `How much precision gain can SL_gam_VS1 provide?`,
+    `precision_gain_SL_bartMachine_Top-3`      = `How much precision gain can SL_bartMachine_VS1 provide?`,
+    `precision_gain_DML_Top-3`                 = `How much precision gain can DML_VS1 provide?`,
+    `precision_gain_TMLE_Top-3`                = `How much precision gain can TMLE_VS1 provide?`,
+    `precision_gain_AIPW_Top-3`                = `How much precision gain can AIPW_VS1 provide?`,
+    `precision_gain_IPW_Top-3`                 = `How much precision gain can IPW_VS1 provide?`,
+    `precision_gain_IPW_PSWeight_Top-3`        = `How much precision gain can IPW_PSWeight_VS1 provide?`,
+    `precision_gain_AIPW_PSWeight_Top-3`       = `How much precision gain can AIPW_PSWeight_VS1 provide?`,
+    `precision_gain_OW_PSWeight_Top-3`         = `How much precision gain can OW_PSWeight_VS1 provide?`,
+    `precision_gain_AOW_PSWeight_Top-3`        = `How much precision gain can AOW_PSWeight_VS1 provide?`,
+
+    # ── Precision gain: Baseline+ (VS2) ───────────────────────────────────────
+    `precision_gain_ANCOVA_Baseline+`              = `How much precision gain can ANCOVA_VS2 provide?`,
+    `precision_gain_ANHECOVA_Baseline+`            = `How much precision gain can ANHECOVA_VS2 provide?`,
+    `precision_gain_G_Logistic_Baseline+`          = `How much precision gain can Logistic G-Computation_VS2 provide?`,
+    `precision_gain_SL1_Baseline+`                 = `How much precision gain can SL1_VS2 provide?`,
+    `precision_gain_SL_rpart_Baseline+`            = `How much precision gain can SL_rpart_VS2 provide?`,
+    `precision_gain_SL_randomForest_Baseline+`     = `How much precision gain can SL_randomForest_VS2 provide?`,
+    `precision_gain_SL_glmnet_Baseline+`           = `How much precision gain can SL_glmnet_VS2 provide?`,
+    `precision_gain_SL_gam_Baseline+`              = `How much precision gain can SL_gam_VS2 provide?`,
+    `precision_gain_SL_bartMachine_Baseline+`      = `How much precision gain can SL_bartMachine_VS2 provide?`,
+    `precision_gain_DML_Baseline+`                 = `How much precision gain can DML_VS2 provide?`,
+    `precision_gain_TMLE_Baseline+`                = `How much precision gain can TMLE_VS2 provide?`,
+    `precision_gain_AIPW_Baseline+`                = `How much precision gain can AIPW_VS2 provide?`,
+    `precision_gain_IPW_Baseline+`                 = `How much precision gain can IPW_VS2 provide?`,
+    `precision_gain_IPW_PSWeight_Baseline+`        = `How much precision gain can IPW_PSWeight_VS2 provide?`,
+    `precision_gain_AIPW_PSWeight_Baseline+`       = `How much precision gain can AIPW_PSWeight_VS2 provide?`,
+    `precision_gain_OW_PSWeight_Baseline+`         = `How much precision gain can OW_PSWeight_VS2 provide?`,
+    `precision_gain_AOW_PSWeight_Baseline+`        = `How much precision gain can AOW_PSWeight_VS2 provide?`,
+
+    # ── Variance ratio ────────────────────────────────────────────────────────
+    variance_ratio_robust_model              = `The ratio between robust and model-based variance estimators`,
+    variance_ratio_ANCOVA_ANHECOVA           = `ANCOVA vs ANHECOVA variance ratio`,
+    `variance_ratio_robust_model_Top-3`      = `The ratio between robust and model-based variance estimators_VS1`,
+    `variance_ratio_ANCOVA_ANHECOVA_Top-3`   = `ANCOVA_VS1 vs ANHECOVA_VS1 variance ratio`,
+    `variance_ratio_robust_model_Baseline+`  = `The ratio between robust and model-based variance estimators_VS2`,
     `variance_ratio_ANCOVA_ANHECOVA_Baseline+` = `ANCOVA_VS2 vs ANHECOVA_VS2 variance ratio`,
-    
-    # All (base) difference columns
-    diff_ANCOVA = `The difference between unadjusted and ANCOVA point estimates`,
-    diff_ANHECOVA = `The difference between unadjusted and ANHECOVA point estimates`,
-    diff_G_Logistic = `The difference between unadjusted and Logistic G-Computation point estimates`,
-    diff_SL1 = `The difference between unadjusted and SL1 point estimates`,
-    diff_SL_rpart = `The difference between unadjusted and SL_rpart point estimates`,
-    diff_SL_randomForest = `The difference between unadjusted and SL_randomForest point estimates`,
-    diff_SL_glmnet = `The difference between unadjusted and SL_glmnet point estimates`,
-    diff_SL_gam = `The difference between unadjusted and SL_gam point estimates`,
-    diff_SL_bartMachine = `The difference between unadjusted and SL_bartMachine point estimates`,
-    diff_TMLE = `The difference between unadjusted and TMLE point estimates`,
-    diff_DML = `The difference between unadjusted and DML point estimates`,
-    diff_AIPW = `The difference between unadjusted and AIPW point estimates`,
-    diff_IPW = `The difference between unadjusted and IPW point estimates`,
-    
-    # Top-3 (VS1) difference columns
-    `diff_ANCOVA_Top-3` = `The difference between unadjusted and ANCOVA_VS1 point estimates`,
-    `diff_ANHECOVA_Top-3` = `The difference between unadjusted and ANHECOVA_VS1 point estimates`,
-    `diff_G_Logistic_Top-3` = `The difference between unadjusted and Logistic G-Computation_VS1 point estimates`,
-    `diff_SL1_Top-3` = `The difference between unadjusted and SL1_VS1 point estimates`,
-    `diff_SL_rpart_Top-3` = `The difference between unadjusted and SL_rpart_VS1 point estimates`,
-    `diff_SL_randomForest_Top-3` = `The difference between unadjusted and SL_randomForest_VS1 point estimates`,
-    `diff_SL_glmnet_Top-3` = `The difference between unadjusted and SL_glmnet_VS1 point estimates`,
-    `diff_SL_gam_Top-3` = `The difference between unadjusted and SL_gam_VS1 point estimates`,
-    `diff_SL_bartMachine_Top-3` = `The difference between unadjusted and SL_bartMachine_VS1 point estimates`,
-    `diff_TMLE_Top-3` = `The difference between unadjusted and TMLE_VS1 point estimates`,
-    `diff_DML_Top-3` = `The difference between unadjusted and DML_VS1 point estimates`,
-    `diff_AIPW_Top-3` = `The difference between unadjusted and AIPW_VS1 point estimates`,
-    `diff_IPW_Top-3` = `The difference between unadjusted and IPW_VS1 point estimates`,
-    
-    # Baseline+ (VS2) difference columns
-    `diff_ANCOVA_Baseline+` = `The difference between unadjusted and ANCOVA_VS2 point estimates`,
-    `diff_ANHECOVA_Baseline+` = `The difference between unadjusted and ANHECOVA_VS2 point estimates`,
-    `diff_G_Logistic_Baseline+` = `The difference between unadjusted and Logistic G-Computation_VS2 point estimates`,
-    `diff_SL1_Baseline+` = `The difference between unadjusted and SL1_VS2 point estimates`,
-    `diff_SL_rpart_Baseline+` = `The difference between unadjusted and SL_rpart_VS2 point estimates`,
-    `diff_SL_randomForest_Baseline+` = `The difference between unadjusted and SL_randomForest_VS2 point estimates`,
-    `diff_SL_glmnet_Baseline+` = `The difference between unadjusted and SL_glmnet_VS2 point estimates`,
-    `diff_SL_gam_Baseline+` = `The difference between unadjusted and SL_gam_VS2 point estimates`,
-    `diff_SL_bartMachine_Baseline+` = `The difference between unadjusted and SL_bartMachine_VS2 point estimates`,
-    `diff_TMLE_Baseline+` = `The difference between unadjusted and TMLE_VS2 point estimates`,
-    `diff_DML_Baseline+` = `The difference between unadjusted and DML_VS2 point estimates`,
-    `diff_AIPW_Baseline+` = `The difference between unadjusted and AIPW_VS2 point estimates`,
-    `diff_IPW_Baseline+` = `The difference between unadjusted and IPW_VS2 point estimates`
+
+    # ── Estimate diff: All covariates ─────────────────────────────────────────
+    diff_ANCOVA              = `The difference between unadjusted and ANCOVA point estimates`,
+    diff_ANHECOVA            = `The difference between unadjusted and ANHECOVA point estimates`,
+    diff_G_Logistic          = `The difference between unadjusted and Logistic G-Computation point estimates`,
+    diff_SL1                 = `The difference between unadjusted and SL1 point estimates`,
+    diff_SL_rpart            = `The difference between unadjusted and SL_rpart point estimates`,
+    diff_SL_randomForest     = `The difference between unadjusted and SL_randomForest point estimates`,
+    diff_SL_glmnet           = `The difference between unadjusted and SL_glmnet point estimates`,
+    diff_SL_gam              = `The difference between unadjusted and SL_gam point estimates`,
+    diff_SL_bartMachine      = `The difference between unadjusted and SL_bartMachine point estimates`,
+    diff_TMLE                = `The difference between unadjusted and TMLE point estimates`,
+    diff_DML                 = `The difference between unadjusted and DML point estimates`,
+    diff_AIPW                = `The difference between unadjusted and AIPW point estimates`,
+    diff_IPW                 = `The difference between unadjusted and IPW point estimates`,
+    diff_IPW_PSWeight        = `The difference between unadjusted and IPW_PSWeight point estimates`,
+    diff_AIPW_PSWeight       = `The difference between unadjusted and AIPW_PSWeight point estimates`,
+    diff_OW_PSWeight         = `The difference between unadjusted and OW_PSWeight point estimates`,
+    diff_AOW_PSWeight        = `The difference between unadjusted and AOW_PSWeight point estimates`,
+
+    # ── Estimate diff: Top-3 (VS1) ────────────────────────────────────────────
+    `diff_ANCOVA_Top-3`              = `The difference between unadjusted and ANCOVA_VS1 point estimates`,
+    `diff_ANHECOVA_Top-3`            = `The difference between unadjusted and ANHECOVA_VS1 point estimates`,
+    `diff_G_Logistic_Top-3`          = `The difference between unadjusted and Logistic G-Computation_VS1 point estimates`,
+    `diff_SL1_Top-3`                 = `The difference between unadjusted and SL1_VS1 point estimates`,
+    `diff_SL_rpart_Top-3`            = `The difference between unadjusted and SL_rpart_VS1 point estimates`,
+    `diff_SL_randomForest_Top-3`     = `The difference between unadjusted and SL_randomForest_VS1 point estimates`,
+    `diff_SL_glmnet_Top-3`           = `The difference between unadjusted and SL_glmnet_VS1 point estimates`,
+    `diff_SL_gam_Top-3`              = `The difference between unadjusted and SL_gam_VS1 point estimates`,
+    `diff_SL_bartMachine_Top-3`      = `The difference between unadjusted and SL_bartMachine_VS1 point estimates`,
+    `diff_TMLE_Top-3`                = `The difference between unadjusted and TMLE_VS1 point estimates`,
+    `diff_DML_Top-3`                 = `The difference between unadjusted and DML_VS1 point estimates`,
+    `diff_AIPW_Top-3`                = `The difference between unadjusted and AIPW_VS1 point estimates`,
+    `diff_IPW_Top-3`                 = `The difference between unadjusted and IPW_VS1 point estimates`,
+    `diff_IPW_PSWeight_Top-3`        = `The difference between unadjusted and IPW_PSWeight_VS1 point estimates`,
+    `diff_AIPW_PSWeight_Top-3`       = `The difference between unadjusted and AIPW_PSWeight_VS1 point estimates`,
+    `diff_OW_PSWeight_Top-3`         = `The difference between unadjusted and OW_PSWeight_VS1 point estimates`,
+    `diff_AOW_PSWeight_Top-3`        = `The difference between unadjusted and AOW_PSWeight_VS1 point estimates`,
+
+    # ── Estimate diff: Baseline+ (VS2) ────────────────────────────────────────
+    `diff_ANCOVA_Baseline+`              = `The difference between unadjusted and ANCOVA_VS2 point estimates`,
+    `diff_ANHECOVA_Baseline+`            = `The difference between unadjusted and ANHECOVA_VS2 point estimates`,
+    `diff_G_Logistic_Baseline+`          = `The difference between unadjusted and Logistic G-Computation_VS2 point estimates`,
+    `diff_SL1_Baseline+`                 = `The difference between unadjusted and SL1_VS2 point estimates`,
+    `diff_SL_rpart_Baseline+`            = `The difference between unadjusted and SL_rpart_VS2 point estimates`,
+    `diff_SL_randomForest_Baseline+`     = `The difference between unadjusted and SL_randomForest_VS2 point estimates`,
+    `diff_SL_glmnet_Baseline+`           = `The difference between unadjusted and SL_glmnet_VS2 point estimates`,
+    `diff_SL_gam_Baseline+`              = `The difference between unadjusted and SL_gam_VS2 point estimates`,
+    `diff_SL_bartMachine_Baseline+`      = `The difference between unadjusted and SL_bartMachine_VS2 point estimates`,
+    `diff_TMLE_Baseline+`                = `The difference between unadjusted and TMLE_VS2 point estimates`,
+    `diff_DML_Baseline+`                 = `The difference between unadjusted and DML_VS2 point estimates`,
+    `diff_AIPW_Baseline+`                = `The difference between unadjusted and AIPW_VS2 point estimates`,
+    `diff_IPW_Baseline+`                 = `The difference between unadjusted and IPW_VS2 point estimates`,
+    `diff_IPW_PSWeight_Baseline+`        = `The difference between unadjusted and IPW_PSWeight_VS2 point estimates`,
+    `diff_AIPW_PSWeight_Baseline+`       = `The difference between unadjusted and AIPW_PSWeight_VS2 point estimates`,
+    `diff_OW_PSWeight_Baseline+`         = `The difference between unadjusted and OW_PSWeight_VS2 point estimates`,
+    `diff_AOW_PSWeight_Baseline+`        = `The difference between unadjusted and AOW_PSWeight_VS2 point estimates`
   )
 ```
 
@@ -8117,6 +9185,498 @@ cat("          Row 2: Binary outcomes\n")
 cat("• Data source: Primary outcomes only\n")
 cat("========================================\n\n")
 ```
+
+## Modified PVR
+```{r}
+###############################################################################
+##  Sample Size Category vs Precision Gain — Boxplot only
+##  Layout: 2 cols (Continuous, Binary) x 3 rows (All, Top-3, Baseline+)
+##  Legends: bottom, one per column (continuous / binary)
+###############################################################################
+
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(patchwork)
+library(ggpattern)
+library(cowplot)
+
+## ---------- colour palettes ----------
+method_fill_colors = c(
+  "ANCOVA"     = "#F8766D",
+  "ANHECOVA"   = "#B79F00",
+  "G-Logistic" = "#00BA38",
+  "DML"        = "#9FE8ED",
+  "TMLE"       = "#B8D4FF",
+  "IPW"        = "#C77CFF"
+)
+
+method_border_colors = c(
+  "ANCOVA"     = "grey25",
+  "ANHECOVA"   = "grey25",
+  "G-Logistic" = "grey25",
+  "DML"        = "grey25",
+  "TMLE"       = "grey25",
+  "IPW"        = "grey25"
+)
+
+method_linewidths = c(
+  "ANCOVA"     = 0.35,
+  "ANHECOVA"   = 0.35,
+  "G-Logistic" = 0.35,
+  "DML"        = 0.35,
+  "TMLE"       = 0.35,
+  "IPW"        = 0.35
+)
+
+method_patterns = c(
+  "ANCOVA"     = "none",
+  "ANHECOVA"   = "none",
+  "G-Logistic" = "none",
+  "DML"        = "none",
+  "TMLE"       = "none",
+  "IPW"        = "none"
+)
+
+method_pattern_angles = c(
+  "ANCOVA"     = 0,
+  "ANHECOVA"   = 0,
+  "G-Logistic" = 0,
+  "DML"        = 0,
+  "TMLE"       = 0,
+  "IPW"        = 0
+)
+
+## renamed x-axis labels
+size_labels = c(
+  "0-100"   = "Small\n(<100)",
+  "100-500" = "Medium\n(100-500)",
+  "500+"    = "Large\n(>500)"
+)
+
+###############################################################################
+##  Categorize sample size
+###############################################################################
+categorize_sample_size = function(data) {
+  data %>%
+    mutate(size_cat = case_when(
+      Sample_Size <= 100                     ~ "0-100",
+      Sample_Size > 100 & Sample_Size <= 500 ~ "100-500",
+      Sample_Size > 500                      ~ "500+"
+    )) %>%
+    mutate(size_cat = factor(size_cat, levels = c("0-100", "100-500", "500+")))
+}
+
+df_long_cat_all     = categorize_sample_size(df_long_size_cleaned_all)
+df_long_cat_primary = categorize_sample_size(df_long_size_cleaned_primary)
+
+###############################################################################
+##  Helper: extract bottom legend grob for a given method set
+###############################################################################
+make_legend_grob = function(method_levels) {
+  df_dummy = data.frame(
+    x      = seq_along(method_levels),
+    y      = rep(0, length(method_levels)),
+    method = factor(method_levels, levels = method_levels)
+  )
+
+  p_leg = ggplot(df_dummy, aes(x = x, y = y,
+                                fill          = method,
+                                colour        = method,
+                                pattern       = method,
+                                pattern_angle = method,
+                                linewidth     = method)) +
+    ggpattern::geom_boxplot_pattern(
+      pattern_density = 0.08,
+      pattern_spacing = 0.04,
+      pattern_size    = 0.4,
+      pattern_colour  = "grey30",
+      pattern_fill    = NA
+    ) +
+    scale_fill_manual(values          = method_fill_colors[method_levels]) +
+    scale_colour_manual(values        = method_border_colors[method_levels]) +
+    scale_linewidth_manual(values     = method_linewidths[method_levels]) +
+    scale_pattern_manual(values       = method_patterns[method_levels]) +
+    scale_pattern_angle_manual(values = method_pattern_angles[method_levels]) +
+    guides(
+      colour        = "none",
+      linewidth     = "none",
+      pattern_angle = "none",
+      pattern       = "none",
+      fill          = guide_legend(
+        title = "Method",
+        nrow  = 1,
+        override.aes = list(
+          colour          = method_border_colors[method_levels],
+          linewidth       = method_linewidths[method_levels],
+          pattern         = method_patterns[method_levels],
+          pattern_angle   = method_pattern_angles[method_levels],
+          pattern_density = 0.08,
+          pattern_spacing = 0.04,
+          pattern_size    = 0.4,
+          pattern_colour  = "grey30"
+        ))
+    ) +
+    theme_minimal() +
+    theme(
+      legend.position = "bottom",
+      legend.text     = element_text(size = 16),
+      legend.title    = element_text(size = 18),
+      legend.key.size = unit(0.9, "cm")
+    )
+
+  cowplot::get_legend(p_leg)
+}
+
+###############################################################################
+##  BOXPLOT — one panel (legend always suppressed; extracted separately)
+###############################################################################
+make_boxplot_cat = function(data, outcome_type) {
+
+  if (outcome_type == "binary") {
+    method_levels = c("ANCOVA", "ANHECOVA", "G-Logistic", "DML", "TMLE", "IPW")
+  } else {
+    method_levels = c("ANCOVA", "ANHECOVA", "DML", "TMLE", "IPW")
+    data      = data %>% filter(method != "G-Logistic")
+  }
+
+  # Unified box size so continuous and binary boxes appear the same width
+  box_width = 0.63
+  dodge_w   = 0.70
+
+  data = data %>%
+    filter(!is.na(size_cat), !is.na(prop_var_reduction)) %>%
+    mutate(method   = factor(method, levels = method_levels),
+           size_cat = factor(size_cat, levels = c("0-100", "100-500", "500+")))
+
+  ggplot(data, aes(x = size_cat, y = prop_var_reduction,
+                   fill          = method,
+                   colour        = method,
+                   pattern       = method,
+                   pattern_angle = method,
+                   linewidth     = method)) +
+    ggpattern::geom_boxplot_pattern(
+      position        = position_dodge(width = dodge_w),
+      width           = box_width,
+      outlier.shape   = NA,
+      pattern_density = 0.08,
+      pattern_spacing = 0.04,
+      pattern_size    = 0.4,
+      pattern_colour  = "grey30",
+      pattern_fill    = NA
+    ) +
+    stat_summary(
+      aes(group = method),
+      fun         = median,
+      geom        = "crossbar",
+      width       = box_width,
+      fatten      = 1,
+      colour      = "black",
+      linewidth   = 0.5,
+      position    = position_dodge(width = dodge_w),
+      show.legend = FALSE
+    ) +
+    geom_hline(yintercept = 0, linetype = "dashed", colour = "grey40",
+               linewidth = 0.7) +
+    scale_fill_manual(values          = method_fill_colors[method_levels]) +
+    scale_colour_manual(values        = method_border_colors[method_levels]) +
+    scale_linewidth_manual(values     = method_linewidths[method_levels]) +
+    scale_pattern_manual(values       = method_patterns[method_levels]) +
+    scale_pattern_angle_manual(values = method_pattern_angles[method_levels]) +
+    scale_x_discrete(labels = size_labels) +
+    labs(x = "Sample Size", y = "Precision Gain") +
+    coord_cartesian(ylim = c(-1, 1)) +
+    theme_minimal(base_size = 20) +
+    theme(
+      legend.position    = "none",
+      panel.grid.minor   = element_blank(),
+      panel.grid.major.x = element_blank(),
+      panel.background   = element_rect(fill = "white", colour = NA),
+      plot.background    = element_rect(fill = "white", colour = NA),
+      axis.text          = element_text(size = 18),
+      axis.title         = element_text(size = 20),
+      axis.text.x        = element_text(size = 15)
+    )
+}
+
+###############################################################################
+##  Assemble 2-col x 3-row grid with bottom legends per column
+###############################################################################
+assemble_grid_2x3 = function(data_source) {
+
+  adj_configs = list(
+    list(adj = "All",       label = "All"),
+    list(adj = "Top-3",     label = "Top-3"),
+    list(adj = "Baseline+", label = "Baseline+")
+  )
+
+  cont_panels = list()
+  bin_panels  = list()
+
+  method_levels_cont = c("ANCOVA", "ANHECOVA", "DML", "TMLE", "IPW")
+  method_levels_bin  = c("ANCOVA", "ANHECOVA", "G-Logistic", "DML", "TMLE", "IPW")
+
+  for (i in 1:3) {
+    cfg = adj_configs[[i]]
+
+    df_cont = data_source %>% filter(outcome_group == "continuous", adjustment_type == cfg$adj)
+    df_bin  = data_source %>% filter(outcome_group == "binary",     adjustment_type == cfg$adj)
+
+    p_cont = make_boxplot_cat(df_cont, "continuous")
+    p_bin  = make_boxplot_cat(df_bin,  "binary")
+
+    # column titles on top row only
+    if (i == 1) {
+      p_cont = p_cont + ggtitle("Continuous") +
+        theme(plot.title = element_text(size = 19, face = "bold", hjust = 0.5))
+      p_bin  = p_bin  + ggtitle("Binary") +
+        theme(plot.title = element_text(size = 19, face = "bold", hjust = 0.5))
+    }
+
+    cont_panels[[i]] = p_cont
+    bin_panels[[i]]  = p_bin
+  }
+
+  # Row labels
+  row_labels = lapply(c("All", "Top-3", "Baseline+"), function(lbl) {
+    wrap_elements(
+      grid::textGrob(lbl, rot = 90,
+                     gp = grid::gpar(fontsize = 20, fontface = "bold"))
+    )
+  })
+
+  # Legend grobs (one per column)
+  leg_cont = make_legend_grob(method_levels_cont)
+  leg_bin  = make_legend_grob(method_levels_bin)
+
+  # Main panel grid
+  main_grid = wrap_plots(
+    row_labels[[1]], cont_panels[[1]], bin_panels[[1]],
+    row_labels[[2]], cont_panels[[2]], bin_panels[[2]],
+    row_labels[[3]], cont_panels[[3]], bin_panels[[3]],
+    ncol   = 3,
+    widths = c(0.05, 1, 1)
+  )
+
+  # Legend row: spacer | cont legend | bin legend
+  leg_row = wrap_plots(
+    plot_spacer(),
+    wrap_elements(full = leg_cont),
+    wrap_elements(full = leg_bin),
+    ncol   = 3,
+    widths = c(0.05, 1, 1)
+  )
+
+  # Stack
+  main_grid / leg_row + plot_layout(heights = c(1, 0.08))
+}
+
+###############################################################################
+##  Generate figures
+###############################################################################
+final_boxplot_all     = assemble_grid_2x3(df_long_cat_all)
+final_boxplot_primary = assemble_grid_2x3(df_long_cat_primary)
+
+###############################################################################
+##  Save
+###############################################################################
+output_dir = "plots/samplesize_boxplot"
+dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
+
+ggsave(file.path(output_dir, "samplesize_BOXPLOT_6panel_all.png"),
+       final_boxplot_all, width = 22, height = 18, dpi = 600, bg = "white")
+ggsave(file.path(output_dir, "samplesize_BOXPLOT_6panel_all.pdf"),
+       final_boxplot_all, width = 22, height = 18, bg = "white")
+
+ggsave(file.path(output_dir, "samplesize_BOXPLOT_6panel_primary.png"),
+       final_boxplot_primary, width = 22, height = 18, dpi = 600, bg = "white")
+ggsave(file.path(output_dir, "samplesize_BOXPLOT_6panel_primary.pdf"),
+       final_boxplot_primary, width = 22, height = 18, bg = "white")
+
+cat("Saved boxplot figures to:", output_dir, "\n")
+```
+## Modified Shift
+```{r}
+###############################################################################
+##  ESTIMATE SHIFT — 2-Panel Figure (no method highlighting)
+##  Panel 1: Continuous | Panel 2: Binary
+##  X-axis: All, Top-3, Baseline+
+##  Within each group: side-by-side boxplots per method
+###############################################################################
+
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(patchwork)
+library(cowplot)
+
+## ---------- colour palette (uniform styling, no highlighting) ----------
+
+method_colors = c(
+  "ANCOVA"     = "#F8766D",
+  "ANHECOVA"   = "#B79F00",
+  "G-Logistic" = "#00BA38",
+  "DML"        = "#00BFC4",
+  "TMLE"       = "#619CFF",
+  "IPW"        = "#C77CFF"
+)
+
+###############################################################################
+##  Manual outlier threshold & selective removal
+###############################################################################
+diff_manual_threshold = 8
+
+apply_selective_diff_outlier_removal = function(data) {
+  data %>%
+    mutate(diff = ifelse(
+      method == "ANHECOVA" & adjustment_type == "All" & outcome_group == "continuous" & abs(diff) > diff_manual_threshold,
+      NA_real_,
+      diff
+    ))
+}
+
+df_long_diff_selective_all     = apply_selective_diff_outlier_removal(df_long_diff_full_all)
+df_long_diff_selective_primary = apply_selective_diff_outlier_removal(df_long_diff_full_primary)
+
+###############################################################################
+##  Helper: extract bottom legend grob for a given method set
+###############################################################################
+make_legend_grob = function(method_levels) {
+  df_dummy = data.frame(
+    x      = seq_along(method_levels),
+    y      = rep(0, length(method_levels)),
+    method = factor(method_levels, levels = method_levels)
+  )
+
+  p_leg = ggplot(df_dummy, aes(x = x, y = y, fill = method)) +
+    geom_boxplot() +
+    scale_fill_manual(values = method_colors[method_levels]) +
+    guides(fill = guide_legend(title = "Method", nrow = 1)) +
+    theme_minimal() +
+    theme(
+      legend.position = "bottom",
+      legend.text     = element_text(size = 16),
+      legend.title    = element_text(size = 18),
+      legend.key.size = unit(0.9, "cm")
+    )
+
+  cowplot::get_legend(p_leg)
+}
+
+###############################################################################
+##  Plot function — one panel (continuous or binary), legend always off
+###############################################################################
+make_shift_panel = function(data, outcome_type) {
+
+  if (outcome_type == "binary") {
+    method_levels = c("ANCOVA", "ANHECOVA", "G-Logistic", "DML", "TMLE", "IPW")
+    box_width = 0.63
+    dodge_w   = 0.70
+  } else {
+    method_levels = c("ANCOVA", "ANHECOVA", "DML", "TMLE", "IPW")
+    data      = data %>% filter(method != "G-Logistic")
+    box_width = 0.63
+    dodge_w   = 0.70
+  }
+
+  data = data %>%
+    filter(!is.na(diff)) %>%
+    mutate(
+      method          = factor(method, levels = method_levels),
+      adjustment_type = factor(adjustment_type, levels = c("All", "Top-3", "Baseline+"))
+    )
+
+  ggplot(data, aes(x = adjustment_type, y = diff, fill = method)) +
+    geom_boxplot(
+      colour        = "grey25",
+      linewidth     = 0.4,
+      position      = position_dodge(width = dodge_w),
+      width         = box_width,
+      outlier.shape = NA
+    ) +
+    geom_hline(yintercept = 0, linetype = "dashed", colour = "grey40",
+               linewidth = 0.7) +
+    scale_fill_manual(values = method_colors[method_levels]) +
+    labs(x = NULL, y = "Estimate Shift") +
+    coord_cartesian(ylim = c(-3, 3)) +
+    scale_y_continuous(breaks = c(-3, -1.5, 0, 1.5, 3)) +
+    theme_minimal(base_size = 20) +
+    theme(
+      legend.position    = "none",
+      panel.grid.minor   = element_blank(),
+      panel.grid.major.x = element_blank(),
+      panel.background   = element_rect(fill = "white", colour = NA),
+      plot.background    = element_rect(fill = "white", colour = NA),
+      axis.text          = element_text(size = 18),
+      axis.title         = element_text(size = 20),
+      axis.text.x        = element_text(size = 17)
+    )
+}
+
+###############################################################################
+##  Assemble 2-panel figure with bottom legends per column
+###############################################################################
+assemble_shift = function(df_cont, df_bin) {
+
+  method_levels_cont = c("ANCOVA", "ANHECOVA", "DML", "TMLE", "IPW")
+  method_levels_bin  = c("ANCOVA", "ANHECOVA", "G-Logistic", "DML", "TMLE", "IPW")
+
+  p_cont = make_shift_panel(df_cont, "continuous") +
+    ggtitle("Continuous") +
+    theme(plot.title = element_text(size = 19, face = "bold", hjust = 0.5))
+
+  p_bin = make_shift_panel(df_bin, "binary") +
+    ggtitle("Binary") +
+    theme(plot.title = element_text(size = 19, face = "bold", hjust = 0.5))
+
+  leg_cont = make_legend_grob(method_levels_cont)
+  leg_bin  = make_legend_grob(method_levels_bin)
+
+  main_row = p_cont + p_bin + plot_layout(widths = c(1, 1))
+
+  leg_row = wrap_plots(
+    wrap_elements(full = leg_cont),
+    wrap_elements(full = leg_bin),
+    ncol   = 2,
+    widths = c(1, 1)
+  )
+
+  main_row / leg_row + plot_layout(heights = c(1, 0.08))
+}
+
+###############################################################################
+##  Generate 2-panel figures
+###############################################################################
+
+## --- All outcomes ---
+df_cont_all = df_long_diff_selective_all %>% filter(outcome_group == "continuous")
+df_bin_all  = df_long_diff_selective_all %>% filter(outcome_group == "binary")
+final_shift_all = assemble_shift(df_cont_all, df_bin_all)
+
+## --- Primary outcomes ---
+df_cont_primary = df_long_diff_selective_primary %>% filter(outcome_group == "continuous")
+df_bin_primary  = df_long_diff_selective_primary %>% filter(outcome_group == "binary")
+final_shift_primary = assemble_shift(df_cont_primary, df_bin_primary)
+
+###############################################################################
+##  Save
+###############################################################################
+output_dir = "plots/estimate_shift"
+dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
+
+ggsave(file.path(output_dir, "estimate_shift_2panel_all.png"),
+       final_shift_all, width = 20, height = 10, dpi = 600, bg = "white")
+ggsave(file.path(output_dir, "estimate_shift_2panel_all.pdf"),
+       final_shift_all, width = 20, height = 10, bg = "white")
+
+ggsave(file.path(output_dir, "estimate_shift_2panel_primary.png"),
+       final_shift_primary, width = 20, height = 10, dpi = 600, bg = "white")
+ggsave(file.path(output_dir, "estimate_shift_2panel_primary.pdf"),
+       final_shift_primary, width = 20, height = 10, bg = "white")
+
+cat("Saved estimate shift figures to:", output_dir, "\n")
+```
+
 
 # Propensity Modeling
 ```{r}
